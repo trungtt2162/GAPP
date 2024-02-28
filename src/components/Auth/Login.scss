@@ -1,0 +1,95 @@
+.login-container {
+    .loaderIcon{
+        margin-right: 7px;
+        margin-bottom: 2px;
+        top: 2px;
+        animation: spin 1s infinite linear;
+    }
+    @keyframes spin {
+        from{
+            transform: scale(1) rotate(0deg);
+        }
+        to{
+            transform: scale(1) rotate(360deg);
+        }
+    }
+    .header{
+        padding: 10px 20px 0 20px;
+            height: 50px;
+            text-align: right;
+            border: 1px;
+            font-size: 13px;
+        .btn-signup{
+            margin-left: 10px;
+            padding: 3px 10px 3px 10px;
+            border: solid 1px black;
+            border-radius: 5px;
+            background-color: #ffffff;
+            &:hover{
+                color: white;
+                background-color: black;
+            }
+        }
+    }
+    .title{
+        cursor: pointer;
+        padding: 20px 0;
+        font-size: 40px;
+        text-align: center;
+    }
+    .welcome{
+        margin: 20px;
+        height: 30px;
+        font-size: 25px;
+        text-align: center;
+    }
+    .content-form{
+        display: flex;
+        flex-direction: column;
+    input{
+        margin-top: 5px;
+        margin-bottom: 10px;
+        height: 50px;
+    }
+    .form-group{
+        text-align: left;
+    label{
+        font-size: 18px;
+    }
+    }
+    .forgot-password{
+        color: #999999;
+        margin-bottom: 20px;
+        text-decoration: underline;
+    }
+    .back{
+        cursor: pointer;
+    }
+    .btn-submit{
+        margin-top: 15px;
+        margin-bottom: 15px;
+        width: 100%;
+        background-color:  #1a1a19;
+        border-color: #1a1a19;
+        border-radius: 5px;
+        border-style:solid; 
+        border-width: 1px;
+        color: #ffffff;
+        font-weight: 500;
+        justify-content: center;
+        line-height: 30px;
+        padding: 8px 16px;
+        text-align: center;
+        
+        &:hover {
+        background-color: #3e3e3e;
+        }
+        &:disabled{
+            border-color: white;
+            background-color: #999999;
+            cursor: no-drop;
+        }
+    }
+}
+    
+}
