@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // import { useDispatch } from 'react-redux';
 // import { doLogin } from '../../redux/action/userAction';
 import { ImSpinner6 } from 'react-icons/im'
+import Hero from '../Page/ui/Hero';
 const Login = (props) => {
     // const [email, setEmail] = useState("");
     // const [password, setPassword] = useState("");
@@ -47,11 +48,9 @@ const Login = (props) => {
     // }
     return (
         <div className="login-container">
+           
             <div className='header' >
-                <span>Don't have an account yet?</span>
-                <button className="btn-signup" onClick={() => { navigate('/signup') }}>
-                    Sign up
-                </button>
+                
             </div>
             <div className='title col-3 mx-auto' >
                 <span onClick={() => { navigate('/') }}>GAPP</span>
@@ -96,8 +95,10 @@ const Login = (props) => {
                     </button>
                 </div>
                 <div className='text-center'>
-                    <span className='back' onClick={() => { navigate('/') }}>
-                        &#60;&#60; Go to Homepage</span>
+                    <span>Don't have an account yet?</span>
+                    <button className="btn-signup" onClick={() => { navigate('/signup') }}>
+                        Sign up
+                    </button>
                 </div>
             </div>
 

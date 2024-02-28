@@ -1,4 +1,9 @@
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
+import Navbar from "./components/Page/Navbar";
+import Footer from "./components/Page/footer";
+
 import App from './App';
 import { ToastContainer } from 'react-toastify';
 import Login from './components/Auth/Login';
@@ -12,35 +17,39 @@ const NotFound = () => {
 }
 const Layout = (props) => {
     return (
-        <>
-            <Routes>
-                <Route path="/" element={<App />} >
-                    <Route index element={<></>} />
-                    <Route path="users" element={<></>} />
+        <div className="App">
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<App />} >  
+                        <Route path="users" element={<></>} />
+                    </Route>
+                    <Route path="/quiz/:id" element={<></>} />
+                    <Route path="/admin" element={<></>} >
+                        <Route index element={<DashBoard />} />
+                        <Route path="" element={<></>} />
+                    </Route>
+                    <Route path="/login" element={<Login />} />
+                    {/* <Route path="/signup" element={<Signup />} /> */}
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
 
-                </Route>
-                <Route path="/quiz/:id" element={<></>} />
-                <Route path="/admin" element={<></>} >
-                    <Route index element={<DashBoard />} />
-                    <Route path="" element={<></>} />
-                </Route>
-                <Route path="/login" element={<Login />} />
-                {/* <Route path="/signup" element={<Signup />} /> */}
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-            <ToastContainer
-                position="top-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-        </>
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
+                <Footer />
+            </ThemeProvider>
+        </div>
     );
 
 }
