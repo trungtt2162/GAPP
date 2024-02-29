@@ -84,7 +84,6 @@ const Navbar = () => {
                             >
                                 Signin
                             </Link>
-                            
                         </Button>
                         <Button
                             variant="text"
@@ -97,7 +96,11 @@ const Navbar = () => {
                                 "&:hover": { color: palette.primary.main },
                             }}
                         >
-                            Register
+                            <Link
+                                to="/register"
+                            >
+                                Register
+                            </Link>
                         </Button>
                     </Box>
                 </>

@@ -1,0 +1,113 @@
+.signup-container{
+
+    background-color: black;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    
+    .content-left{
+        background-color: black;
+        width: 45%;
+        .title{
+            margin-top: 130px;
+            padding: 20px 0;
+            font-size: 40px;
+            text-align: center;
+            color: white;
+        }
+        .img-bg{
+            margin-left: 145px;
+            margin-right: 145px;
+            margin-top: 30px;
+            margin-bottom: 140px;
+        }
+        .credit{
+            color: white;
+            margin: 20px;
+            text-align: center;
+        }
+    }
+    .content-right{
+        background-color: white;
+        width: 55%;
+       // border-radius: 20px;
+        .header{
+            padding: 10px 20px 0 20px;
+            height: 50px;
+            text-align: right;
+            border: 1px;
+            font-size: 13px;
+            .btn-signup{
+                margin-left: 10px;
+                padding: 3px 10px 3px 10px;
+                border: solid 1px black;
+                background-color: #ffffff;
+                border-radius: 5px;
+                &:hover{
+                    color: white;
+                    background-color: black;
+                }
+            }
+        }
+        .title{
+            cursor: pointer;
+            margin-top: 40px;
+            padding: 20px 0;
+            font-size: 35px;
+            text-align: center;
+        }
+        .welcome{
+            margin-top: 20px;
+            height: 30px;
+            font-size: 22px;
+            color: #999999;
+            text-align: center;
+        }
+        .content-form{
+            margin-top: 80px ;
+            .pass-group {
+                position: relative;
+                .eyeicon{
+                    cursor: pointer;
+                    position: absolute;
+                    right: 10px;
+                    bottom: 12px;
+                }
+            }
+            input{
+                margin-top: 5px;
+                margin-bottom: 10px;
+                height: 45px;
+                border-radius: 5px;
+            }
+            .forgot-password{
+                color: #999999;
+                margin-bottom: 20px;
+                text-decoration: underline;
+            }
+            .back{
+                cursor: pointer;
+            }
+            .btn-submit{
+                margin-top: 40px;
+                margin-bottom: 15px;
+                width: 100%;
+                background-color:  #1a1a19;
+                border-color: #1a1a19;
+                border-radius: 5px;
+                border-style:solid; 
+                border-width: 1px;
+                color: #ffffff;
+                font-weight: 500;
+                justify-content: center;
+                line-height: 30px;
+                padding: 8px 16px;
+                text-align: center;
+                &:hover {
+                background-color: #3e3e3e;
+                }
+            }
+        }
+    }
+}

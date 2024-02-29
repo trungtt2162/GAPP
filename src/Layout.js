@@ -8,6 +8,7 @@ import App from './App';
 import { ToastContainer } from 'react-toastify';
 import Login from './components/Auth/Login';
 import DashBoard from './components/Auth/DashBoard';
+import Register from './components/Auth/Register';
 const NotFound = () => {
     return (
         <div className='container mt-3 alert alert-danger' role='alert'>
@@ -20,9 +21,9 @@ const Layout = (props) => {
         <div className="App">
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <Navbar />
+
                 <Routes>
-                    <Route path="/" element={<App />} >  
+                    <Route path="/" element={<App />} >
                         <Route path="users" element={<></>} />
                     </Route>
                     <Route path="/quiz/:id" element={<></>} />
@@ -31,7 +32,7 @@ const Layout = (props) => {
                         <Route path="" element={<></>} />
                     </Route>
                     <Route path="/login" element={<Login />} />
-                    {/* <Route path="/signup" element={<Signup />} /> */}
+                    <Route path="/register" element={<Register />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
 

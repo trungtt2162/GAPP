@@ -48,9 +48,11 @@ const Login = (props) => {
     // }
     return (
         <div className="login-container">
-           
             <div className='header' >
-                
+                <span>Don't have an account yet?</span>
+                <button className="btn-signup" onClick={() => { navigate('/register') }}>
+                    Sign up
+                </button>
             </div>
             <div className='title col-3 mx-auto' >
                 <span onClick={() => { navigate('/') }}>GAPP</span>
@@ -94,12 +96,7 @@ const Login = (props) => {
 
                     </button>
                 </div>
-                <div className='text-center'>
-                    <span>Don't have an account yet?</span>
-                    <button className="btn-signup" onClick={() => { navigate('/signup') }}>
-                        Sign up
-                    </button>
-                </div>
+
             </div>
 
         </div>

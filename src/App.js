@@ -1,13 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
-import Header from './components/Header/Header';
-import Login from './components/Auth/Login';
+import Navbar from './components/Page/Navbar';
 import Home from './components/Page/Home';
 
 const App = () => {
   return (
+
+
     <div className="App">
-      <Home />
+      <div className='header-container'>
+        <Navbar />
+      </div>
+      <div className='app-content'>
+        {/* <Outlet /> */}
+        <Home />
+      </div>
     </div>
   );
 }
