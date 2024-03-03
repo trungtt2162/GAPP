@@ -47,14 +47,14 @@ const Navbar = () => {
                             Home
                         </Link>
                         <Link
-                            to="/#"
-                            className={"link" + (url === "/tracking" ? " active" : "")}
+                            to="/pageTree"
+                            className={"link" + (url === "/pageTree" ? " active" : "")}
                         >
                             Cây Gia Phả
                         </Link>
                         <Link
-                            to="/#"
-                            className={"link" + (url === "/shipping" ? " active" : "")}
+                            to="/history"
+                            className={"link" + (url === "/history" ? " active" : "")}
                         >
                             Lịch Sử Gia Đình
                         </Link>
@@ -152,14 +152,14 @@ const Navbar = () => {
                                     Home
                                 </Link>
                                 <Link
-                                    to="/tracking"
-                                    className={"link" + (url === "/tracking" ? " active" : "")}
+                                    to="/pageTree"
+                                    className={"link" + (url === "/pageTree" ? " active" : "")}
                                 >
                                     Cây Gia Phả
                                 </Link>
                                 <Link
-                                    to="/shipping"
-                                    className={"link" + (url === "/shipping" ? " active" : "")}
+                                    to="/history"
+                                    className={"link" + (url === "/history" ? " active" : "")}
                                 >
                                     Lịch Sử Gia Đình
                                 </Link>

@@ -9,6 +9,8 @@ import { ToastContainer } from 'react-toastify';
 import Login from './components/Auth/Login';
 import DashBoard from './components/Auth/DashBoard';
 import Register from './components/Auth/Register';
+import PageTree from './components/Page/PageTree';
+import HistoryFamily from './components/Page/HistoryFamily';
 const NotFound = () => {
     return (
         <div className='container mt-3 alert alert-danger' role='alert'>
@@ -24,7 +26,9 @@ const Layout = (props) => {
                 <Routes>
                     <Route path="/" element={<App />} >
                         <Route path="users" element={<></>} />
-                    </Route>
+                    </Route>history
+                    <Route path="/pageTree" element={<PageTree />} ></Route>
+                    <Route path="/history" element={<HistoryFamily />} ></Route>
                     <Route path="/quiz/:id" element={<></>} />
                     <Route path="/admin" element={<></>} >
                         <Route index element={<DashBoard />} />

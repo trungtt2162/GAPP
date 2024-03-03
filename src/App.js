@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import Navbar from './components/Page/Navbar';
 import Home from './components/Page/Home';
+import PageTree from './components/Page/PageTree';
 
 const App = () => {
   return (

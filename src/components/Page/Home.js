@@ -35,8 +35,7 @@ const Home = () => {
                     backgroundColor: palette.secondary.main,
                     p: "2rem",
                 }}
-            >
-                
+            >   
             </Box>
             {/* HOW IT WORKS */}
             <div className="how-work">

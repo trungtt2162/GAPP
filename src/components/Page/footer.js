@@ -19,7 +19,7 @@ const Footer = () => {
         <Box
             className="footer"
             sx={{
-                backgroundColor: { xs: palette.secondary.main, md: "transparent" },
+                backgroundColor: { xs: palette.secondary.dark, md: "transparent" },
                 //backgroundImage: { xs: "none", md: `url(${footer})` },
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "bottom left",
@@ -168,7 +168,7 @@ const Footer = () => {
             <Box
                 sx={{
                     mx: "10%",
-                    mt: "3rem",
+                    //mt: "3rem",
                     p: "2rem",
                     display: "flex",
                     flexDirection: { xs: "column", md: "row" },
