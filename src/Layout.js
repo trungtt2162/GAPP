@@ -21,7 +21,6 @@ const Layout = (props) => {
         <div className="App">
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-
                 <Routes>
                     <Route path="/" element={<App />} >
                         <Route path="users" element={<></>} />

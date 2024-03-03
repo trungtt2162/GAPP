@@ -1,5 +1,5 @@
 import { Button, IconButton, useMediaQuery, useTheme } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import { Menu, Close } from "@mui/icons-material";
@@ -9,6 +9,8 @@ import { theme } from "../../theme";
 
 const Navbar = () => {
     const { palette } = useTheme(theme);
+    const navigate = useNavigate();
+
     const location = useLocation();
     const [url, setUrl] = useState(null);
     const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -78,12 +80,11 @@ const Navbar = () => {
                                 backgroundColor: "transparent",
                                 "&:hover": { color: palette.primary.main },
                             }}
+                            onClick={() => { navigate('/login') }}
                         >
-                            <Link
-                                to="/login"
-                            >
-                                Signin
-                            </Link>
+                           
+                                Đăng nhập
+                            
                         </Button>
                         <Button
                             variant="text"
@@ -95,12 +96,9 @@ const Navbar = () => {
                                 boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
                                 "&:hover": { color: palette.primary.main },
                             }}
+                            onClick={() => { navigate('/register') }}
                         >
-                            <Link
-                                to="/register"
-                            >
-                                Register
-                            </Link>
+                            Đăng kí                      
                         </Button>
                     </Box>
                 </>

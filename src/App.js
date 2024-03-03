@@ -5,8 +5,6 @@ import Home from './components/Page/Home';
 
 const App = () => {
   return (
-
-
     <div className="App">
       <div className='header-container'>
         <Navbar />
