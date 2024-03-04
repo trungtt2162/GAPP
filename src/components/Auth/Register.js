@@ -133,8 +133,8 @@ const Register = (props) => {
                         >Create my free account</button>
                     </div>
                     <div className='text-center'>
-                        {/* <span className='back' onClick={() => { navigate('/') }}> */}
-                        {/* &#60;&#60; Go to Homepage</span> */}
+                        <span className='back' onClick={() => { navigate('/') }}>
+                            &#60;&#60; Go to Homepage</span>
                     </div>
                 </div>
             </div>
