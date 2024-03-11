@@ -1,4 +1,5 @@
 ﻿using GenealogyCommon.Models;
+using GenealogyCommon.Models.Authen;
 using GenealogyDL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,11 @@ namespace GenealogyDL.Implements
     {
         public UserDL(IDBContextFactory dbContextFactory) : base(dbContextFactory)
         {
-
-
         }
 
+        public Task<bool> SaveCredential(Credential credential)
+        {
+            
+        }
     }
 }
