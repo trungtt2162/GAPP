@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenealogyAPI", "GenealogyAPI\GenealogyAPI.csproj", "{7968314B-AA7F-4F4F-BEBA-D6B9E80D32F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenealogyBL", "GenealogyBL\GenealogyBL.csproj", "{B66B2957-C7E4-4AC3-AF02-ADF1E0197AE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenealogyDL", "GenealogyDL\GenealogyDL.csproj", "{78FFE214-071C-452C-AA57-203E55896375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenealogyCommon", "GenealogyCommon\GenealogyCommon.csproj", "{92F7064D-48EF-43F8-A083-16B9788FEA7E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7968314B-AA7F-4F4F-BEBA-D6B9E80D32F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7968314B-AA7F-4F4F-BEBA-D6B9E80D32F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7968314B-AA7F-4F4F-BEBA-D6B9E80D32F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7968314B-AA7F-4F4F-BEBA-D6B9E80D32F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B66B2957-C7E4-4AC3-AF02-ADF1E0197AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B66B2957-C7E4-4AC3-AF02-ADF1E0197AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B66B2957-C7E4-4AC3-AF02-ADF1E0197AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B66B2957-C7E4-4AC3-AF02-ADF1E0197AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78FFE214-071C-452C-AA57-203E55896375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78FFE214-071C-452C-AA57-203E55896375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78FFE214-071C-452C-AA57-203E55896375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78FFE214-071C-452C-AA57-203E55896375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92F7064D-48EF-43F8-A083-16B9788FEA7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92F7064D-48EF-43F8-A083-16B9788FEA7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92F7064D-48EF-43F8-A083-16B9788FEA7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92F7064D-48EF-43F8-A083-16B9788FEA7E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DD163DF-12B7-4E67-9260-913D99E55E76}
+	EndGlobalSection
+EndGlobal
