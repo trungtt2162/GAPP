@@ -10,10 +10,8 @@ namespace GenealogyCommon.Models.Authen
     [Table("user_password")]
     public class Credential: BaseModel
     {
-        [Column("user_name")]
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
-        [Column("password")]
         public string Password { get; set; }
     }
 }

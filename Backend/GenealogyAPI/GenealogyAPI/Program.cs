@@ -1,8 +1,11 @@
 using GenealogyAPI.Extensions;
 using GenealogyAPI.Infrastructure;
+using GenealogyAPI.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,14 +32,14 @@ builder.Services.AddAuthentication(x =>
     x.SaveToken = true;
     x.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
+        ValidateIssuer = false,
         ValidIssuer = jwtTokenConfig.Issuer,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
         ValidAudience = jwtTokenConfig.Audience,
         ValidateAudience = true,
         ValidateLifetime = true,
-        ClockSkew = TimeSpan.FromMinutes(1)
+        ClockSkew = TimeSpan.FromMinutes(5)
     };
 });
 builder.Services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
@@ -73,7 +76,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<JwtMiddleware>();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

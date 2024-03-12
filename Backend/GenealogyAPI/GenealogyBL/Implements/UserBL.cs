@@ -6,6 +6,7 @@ using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace GenealogyBL.Implements
 {
@@ -20,12 +21,6 @@ namespace GenealogyBL.Implements
             _userDL.InitializeDatabaseContext(conn ?? "");
             _passwordHasher = passwordHasher;
         }
-        private readonly Dictionary<string, string> _users = new()
-        {
-            { "test1", "password1" },
-            { "test2", "password2" },
-            { "admin", "securePassword" }
-        };
 
         public bool IsValidUserCredentials(string userName, string password)
         {
@@ -33,21 +28,25 @@ namespace GenealogyBL.Implements
             {
                 return false;
             }
-
-            return _users.TryGetValue(userName, out var p) && p == password;
+            var user = _userDL.GetUserPassword<Credential>(userName).Result;
+            if (user == null)
+            {
+                return false;
+            }
+            return _passwordHasher.ValidateHashPassword(password, user.Password).Result;
         }
 
         public bool IsAnExistingUser(string userName)
         {
-            return _users.ContainsKey(userName);
+            return _userDL.CheckUserExist(userName).Result;
         }
 
         public string GetUserRole(string userName)
         {
-            if (!IsAnExistingUser(userName))
-            {
-                return string.Empty;
-            }
+            //if (!IsAnExistingUser(userName))
+            //{
+            //    return string.Empty;
+            //}
 
             if (userName == "admin")
             {
@@ -67,15 +66,16 @@ namespace GenealogyBL.Implements
             return false;
         }
 
-        public Task<bool> Create(User user)
+        public async Task<object> Create(User user)
         {
-            throw new NotImplementedException();
+            var lastId =  await _userDL.Create(user);
+            return null;
         }
 
         public async Task<bool> SaveCredential(Credential credential)
         {
             credential.Password = await _passwordHasher.HashPassword(credential.Password);
-
+            return await _userDL.SaveCredential(credential);
         }
     }
 

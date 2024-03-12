@@ -1,9 +1,11 @@
 ﻿using Dapper;
 using GenealogyCommon.Utils;
 using GenealogyDL.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,11 +16,13 @@ namespace GenealogyDL.Implements
     {
         protected readonly IDBContextFactory _context;
         protected string _tableName;
+        private readonly IWebHostEnvironment _env;
 
-        public BaseDL(IDBContextFactory dapperDatabaseContextFactory)
+        public BaseDL(IDBContextFactory dapperDatabaseContextFactory, IWebHostEnvironment env)
         {
             _context = dapperDatabaseContextFactory ;
             _tableName = Utilities.GetEntityName<T>();
+            _env = env ;
         }
         #region Properties
 
@@ -28,7 +32,7 @@ namespace GenealogyDL.Implements
         {
             var res = new List<T>();
 
-            res = (await GetEntitiesAsync($"SELECT * FROM {_tableName} WHERE  {_tableName}ID = @id;", new { id = id.ToString() })).AsList();
+            //s = (await GetEntitiesAsync($"SELECT * FROM {_tableName} WHERE  {_tableName}ID = @id;", new { id = id.ToString() })).AsList();
 
             if (res.Count > 0)
             {
@@ -36,54 +40,41 @@ namespace GenealogyDL.Implements
             }
             return null;
         }
-        public virtual async Task<IEnumerable<T>> GetEntitiesAsync(string commandText, object param = null)
+
+        public async Task<int> ExecuteAsync(string commandText, object param = null)
         {
-            using (var _dbContext = _context.CreateDatabaseContext(ConnectionString))
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
             {
-                IDataReader sqlDataReader = await _dbContext.ExecuteReaderAsync(commandText, param);
-                return ReadData(sqlDataReader);
+                return await dbContext.ExecuteAsync(commandText, param);
             }
         }
-        protected IEnumerable<T> ReadData(IDataReader sqlDataReader)
-        {
-            var res = new List<T>();
-            while (sqlDataReader.Read())
-            {
-                var entity = Activator.CreateInstance<T>();
-                for (int i = 0; i < sqlDataReader.FieldCount; i++)
-                {
-                    var fieldType = sqlDataReader.GetDataTypeName(i);
-                    var fieldName = sqlDataReader.GetName(i);
-                    var fieldValue = sqlDataReader.GetValue(i);
-                    var property = entity.GetType().GetProperty(fieldName);
-                    if (fieldValue != System.DBNull.Value && property != null)
-                    {
-                        if (fieldType == "BIT")
-                        {
-                            if ((UInt64)fieldValue == 0) property.SetValue(entity, false);
-                            else if ((UInt64)fieldValue == 1) property.SetValue(entity, true);
-                            continue;
-                        }
 
-                        if ((property.PropertyType == typeof(Guid) || property.PropertyType == typeof(Guid?)) && fieldValue.GetType() == typeof(String))
-                        {
-                            property.SetValue(entity, Guid.Parse((string)fieldValue));
-                        }
-                        else
-                        {
-                            property.SetValue(entity, fieldValue);
-                        }
-                    }
-                }
-                res.Add(entity);
+        public async Task<P> ExecuteScalarAsync<P>(string commandText, object param = null)
+        {
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return await dbContext.ExecuteScalarAsync<P>(commandText, param);
             }
-            return res;
+        }
+
+        public async Task<P> QueryFirstOrDefaultAsync<P>(string procName, object param = null, CommandType commandType = CommandType.StoredProcedure)
+        {
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return await dbContext.QueryFirstOrDefaultAsync<P>(procName, param, commandType);
+            }
+        }
+
+        public string GetFileSql(string fileName)
+        {
+            return Utilities.GeFileContent(fileName, _env);
         }
 
         public void InitializeDatabaseContext(string connectionString)
         {
             ConnectionString = connectionString;
         }
+
         #endregion
     }
 }

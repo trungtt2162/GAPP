@@ -31,8 +31,10 @@ namespace GenealogyDL.Interfaces
         object ExecuteScalar(string commandText, object param = null, int? commandTimeout = null, CommandType? commandType = null);
 
 
-        Task<object> ExecuteScalarAsync(string commandText, object param = null, int? commandTimeout = null, CommandType? commandType = null);
-        object QueryProc(string procText, object param = null, CommandType commandType = CommandType.StoredProcedure);
+        Task<T> ExecuteScalarAsync<T>(string commandText, object param = null, int? commandTimeout = null, CommandType? commandType = null);
+        Task<IEnumerable<T>> Query<T>(string procText, object param = null, CommandType commandType = CommandType.StoredProcedure);
+
+        Task<T> QueryFirstOrDefaultAsync<T>(string procName, object param = null, CommandType commandType = CommandType.StoredProcedure);
 
     }
 }

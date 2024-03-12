@@ -19,7 +19,7 @@ namespace GenealogyBL.Interfaces
 
         Task<bool> CheckExistUser(string userName);
 
-        Task<bool> Create(User user);
+        Task<object> Create(User user);
 
         Task<bool> SaveCredential(Credential credential);
     }

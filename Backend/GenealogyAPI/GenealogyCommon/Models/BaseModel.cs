@@ -9,16 +9,12 @@ namespace GenealogyCommon.Models
 {
     public class BaseModel
     {
-        [Column("modified_by")]
-        public int ModifiedBy { get; set; }
+        public string ModifiedBy { get; set; }
 
-        [Column("modified_date")]
-        public int ModifiedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
-        [Column("created_by")]
-        public int CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
 
-        [Column("created_date")]
-        public int CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

@@ -12,8 +12,7 @@
 
         public Task StartAsync(CancellationToken stoppingToken)
         {
-            // remove expired refresh tokens from cache every minute
-            _timer = new Timer(DoWork!, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+            _timer = new Timer(DoWork!, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
             return Task.CompletedTask;
         }
 

@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -98,26 +99,36 @@ namespace GenealogyDL.DBContext
             }
         }
 
-        public object QueryProc(string procText, object param = null, CommandType commandType = CommandType.StoredProcedure)
+        public async Task<IEnumerable<T>> Query<T>(string procText, object param = null, CommandType commandType = CommandType.StoredProcedure)
         {
             using (var transac = _dbConnection.BeginTransaction())
             {
-                var result = _dbConnection.Query<object>(procText, param, commandType: commandType);
+                var result = await _dbConnection.QueryAsync<T>(procText, param, commandType: commandType);
                 transac.Commit();
                 return result;
             }
         }
 
-        public async Task<object> ExecuteScalarAsync(string commandText, object param = null, int? commandTimeout = null, CommandType? commandType = null)
+        public async Task<T> ExecuteScalarAsync<T>(string commandText, object param = null, int? commandTimeout = null, CommandType? commandType = null)
         {
             using (var transac = _dbConnection.BeginTransaction())
             {
-                var result = await _dbConnection.ExecuteScalarAsync(commandText, param, transac, commandTimeout, commandType);
+                var result = await _dbConnection.ExecuteScalarAsync<T>(commandText, param, transac, commandTimeout, commandType);
                 transac.Commit();
                 return result;
             }
         }
 
+
+        public async Task<T> QueryFirstOrDefaultAsync<T>(string procName, object param = null, CommandType commandType = CommandType.StoredProcedure)
+        {
+            using (var transac = _dbConnection.BeginTransaction())
+            {
+                var result = await _dbConnection.QueryFirstOrDefaultAsync<T>(procName, param, commandType: commandType);
+                transac.Commit();
+                return result;
+            }
+        }
 
         public void Dispose()
         {

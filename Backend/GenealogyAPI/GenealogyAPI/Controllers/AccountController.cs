@@ -1,4 +1,5 @@
-﻿using GenealogyAPI.Infrastructure;
+﻿using AutoMapper;
+using GenealogyAPI.Infrastructure;
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
@@ -18,11 +19,16 @@ namespace GenealogyAPI.Controllers
     {
         private readonly IJwtAuthManager _jwtAuthManager;
         private readonly IUserBL _userBL;
-        public AccountController(IJwtAuthManager jwtAuthManager, IUserBL userBL)
+        private readonly IMapper _mapper;
+        private readonly TokenBlacklist _tokenBlacklist;
+        public AccountController(IJwtAuthManager jwtAuthManager, IUserBL userBL, IMapper mapper, TokenBlacklist tokenBlacklist)
         {
             _jwtAuthManager = jwtAuthManager;
             _userBL = userBL;
+            _mapper = mapper;
+            _tokenBlacklist = tokenBlacklist;
         }
+
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<object>> RegisterUser(UserRegister userRegister)
@@ -37,18 +43,8 @@ namespace GenealogyAPI.Controllers
             {
                 return BadRequest("Duplicate user");
             }
-            await _userBL.SaveCredential(new Credential());
-            await _userBL.Create(new User());
-            var user = new User
-            {
-                Username = model.Username,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Password = await this._hasher.HashAsync(model.Password),
-                Role = Role.USER
-            };
-
-            this._usersRepository.Create(user);
+            await _userBL.SaveCredential(_mapper.Map<Credential>(userRegister));
+            await _userBL.Create(_mapper.Map<User>(userRegister));
 
             return Ok("Created");
         }
@@ -72,8 +68,7 @@ namespace GenealogyAPI.Controllers
             var claims = new[]
             {
             new Claim(ClaimTypes.Name,request.UserName),
-            new Claim(ClaimTypes.Role, role),
-            new Claim("genealogy_id", "pnthuan")
+            new Claim(ClaimTypes.Role, role)
             };
 
             var jwtResult = _jwtAuthManager.GenerateTokens(request.UserName, claims, DateTime.Now);
@@ -91,7 +86,9 @@ namespace GenealogyAPI.Controllers
         {
             var userName = User.Identity?.Name!;
             _jwtAuthManager.RemoveRefreshTokenByUserName(userName);
-            return Ok();
+            string token = HttpContext.Request.Headers["Authorization"];
+            _tokenBlacklist.AddToken(token);
+            return Ok("Logout success");
         }
     }
 }
