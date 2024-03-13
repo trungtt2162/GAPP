@@ -53,7 +53,7 @@ namespace GenealogyBL.Implements
                 return UserRoles.Admin;
             }
 
-            return UserRoles.BasicUser;
+            return UserRoles.Account;
         }
 
         public Task<User> GetUserInfo(string userName)
@@ -81,7 +81,13 @@ namespace GenealogyBL.Implements
 
     public static class UserRoles
     {
+        public const string Guest = nameof(Guest);
+        public const string Account = nameof(Account);
         public const string Admin = nameof(Admin);
-        public const string BasicUser = nameof(BasicUser);
+        public const string SuperAdmin = nameof(SuperAdmin);
+    }
+
+    public static class Permission {
+        
     }
 }

@@ -16,6 +16,7 @@ namespace GenealogyAPI.Extensions
             services.AddBLExtension(configuration);
             services.AddDLExtension(configuration);
             services.AddAutoMapper(typeof(UserMapper));
+            services.AddScoped<IAuthService, AuthService>();
         }
     }
 }

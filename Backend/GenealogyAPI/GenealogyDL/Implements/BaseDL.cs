@@ -17,12 +17,14 @@ namespace GenealogyDL.Implements
         protected readonly IDBContextFactory _context;
         protected string _tableName;
         private readonly IWebHostEnvironment _env;
+        private readonly IAuthService _authService;
 
-        public BaseDL(IDBContextFactory dapperDatabaseContextFactory, IWebHostEnvironment env)
+        public BaseDL(IDBContextFactory dapperDatabaseContextFactory, IWebHostEnvironment env, IAuthService authService)
         {
             _context = dapperDatabaseContextFactory ;
-            _tableName = Utilities.GetEntityName<T>();
-            _env = env ;
+            _tableName = Utilities.GetTableName(T);
+            _env = env;
+            _authService = authService;
         }
         #region Properties
 
@@ -30,15 +32,28 @@ namespace GenealogyDL.Implements
         public string TableName { get => _tableName; }
         public async Task<T> GetById(object id)
         {
-            var res = new List<T>();
-
-            //s = (await GetEntitiesAsync($"SELECT * FROM {_tableName} WHERE  {_tableName}ID = @id;", new { id = id.ToString() })).AsList();
-
-            if (res.Count > 0)
+            string sql = $"SELECT * FROM {_tableName} WHERE  Id = @id;";
+            var param = new Dictionary<string, object> (){
+                ["@Id"] = id
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
             {
-                return res[0];
+                return await dbContext.QueryFirstOrDefaultAsync<T>(sql, param, commandType: System.Data.CommandType.Text);
             }
-            return null;
+  
+        }
+
+        public async Task<bool> DeleteById(object id)
+        {
+            string sql = $"DELETE FROM {_tableName} WHERE  Id = @id;";
+            var param = new Dictionary<string, object> (){
+                ["@Id"] = id
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return await dbContext.ExecuteAsync<T>(procName, param,);
+            }
+  
         }
 
         public async Task<int> ExecuteAsync(string commandText, object param = null)
@@ -73,6 +88,22 @@ namespace GenealogyDL.Implements
         public void InitializeDatabaseContext(string connectionString)
         {
             ConnectionString = connectionString;
+        }
+
+        public Dictionary<string, object> GetParamInsertDB<T>(){
+            var param = Utilities.CreateParamDB(user);
+            param["p_CreatedDate"] = DateTime.Now;
+            param["p_CreatedBy"] = _authService.GetUserName();
+            param["p_ModifiedBy"] = _authService.GetUserName();
+            param["p_ModifiedDate"] = DateTime.Now;
+            return param;
+        }
+
+        public Dictionary<string, object> GetParamUpdateDB<T>(){
+            var param = Utilities.CreateParamDB(user);
+            param["p_ModifiedBy"] = _authService.GetUserName();
+            param["p_ModifiedDate"] = DateTime.Now;
+            return param;
         }
 
         #endregion

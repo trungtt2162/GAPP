@@ -11,11 +11,6 @@ namespace GenealogyCommon.Utils
 {
     public class Utilities
     {
-        public static string GetEntityName<T>()
-        {
-            var entity = Activator.CreateInstance<T>();
-            return entity.GetType().Name;
-        }
 
         public static string GeFileContent(string fileName, IWebHostEnvironment webHostEnvironment)
         {
@@ -53,5 +48,25 @@ namespace GenealogyCommon.Utils
             }
             return param;
         }
+
+
+        public static string GetTableName<T>() where T : class
+        {
+            Type type = typeof(T);
+            object[] attributes = type.GetCustomAttributes(true);
+
+            foreach (var attribute in attributes)
+            {
+                if (attribute is TableAttribute)
+                {
+                    TableAttribute tableAttribute = (TableAttribute)attribute;
+                    return tableAttribute.Name;
+                }
+            }
+
+            return null;
+        }
+
+        
     }
 }

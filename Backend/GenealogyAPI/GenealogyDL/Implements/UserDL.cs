@@ -33,7 +33,7 @@ namespace GenealogyDL.Implements
             };
             return (await this.ExecuteAsync(sql, param)) > 0;
         }
-
+#region User
         public async Task<int> Create(User user)
         {
             var proc = "Proc_user_Insert";
@@ -41,7 +41,7 @@ namespace GenealogyDL.Implements
             param["p_CreatedDate"] = DateTime.Now;
             return await this.QueryFirstOrDefaultAsync<int>(proc, param);
         }
-
+#endregion
         public async Task<bool> CheckUserExist(string userName)
         {
             var sql = "select UserName from user where UserName = @UserName";
@@ -69,5 +69,7 @@ namespace GenealogyDL.Implements
             return user;
 
         }
+
+        public 
     }
 }

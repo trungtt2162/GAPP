@@ -12,6 +12,7 @@ namespace GenealogyBL
             services.AddScoped(typeof(IBaseBL<>), typeof(BaseBL<>));
             services.AddScoped<IUserBL, UserBL>();
 
+
         }
 
     }
