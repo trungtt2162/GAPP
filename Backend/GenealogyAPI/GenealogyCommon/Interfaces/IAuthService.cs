@@ -11,6 +11,6 @@ namespace GenealogyCommon.Interfaces
         string GetUserName();
 
         string GetRoleCode();
-    }
+    } 
 }
-  
+   
