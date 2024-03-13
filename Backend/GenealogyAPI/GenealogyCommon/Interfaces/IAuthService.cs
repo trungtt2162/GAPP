@@ -13,3 +13,4 @@ namespace GenealogyCommon.Interfaces
         string GetRoleCode();
     }
 }
+  
