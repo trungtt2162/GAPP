@@ -42,10 +42,33 @@ namespace GenealogyDL.Implements
             param["p_CreatedDate"] = DateTime.Now;
             return await this.QueryFirstOrDefaultAsync<int>(proc, param);
         }
-#endregion
+
+        public async Task<UserRole> GetUserRole(int userID)
+        {
+            var sql = "select * from user_role where UserID = @userID";
+            var param = new Dictionary<string, object>()
+            {
+                ["UserID"] = userID
+            };
+            var userRole = await this.QueryFirstOrDefaultAsync<UserRole>(sql, param, commandType: System.Data.CommandType.Text);
+            return userRole;
+        }
+
+        public async Task<User> GetUserByUserName(string userName)
+        {
+            var sql = "select * from user where UserName = @UserName";
+            var param = new Dictionary<string, object>()
+            {
+                ["UserName"] = userName
+            };
+            var user = await this.ExecuteScalarAsync<User>(sql, param);
+            return user;
+
+        }
+        #endregion
         public async Task<bool> CheckUserExist(string userName)
         {
-            var sql = "select UserName from user where UserName = @UserName";
+            var sql = "select UserName from user_password where UserName = @UserName";
             var param = new Dictionary<string, object>()
             {
                 ["UserName"] = userName
@@ -71,6 +94,15 @@ namespace GenealogyDL.Implements
 
         }
 
-         
+        #region Supper Admin
+        public async Task<int> CreateAdmin(User user)
+        {
+            var proc = "Proc_superadmin_insert_admin";
+            var param = Utilities.CreateParamDB(user);
+            param["p_CreatedDate"] = DateTime.Now;
+            return await this.QueryFirstOrDefaultAsync<int>(proc, param);
+        }
+        #endregion
+
     }
 }

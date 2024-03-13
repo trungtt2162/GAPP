@@ -54,7 +54,7 @@ namespace GenealogyAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public ActionResult Login([FromBody] LoginRequest request)
+        public async Task<ActionResult> Login([FromBody] LoginRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace GenealogyAPI.Controllers
                 return Unauthorized();
             }
 
-            var role = _userBL.GetUserRole(request.UserName);
+            var role = await _userBL.GetUserRole(request.UserName);
             var claims = new[]
             {
             new Claim(ClaimTypes.Name,request.UserName),

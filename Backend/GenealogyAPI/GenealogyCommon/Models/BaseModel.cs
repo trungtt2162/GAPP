@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper.Configuration.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace GenealogyCommon.Models
 {
     public class BaseModel
     {
+        [Ignore]
+        public int Id { get; set; }
         public string ModifiedBy { get; set; }
 
         public DateTime ModifiedDate { get; set; }

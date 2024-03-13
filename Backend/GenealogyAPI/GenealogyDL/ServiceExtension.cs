@@ -11,9 +11,11 @@ namespace GenealogyDL
     {
         public static void AddDLExtension(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IDBContextFactory, DBContextFactory>();
+            services.AddScoped<IDBContextFactory, DBContextFactory>();
             services.AddScoped(typeof(IBaseDL<>), typeof(BaseDL<>));
             services.AddScoped<IUserDL, UserDL>();
+            services.AddScoped<IGenealogyDL, GenealogyTreeDL>();
+            services.AddScoped<IPermissionDL, PermissionDL>();
         }
 
     }

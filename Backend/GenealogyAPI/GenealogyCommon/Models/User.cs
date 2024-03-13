@@ -12,9 +12,6 @@ namespace GenealogyCommon.Models
 {
     public class User: BaseModel
     {
-        [Ignore]
-        public int Id { get; set; }
-
         public int IdGenealogy { get; set; }
         public int IdFamilyTree { get; set; }
         public string FirstName { get; set; }

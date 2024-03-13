@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace GenealogyBL.Interfaces
 {
-    public interface IBaseBL<T> 
+    public interface ISuperAdminBL: IBaseBL<User>
     {
-        Task<T> GetById(object id);
-        Task<object> Create(T obj);
-        Task<object> Update(T obj);
-        Task<object> Delete(T obj);
 
+        Task<object> Create(User user, Genealogy genealogy);
     }
 }

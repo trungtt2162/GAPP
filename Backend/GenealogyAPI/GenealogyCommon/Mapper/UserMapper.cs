@@ -14,6 +14,8 @@ namespace GenealogyCommon.Mapper
         public UserMapper() { 
             CreateMap<UserRegister, User>();
             CreateMap<UserRegister, Credential>();
+            CreateMap<UserAdmin, User>();
+            CreateMap<UserAdmin, Genealogy>();
         }
     }
 }

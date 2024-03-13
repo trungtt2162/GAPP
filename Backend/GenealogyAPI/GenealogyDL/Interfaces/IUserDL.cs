@@ -18,5 +18,9 @@ namespace GenealogyDL.Interfaces
         Task<bool> CheckUserExist(string userName);
 
         Task<T> GetUserPassword<T>(string userName);
+
+        Task<int> CreateAdmin(User user);
+        Task<UserRole> GetUserRole(int userID);
+        Task<User> GetUserByUserName(string userName);
     }
 }

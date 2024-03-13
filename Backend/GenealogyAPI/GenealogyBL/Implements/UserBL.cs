@@ -1,4 +1,5 @@
 ﻿using GenealogyBL.Interfaces;
+using GenealogyCommon.Constant;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
@@ -14,11 +15,14 @@ namespace GenealogyBL.Implements
     {
         private readonly IUserDL _userDL;
         private readonly IPasswordHasher _passwordHasher;
-        public UserBL(IUserDL userDL, IPasswordHasher passwordHasher, IWebHostEnvironment env) : base(env, userDL)
+        private readonly IPermissionDL _permissionDL;
+        public UserBL(IPermissionDL permissionDL,IUserDL userDL, IPasswordHasher passwordHasher, IWebHostEnvironment env) : base(env, userDL)
         {
             _userDL = userDL;
+            _permissionDL = permissionDL;
             var conn = _configuration.GetConnectionString("Genealogy_DB");
             _userDL.InitializeDatabaseContext(conn ?? "");
+            _permissionDL.InitializeDatabaseContext(conn ?? "");
             _passwordHasher = passwordHasher;
         }
 
@@ -36,24 +40,12 @@ namespace GenealogyBL.Implements
             return _passwordHasher.ValidateHashPassword(password, user.Password).Result;
         }
 
-        public bool IsAnExistingUser(string userName)
+
+        public async Task<string> GetUserRole(string userName)
         {
-            return _userDL.CheckUserExist(userName).Result;
-        }
-
-        public string GetUserRole(string userName)
-        {
-            //if (!IsAnExistingUser(userName))
-            //{
-            //    return string.Empty;
-            //}
-
-            if (userName == "admin")
-            {
-                return UserRoles.Admin;
-            }
-
-            return UserRoles.Account;
+            var user = await _userDL.GetUserByUserName(userName);
+            var userRole = await _userDL.GetUserRole(user.Id);
+            return userRole.RoleCode;
         }
 
         public Task<User> GetUserInfo(string userName)
@@ -63,12 +55,20 @@ namespace GenealogyBL.Implements
 
         public async Task<bool> CheckExistUser(string userName)
         {
-            return false;
+            return _userDL.CheckUserExist(userName).Result;
         }
 
         public async Task<object> Create(User user)
         {
             var lastId =  await _userDL.Create(user);
+            var param = new Dictionary<string, object>()
+            {
+                ["p_UserID"] = lastId,
+                ["p_RoleCode"] = nameof(UserRoles.Account),
+                ["P_IdGenealogy"] = -1,
+                ["p_ModifiedBy"] = "system"
+            };
+            await _permissionDL.InsertPermission(param);
             return null;
         }
 
@@ -79,15 +79,4 @@ namespace GenealogyBL.Implements
         }
     }
 
-    public static class UserRoles
-    {
-        public const string Guest = nameof(Guest);
-        public const string Account = nameof(Account);
-        public const string Admin = nameof(Admin);
-        public const string SuperAdmin = nameof(SuperAdmin);
-    }
-
-    public static class Permission {
-        
-    }
 }

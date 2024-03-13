@@ -21,9 +21,25 @@ namespace GenealogyBL.Implements
             _configuration = ConfigService.GetConfiguration(env);
             _baseDL = baseDL;
         }
+
+        public Task<object> Create(T obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<object> Delete(T obj)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<T> GetById(object id)
         {
             return await _baseDL.GetById(id);
+        }
+
+        public Task<object> Update(T obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

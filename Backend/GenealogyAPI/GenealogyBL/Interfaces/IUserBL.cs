@@ -11,15 +11,12 @@ namespace GenealogyBL.Interfaces
 {
     public interface IUserBL: IBaseBL<User>
     {
-        bool IsAnExistingUser(string userName);
         bool IsValidUserCredentials(string userName, string password);
-        string GetUserRole(string userName);
+        Task<string> GetUserRole(string userName);
 
         Task<User> GetUserInfo(string userName);
 
         Task<bool> CheckExistUser(string userName);
-
-        Task<object> Create(User user);
 
         Task<bool> SaveCredential(Credential credential);
     }

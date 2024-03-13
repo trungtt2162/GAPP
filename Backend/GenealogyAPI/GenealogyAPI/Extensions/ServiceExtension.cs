@@ -11,6 +11,7 @@ namespace GenealogyAPI.Extensions
     {
         public static void AddServiceExtensions(this IServiceCollection services, IConfiguration configuration)
         {
+
             services.AddSingleton<TokenBlacklist>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddBLExtension(configuration);
