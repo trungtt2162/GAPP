@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Utils;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
@@ -22,7 +23,7 @@ namespace GenealogyDL.Implements
         public BaseDL(IDBContextFactory dapperDatabaseContextFactory, IWebHostEnvironment env, IAuthService authService)
         {
             _context = dapperDatabaseContextFactory ;
-            _tableName = Utilities.GetTableName(T);
+            _tableName = Utilities.GetTableName<T>();
             _env = env;
             _authService = authService;
         }
@@ -51,7 +52,7 @@ namespace GenealogyDL.Implements
             };
             using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
             {
-                return await dbContext.ExecuteAsync<T>(procName, param,);
+                return (await dbContext.ExecuteAsync(sql, param)) > 0;
             }
   
         }
@@ -90,8 +91,8 @@ namespace GenealogyDL.Implements
             ConnectionString = connectionString;
         }
 
-        public Dictionary<string, object> GetParamInsertDB<T>(){
-            var param = Utilities.CreateParamDB(user);
+        public Dictionary<string, object> GetParamInsertDB<T>(T obj){
+            var param = Utilities.CreateParamDB(obj);
             param["p_CreatedDate"] = DateTime.Now;
             param["p_CreatedBy"] = _authService.GetUserName();
             param["p_ModifiedBy"] = _authService.GetUserName();
@@ -99,8 +100,8 @@ namespace GenealogyDL.Implements
             return param;
         }
 
-        public Dictionary<string, object> GetParamUpdateDB<T>(){
-            var param = Utilities.CreateParamDB(user);
+        public Dictionary<string, object> GetParamUpdateDB<T>(T obj){
+            var param = Utilities.CreateParamDB(obj);
             param["p_ModifiedBy"] = _authService.GetUserName();
             param["p_ModifiedDate"] = DateTime.Now;
             return param;

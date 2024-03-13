@@ -1,4 +1,5 @@
-﻿using GenealogyCommon.Models;
+﻿using GenealogyCommon.Interfaces;
+using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
 using GenealogyCommon.Utils;
 using GenealogyDL.Interfaces;
@@ -15,7 +16,7 @@ namespace GenealogyDL.Implements
 {
     public class UserDL : BaseDL<User>, IUserDL
     {
-        public UserDL(IDBContextFactory dbContextFactory, IWebHostEnvironment env) : base(dbContextFactory, env)
+        public UserDL(IDBContextFactory dbContextFactory, IWebHostEnvironment env, IAuthService authService) : base(dbContextFactory, env, authService)
         {
         }
 
@@ -70,6 +71,6 @@ namespace GenealogyDL.Implements
 
         }
 
-        public 
+         
     }
 }

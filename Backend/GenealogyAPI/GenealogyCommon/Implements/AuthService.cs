@@ -1,17 +1,9 @@
-using GenealogyBL.Interfaces;
-using GenealogyCommon.Configuration;
-using GenealogyDL.Interfaces;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GenealogyCommon.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace GenealogyCommon.Implements
 {
-    public class AuthService
+    public class AuthService: IAuthService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         public AuthService(IHttpContextAccessor httpContextAccessor)
@@ -20,11 +12,11 @@ namespace GenealogyCommon.Implements
         }
 
         public string GetUserName(){
-            return httpContext.User.FindFirst("UserName")?.Value;
+            return _httpContextAccessor.HttpContext.User.FindFirst("UserName")?.Value;
         }
 
         public string GetRoleCode(){
-            return httpContext.User.FindFirst("Role")?.Value;
+            return _httpContextAccessor.HttpContext.User.FindFirst("Role")?.Value;
         }
 
     }
