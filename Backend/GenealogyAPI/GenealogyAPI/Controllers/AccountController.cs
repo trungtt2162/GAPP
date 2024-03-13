@@ -3,9 +3,11 @@ using GenealogyAPI.Infrastructure;
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Cmp;
 using System.Data;
 using System.Security.Claims;
@@ -90,5 +92,34 @@ namespace GenealogyAPI.Controllers
             _tokenBlacklist.AddToken(token);
             return Ok("Logout success");
         }
+
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        {
+            try
+            {
+                var userName = User.Identity?.Name!;
+                if (string.IsNullOrWhiteSpace(request.RefreshToken))
+                {
+                    return Unauthorized();
+                }
+
+                var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
+                var jwtResult = _jwtAuthManager.Refresh(request.RefreshToken, accessToken ?? string.Empty, DateTime.Now);
+                return Ok(new LoginResult
+                {
+                    UserName = userName,
+                    Role = User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty,
+                    AccessToken = jwtResult.AccessToken,
+                    RefreshToken = jwtResult.RefreshToken.TokenString
+                });
+            }
+            catch (SecurityTokenException e)
+            {
+                return Unauthorized(e.Message); 
+            }
+        }
+
     }
 }
