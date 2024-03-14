@@ -1,6 +1,9 @@
 ﻿using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
+using GenealogyCommon.Implements;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
+using GenealogyCommon.Models.Authen;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,21 +20,35 @@ namespace GenealogyBL.Implements
         private readonly IUserDL _userDL;
         private readonly IGenealogyDL _genealDL;
         private readonly IPermissionDL _permissionDL;
-        public SuperAdminBL(IPermissionDL permissionDL, IUserDL userDL, IGenealogyDL genealDL, IWebHostEnvironment env) : base(env, userDL)
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IEmailSender _emailSender;
+        public SuperAdminBL(IEmailSender emailSender, IPasswordHasher passwordHasher, IPermissionDL permissionDL, IUserDL userDL, IGenealogyDL genealDL, IWebHostEnvironment env) : base(env, userDL)
         {
             _userDL = userDL;
             _genealDL = genealDL;
             _permissionDL = permissionDL;
+            _passwordHasher = passwordHasher;
+            _emailSender = emailSender;
             var conn = _configuration.GetConnectionString("Genealogy_DB");
             _userDL.InitializeDatabaseContext(conn ?? "");
             _permissionDL.InitializeDatabaseContext(conn ?? "");
             _genealDL.InitializeDatabaseContext(conn ?? "");
+            
         }
 
         public async Task<object> Create(User user, Genealogy genealogy)
         {
             var idGen = await _genealDL.Create(genealogy);
             var idUser = await _userDL.Create(user);
+            // Gen password default: 
+            var creden = new Credential()
+            {
+                UserName = user.Email,
+                Password = _passwordHasher.GenerateRandomPassword(12)
+            };
+            await _userDL.SaveCredential(creden);
+           // await _emailSender.SendEmailAsync("=", "xin chao", "xin chai");
+            // todo : Send mail
             var param = new Dictionary<string, object>()
             {
                 ["p_UserID"] = idUser,
@@ -40,6 +57,7 @@ namespace GenealogyBL.Implements
                 ["p_ModifiedBy"] = "superaddmin"
             };
             await _permissionDL.InsertPermission(param);
+            await _userDL.InsertUserRole(idUser, nameof(UserRoles.Admin));
             return null;
         }
 
@@ -51,7 +69,7 @@ namespace GenealogyBL.Implements
             var users = _userDL.GetAllUserByRole(UserRoles.Admin, -1).Result;
             if (users != null && users.Count > 0){
                 var con = new StringBuilder();
-                con.Append(" Id in ( ");
+                con.Append(" and Id in ( ");
                 users.ForEach(user =>
                 {
                     con.Append($" {user.Id},");

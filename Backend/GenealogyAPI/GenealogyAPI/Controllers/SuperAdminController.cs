@@ -23,7 +23,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("admin/paging")]
-        public async Task<ActionResult<object>> InsertAdmin(PageRequest paggingRequest)
+        public async Task<ActionResult<object>> GetPagingData(PageRequest paggingRequest)
         {
             return await _superAdminBL.GetPagingData(paggingRequest);
         }
@@ -52,7 +52,7 @@ namespace GenealogyAPI.Controllers
             return Ok("Created");
         }
 
-        [HttpDelete("admin/{id}")]
+        [HttpDelete("admin")]
         public async Task<ActionResult<object>> UpdateAdmin([FromQuery] int id)
         {
             if (!ModelState.IsValid)

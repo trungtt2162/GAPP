@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Net;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,12 +57,12 @@ namespace GenealogyDL.Implements
 
         public async Task<User> GetUserByUserName(string userName)
         {
-            var sql = "select * from user where UserName = @UserName";
+            var sql = "select * from user where Email = @UserName";
             var param = new Dictionary<string, object>()
             {
                 ["UserName"] = userName
             };
-            var user = await this.ExecuteScalarAsync<User>(sql, param);
+            var user = await this.QueryFirstOrDefaultAsync<User>(sql, param, commandType: System.Data.CommandType.Text);
             return user;
 
         }
@@ -94,8 +95,29 @@ namespace GenealogyDL.Implements
 
         }
 
-        public async Task<List<User>> GetAllUserByRole(string roleCode, int idGen){
-            return new List<User>();
+        public async Task<List<UserRole>> GetAllUserByRole(string roleCode, int idGen){
+            var sql = "select * from user_role where RoleCode = @RoleCode";
+            var param = new Dictionary<string, object>()
+            {
+                ["RoleCode"] = roleCode
+            };
+            var users = await this.Query<UserRole>(sql, param, commandType: System.Data.CommandType.Text);
+            if (users != null)
+            {
+                return users.ToList();
+            }
+            return new List<UserRole>();
+        }
+
+        public async Task<bool> InsertUserRole(int userID , string roleCode)
+        {
+            var sql = this.GetFileSql("insert_user_role.sql");
+            var param = new Dictionary<string, object>()
+            {
+                ["RoleCode"] = roleCode,
+                ["UserID"] = userID
+            };
+            return (await this.ExecuteAsync(sql, param)) > 0;
         }
 
         #region Supper Admin

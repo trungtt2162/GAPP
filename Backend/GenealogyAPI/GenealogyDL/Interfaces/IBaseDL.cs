@@ -19,6 +19,7 @@ namespace GenealogyDL.Interfaces
         Task<P> QueryFirstOrDefaultAsync<P>(string procName, object param = null, CommandType commandType = CommandType.StoredProcedure);
 
         Task<P> ExecuteScalarAsync<P>(string commandText, object param = null);
+        Task<IEnumerable<P>> Query<P>(string procName, object param = null, CommandType commandType = CommandType.StoredProcedure);
 
         #region  Data
         Task<T> GetById(object id);

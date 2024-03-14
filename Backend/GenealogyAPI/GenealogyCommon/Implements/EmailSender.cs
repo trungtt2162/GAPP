@@ -59,15 +59,16 @@ namespace GenealogyCommon.Implements
 
                 using (SmtpClient smtp = new SmtpClient(_emailSetting.ServerAddress, _emailSetting.ServerPort))
                 {
+                    smtp.UseDefaultCredentials = true;
                     smtp.Credentials = new NetworkCredential(_emailSetting.Username, _emailSetting.Password);
-                    smtp.EnableSsl = _emailSetting.ServerUseSsl;
+                    smtp.EnableSsl = true;
 
                     await smtp.SendMailAsync(mail);
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                //throw ex;
             }
         }
     }

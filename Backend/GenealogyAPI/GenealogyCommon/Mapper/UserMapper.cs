@@ -12,7 +12,8 @@ namespace GenealogyCommon.Mapper
     public class UserMapper: Profile
     {
         public UserMapper() { 
-            CreateMap<UserRegister, User>();
+            CreateMap<UserRegister, User>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Username));
             CreateMap<UserRegister, Credential>();
             CreateMap<UserAdmin, User>();
             CreateMap<UserAdmin, Genealogy>();

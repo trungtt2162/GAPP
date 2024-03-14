@@ -12,8 +12,5 @@ namespace GenealogyBL.Interfaces
 
         Task<object> Create(User user, Genealogy genealogy);
 
-        Task<bool> Update(User user);
-
-        
     }
 }

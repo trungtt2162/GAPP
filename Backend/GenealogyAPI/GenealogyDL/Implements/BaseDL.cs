@@ -95,6 +95,14 @@ namespace GenealogyDL.Implements
             }
         }
 
+        public async Task<IEnumerable<P>> Query<P>(string procName, object param = null, CommandType commandType = CommandType.StoredProcedure)
+        {
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return await dbContext.Query<P>(procName, param, commandType);
+            }
+        }
+
         public string GetFileSql(string fileName)
         {
             return Utilities.GeFileContent(fileName, _env);
@@ -130,9 +138,9 @@ namespace GenealogyDL.Implements
             }
             using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
             {
-                string sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
+                string sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} LIMIT @pageSize OFFSET  @offset";
                 string sqlCount = $@"SELECT COUNT(*) FROM {_tableName} WHERE {condition}";
-                var result = await dbContext.QueryMultipleAsync<T, int>($"{sqlData};{sqlCount}", new { offset = (pageNumber - 1) * pageSize, pageSize});
+                var result = await dbContext.QueryMultipleAsync<T, int>($"{sqlData};{sqlCount};", new { offset = (pageNumber - 1) * pageSize, pageSize}, commandType: CommandType.Text);
                 return new PageResult<T>
                 {
                     Data = result.Item1.ToList(),
