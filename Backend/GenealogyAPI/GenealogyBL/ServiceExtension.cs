@@ -12,7 +12,7 @@ namespace GenealogyBL
             services.AddScoped(typeof(IBaseBL<>), typeof(BaseBL<>));
             services.AddScoped<IUserBL, UserBL>();
             services.AddScoped<ISuperAdminBL, SuperAdminBL>();
-
+            services.AddScoped<IFamilyTreeBL, FamilyTreeBL>();
 
         }
 

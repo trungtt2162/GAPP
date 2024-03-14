@@ -24,7 +24,7 @@ namespace GenealogyBL.Implements
 
         public Task<object> Create(T obj)
         {
-            throw new NotImplementedException();
+            return await _baseDL.Create(obj);
         }
 
         public Task<bool> DeleteByID(T obj)
