@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GenealogyDL.Interfaces
 {
-    public interface IFamilyTree: IBaseDL<FamilyTree>
+    public interface IFamilyTreeDL: IBaseDL<FamilyTree>
     {
 
     }

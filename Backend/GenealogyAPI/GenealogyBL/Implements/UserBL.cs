@@ -72,7 +72,7 @@ namespace GenealogyBL.Implements
             // Gen password default: 
             var creden = new Credential(){
                 UserName = user.Email,
-                PassWord = _passwordHasher.GenerateRandomPassword(12)
+                Password = _passwordHasher.GenerateRandomPassword(12)
             };
             await SaveCredential(creden);
             // todo : Send mail

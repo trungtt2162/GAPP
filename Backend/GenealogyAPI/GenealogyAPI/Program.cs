@@ -1,6 +1,7 @@
 using GenealogyAPI.Extensions;
 using GenealogyAPI.Infrastructure;
 using GenealogyAPI.Middleware;
+using GenealogyCommon.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -65,7 +66,7 @@ builder.Services.AddSwaggerGen(c =>
         {securityScheme, Array.Empty<string>()}
     });
 });
-builder.Services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

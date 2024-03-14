@@ -1,5 +1,6 @@
 ﻿using GenealogyBL.Interfaces;
 using GenealogyCommon.Configuration;
+using GenealogyCommon.Models;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,14 +23,14 @@ namespace GenealogyBL.Implements
             _baseDL = baseDL;
         }
 
-        public Task<object> Create(T obj)
+        public async Task<object> Create(T obj)
         {
             return await _baseDL.Create(obj);
         }
 
-        public Task<bool> DeleteByID(T obj)
+        public async Task<bool> DeleteByID(int Id)
         {
-            return await _baseDL.DeleteByID(id);
+            return await _baseDL.DeleteById(Id);
         }
 
         public async Task<T> GetById(object id)
@@ -41,11 +42,11 @@ namespace GenealogyBL.Implements
         {
             return _baseDL.Update(obj);
         }
-        public Task<PageResult> GetPagingData(PagingRequest pagingRequest){
+        public async Task<PageResult<T>> GetPagingData(PageRequest pagingRequest){
             this.GetCustomParamPaging(pagingRequest);
             return await _baseDL.GetPagingData(pagingRequest.PageSize, pagingRequest.PageNumber, pagingRequest.Condition, pagingRequest.SortOrder);
         }
-        virtual void GetCustomParamPaging(PagingRequest pagingRequest){
+        public virtual void GetCustomParamPaging(PageRequest pagingRequest){
 
         }
     }

@@ -12,7 +12,7 @@ namespace GenealogyBL.Interfaces
         Task<T> GetById(object id);
         Task<object> Create(T obj);
         Task<bool> Update(T obj);
-        Task<bool> DeleteByID(T obj);
-        Task<PageResult> GetPagingData(PagingRequest pagingRequest);
+        Task<bool> DeleteByID(int Id);
+        Task<PageResult<T>> GetPagingData(PageRequest pagingRequest);
     }
 }

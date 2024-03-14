@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using GenealogyCommon.Interfaces;
+using GenealogyCommon.Models;
 using GenealogyCommon.Utils;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
@@ -32,16 +33,16 @@ namespace GenealogyDL.Implements
         protected string ConnectionString { get; set; }
         public string TableName { get => _tableName; }
 
-        public Task<int> Create(T obj)(){
+        public async Task<int> Create(T obj){
             var proc = $"Proc_{_tableName}_Insert";
             var param = GetParamInsertDB(obj);
             return await this.QueryFirstOrDefaultAsync<int>(proc, param);
         }
 
-        public Task<int> Update(T obj)(){
+        public async Task<bool> Update(T obj){
             var proc = $"Proc_{_tableName}_Update";
             var param = GetParamUpdateDB(obj);
-            return await this.QueryFirstOrDefaultAsync<int>(proc, param);
+            return (await this.QueryFirstOrDefaultAsync<int>(proc, param)) > 0;
         }
 
         public async Task<T> GetById(object id)
@@ -119,25 +120,23 @@ namespace GenealogyDL.Implements
             param["p_ModifiedDate"] = DateTime.Now;
             return param;
         }
-        PageResult<dynamic> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder)
+        public async Task<PageResult<T>> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder)
         {
-            if (string.IsNull(condition)){
+            if (string.IsNullOrWhiteSpace(condition)){
                 condition = " 1 = 1 ";
             }
-            if (string.IsNull(sortOrder)){
+            if (string.IsNullOrWhiteSpace(sortOrder)){
                 sortOrder = " ModifiedDate Desc ";
             }
-            using (Ivar dbContext = _context.CreateDatabaseContext(ConnectionString))
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
             {
                 string sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
                 string sqlCount = $@"SELECT COUNT(*) FROM {_tableName} WHERE {condition}";
-                var multiQuery = dbContext.QueryMultiple($"{sqlData};{sqlCount}", new { offset = (pageNumber - 1) * pageSize, pageSize});
-                var data = multiQuery.Read();
-                int totalCount = multiQuery.ReadSingle<int>();
-                return new PageResult<dynamic>
+                var result = await dbContext.QueryMultipleAsync<T, int>($"{sqlData};{sqlCount}", new { offset = (pageNumber - 1) * pageSize, pageSize});
+                return new PageResult<T>
                 {
-                    Data = data.AsList(),
-                    TotalCount = totalCount
+                    Data = result.Item1.ToList(),
+                    TotalCount = result.Item2.FirstOrDefault()
                 };
             }
         }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GenealogyDL.Implements
 { 
-    public class FamilyTreeDL: BaseDL<FamilyTree>, IFamilyTree
+    public class FamilyTreeDL: BaseDL<FamilyTree>, IFamilyTreeDL
     {
         public FamilyTreeDL(IDBContextFactory dbContextFactory, IWebHostEnvironment env, IAuthService authService) : base(dbContextFactory, env, authService)
         {

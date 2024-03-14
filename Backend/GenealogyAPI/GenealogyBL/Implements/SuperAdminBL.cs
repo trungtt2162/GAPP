@@ -44,21 +44,22 @@ namespace GenealogyBL.Implements
         }
 
         override
-        void GetCustomParamPaging(PagingRequest pagingRequest){
-            if (string.isnull(pagingRequest.condition)){
-                pagingRequest.condition = " 1 = 1 ";
+        public void GetCustomParamPaging(PageRequest pagingRequest){
+            if (string.IsNullOrWhiteSpace(pagingRequest.Condition)){
+                pagingRequest.Condition = " 1 = 1 ";
             }
-            var users = await _userDL.GetAllUserByRole(UserRoles.Admin);
-            if (users != null && users.Length > 0){
-                string con = new StringBuilder();
+            var users = _userDL.GetAllUserByRole(UserRoles.Admin, -1).Result;
+            if (users != null && users.Count > 0){
+                var con = new StringBuilder();
                 con.Append(" Id in ( ");
-                users.ForEach(user => {
+                users.ForEach(user =>
+                {
                     con.Append($" {user.Id},");
-                })
+                });
                 con.Append(" -1 ) ");
-                pagingRequest.condition += con.ToString() ;
+                pagingRequest.Condition += con.ToString() ;
             }else {
-                pagingRequest.condition += " Id is null ";
+                pagingRequest.Condition += " Id is null ";
             }
             
         }

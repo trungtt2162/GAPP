@@ -15,7 +15,7 @@ namespace GenealogyBL.Implements
     internal class FamilyTreeBL: BaseBL<FamilyTree>, IFamilyTreeBL
     {
         private readonly IFamilyTreeDL _familyTreeDL;
-        public FamilyTreeBL(IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, userDL)
+        public FamilyTreeBL(IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
         {
             _familyTreeDL = familyTreeDL;
         }

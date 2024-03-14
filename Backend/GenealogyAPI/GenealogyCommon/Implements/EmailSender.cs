@@ -1,5 +1,6 @@
+using GenealogyCommon.Interfaces;
+using GenealogyCommon.Models;
 using Microsoft.Extensions.Options;
-using SendEmail.Code;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -10,11 +11,11 @@ namespace GenealogyCommon.Implements
 {
     public class EmailSender : IEmailSender
     {
-        public EmailSettings _emailSettings { get; }
+        public EmailSetting _emailSetting { get; }
 
-        public EmailSender(IOptions<EmailSettings> emailSettings)
+        public EmailSender(IOptions<EmailSetting> emailSettings)
         {
-            _emailSettings = emailSettings.Value;
+            _emailSetting = emailSettings.Value;
         }
 
         public Task SendEmailAsync(string email, string subject, string message)
@@ -28,20 +29,20 @@ namespace GenealogyCommon.Implements
         {
             try
             {
-                var toEmail = string.IsNullOrEmpty(email) ? _emailSettings.ToEmail : email;
+                var toEmail = string.IsNullOrEmpty(email) ? _emailSetting.ToEmail : email;
 
                 MailMessage mail = new MailMessage()
                 {
-                    From = new MailAddress(_emailSettings.FromAddress, _emailSettings.FromName)
+                    From = new MailAddress(_emailSetting.FromAddress, _emailSetting.FromName)
                 };
 
                 mail.To.Add(new MailAddress(toEmail));
 
-                if (!string.IsNullOrEmpty(_emailSettings.CcEmail))
-                    mail.CC.Add(new MailAddress(_emailSettings.CcEmail));
+                if (!string.IsNullOrEmpty(_emailSetting.CcEmail))
+                    mail.CC.Add(new MailAddress(_emailSetting.CcEmail));
 
-                if (!string.IsNullOrEmpty(_emailSettings.BccEmail))
-                    mail.Bcc.Add(new MailAddress(_emailSettings.BccEmail));
+                if (!string.IsNullOrEmpty(_emailSetting.BccEmail))
+                    mail.Bcc.Add(new MailAddress(_emailSetting.BccEmail));
 
                 if (attachments != null)
                 {
@@ -56,10 +57,10 @@ namespace GenealogyCommon.Implements
                 mail.IsBodyHtml = true;
                 mail.Priority = MailPriority.Normal;
 
-                using (SmtpClient smtp = new SmtpClient(_emailSettings.ServerAddress, _emailSettings.ServerPort))
+                using (SmtpClient smtp = new SmtpClient(_emailSetting.ServerAddress, _emailSetting.ServerPort))
                 {
-                    smtp.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
-                    smtp.EnableSsl = _emailSettings.ServerUseSsl;
+                    smtp.Credentials = new NetworkCredential(_emailSetting.Username, _emailSetting.Password);
+                    smtp.EnableSsl = _emailSetting.ServerUseSsl;
 
                     await smtp.SendMailAsync(mail);
                 }

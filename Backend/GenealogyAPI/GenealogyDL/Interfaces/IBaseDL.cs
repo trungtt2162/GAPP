@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GenealogyCommon.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace GenealogyDL.Interfaces
 
         Task<bool> DeleteById(object id);
 
-        PageResult<dynamic> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder);
+        Task<PageResult<T>> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder);
         #endregion
 
     }

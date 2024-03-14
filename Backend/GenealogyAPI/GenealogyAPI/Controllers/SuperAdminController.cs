@@ -23,9 +23,9 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("admin/paging")]
-        public async Task<ActionResult<object>> InsertAdmin(PagingRequest paggingRequest)
+        public async Task<ActionResult<object>> InsertAdmin(PageRequest paggingRequest)
         {
-            return await _superAdminBL.GetPagingData(pagingRequest);
+            return await _superAdminBL.GetPagingData(paggingRequest);
         }
         
         [HttpPost("admin")]
@@ -47,7 +47,7 @@ namespace GenealogyAPI.Controllers
             {
                 return BadRequest();
             }
-            await _superAdminBL.Update(_mapper.Map<User>(userAdmin), _mapper.Map<Genealogy>(userAdmin));
+            await _superAdminBL.Update(_mapper.Map<User>(userAdmin));
 
             return Ok("Created");
         }

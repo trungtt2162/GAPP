@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using GenealogyDL.Interfaces;
+using Microsoft.AspNetCore.Http;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -127,6 +128,19 @@ namespace GenealogyDL.DBContext
                 var result = await _dbConnection.QueryFirstOrDefaultAsync<T>(procName, param, commandType: commandType);
                 transac.Commit();
                 return result;
+            }
+        }
+
+        public async Task<(IEnumerable<T1>, IEnumerable<T2>)> QueryMultipleAsync<T1, T2>(string procName, object param = null, CommandType commandType = CommandType.StoredProcedure)
+        {
+            using (var transac = _dbConnection.BeginTransaction())
+            {
+                var result = await _dbConnection.QueryMultipleAsync(procName, param, commandType: commandType);
+                transac.Commit();
+
+                var result1 = result.Read<T1>().ToList();
+                var result2 = result.Read<T2>().ToList();
+                return (result1, result2);
             }
         }
 
