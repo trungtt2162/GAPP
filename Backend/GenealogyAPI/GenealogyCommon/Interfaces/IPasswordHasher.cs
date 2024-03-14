@@ -11,5 +11,7 @@ namespace GenealogyCommon.Interfaces
         Task<string> HashPassword(string password);
 
         Task<bool> ValidateHashPassword(string raw, string hash);
+
+        string GenerateRandomPassword(int length);
     }
 }

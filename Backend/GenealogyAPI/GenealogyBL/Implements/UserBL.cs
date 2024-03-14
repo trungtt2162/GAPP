@@ -69,6 +69,13 @@ namespace GenealogyBL.Implements
                 ["p_ModifiedBy"] = "system"
             };
             await _permissionDL.InsertPermission(param);
+            // Gen password default: 
+            var creden = new Credential(){
+                UserName = user.Email,
+                PassWord = _passwordHasher.GenerateRandomPassword(12)
+            };
+            await SaveCredential(creden);
+            // todo : Send mail
             return null;
         }
 

@@ -22,6 +22,12 @@ namespace GenealogyAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost("admin/paging")]
+        public async Task<ActionResult<object>> InsertAdmin(PagingRequest paggingRequest)
+        {
+            return await _superAdminBL.GetPagingData(pagingRequest);
+        }
+        
         [HttpPost("admin")]
         public async Task<ActionResult<object>> InsertAdmin(UserAdmin userAdmin)
         {
@@ -30,6 +36,30 @@ namespace GenealogyAPI.Controllers
                 return BadRequest();
             }
             await _superAdminBL.Create(_mapper.Map<User>(userAdmin), _mapper.Map<Genealogy>(userAdmin));
+
+            return Ok("Created");
+        }
+
+        [HttpPut("admin")]
+        public async Task<ActionResult<object>> UpdateAdmin(UserAdmin userAdmin)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await _superAdminBL.Update(_mapper.Map<User>(userAdmin), _mapper.Map<Genealogy>(userAdmin));
+
+            return Ok("Created");
+        }
+
+        [HttpDelete("admin/{id}")]
+        public async Task<ActionResult<object>> UpdateAdmin([FromQuery] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await _superAdminBL.DeleteByID(id);
 
             return Ok("Created");
         }

@@ -94,6 +94,10 @@ namespace GenealogyDL.Implements
 
         }
 
+        public async Task<List<User>> GetAllUserByRole(string roleCode, int idGen){
+            return new List<User>();
+        }
+
         #region Supper Admin
         public async Task<int> CreateAdmin(User user)
         {
@@ -102,6 +106,8 @@ namespace GenealogyDL.Implements
             param["p_CreatedDate"] = DateTime.Now;
             return await this.QueryFirstOrDefaultAsync<int>(proc, param);
         }
+
+    
         #endregion
 
     }

@@ -10,6 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace GenealogyCommon.Models
 {
+    [Table("user")]
     public class User: BaseModel
     {
         public int IdGenealogy { get; set; }

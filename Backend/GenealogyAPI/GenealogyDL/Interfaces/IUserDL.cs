@@ -22,5 +22,6 @@ namespace GenealogyDL.Interfaces
         Task<int> CreateAdmin(User user);
         Task<UserRole> GetUserRole(int userID);
         Task<User> GetUserByUserName(string userName);
+        Task<List<User>> GetAllUserByRole(string roleCode, int idGen);
     }
 }

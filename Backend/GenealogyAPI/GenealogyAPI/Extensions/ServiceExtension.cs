@@ -18,6 +18,7 @@ namespace GenealogyAPI.Extensions
             services.AddDLExtension(configuration);
             services.AddAutoMapper(typeof(UserMapper));
             services.AddScoped<IAuthService, AuthService>();
+            services.AddTransient<IEmailSender, EmailSender>();
         }
     }
 }

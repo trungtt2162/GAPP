@@ -42,5 +42,25 @@ namespace GenealogyBL.Implements
             await _permissionDL.InsertPermission(param);
             return null;
         }
+
+        override
+        void GetCustomParamPaging(PagingRequest pagingRequest){
+            if (string.isnull(pagingRequest.condition)){
+                pagingRequest.condition = " 1 = 1 ";
+            }
+            var users = await _userDL.GetAllUserByRole(UserRoles.Admin);
+            if (users != null && users.Length > 0){
+                string con = new StringBuilder();
+                con.Append(" Id in ( ");
+                users.ForEach(user => {
+                    con.Append($" {user.Id},");
+                })
+                con.Append(" -1 ) ");
+                pagingRequest.condition += con.ToString() ;
+            }else {
+                pagingRequest.condition += " Id is null ";
+            }
+            
+        }
     }
 }

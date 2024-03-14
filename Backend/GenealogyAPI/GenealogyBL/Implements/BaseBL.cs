@@ -27,9 +27,9 @@ namespace GenealogyBL.Implements
             throw new NotImplementedException();
         }
 
-        public Task<object> Delete(T obj)
+        public Task<bool> DeleteByID(T obj)
         {
-            throw new NotImplementedException();
+            return await _baseDL.DeleteByID(id);
         }
 
         public async Task<T> GetById(object id)
@@ -37,9 +37,16 @@ namespace GenealogyBL.Implements
             return await _baseDL.GetById(id);
         }
 
-        public Task<object> Update(T obj)
+        public Task<bool> Update(T obj)
         {
-            throw new NotImplementedException();
+            return _baseDL.Update(obj);
+        }
+        public Task<PageResult> GetPagingData(PagingRequest pagingRequest){
+            this.GetCustomParamPaging(pagingRequest);
+            return await _baseDL.GetPagingData(pagingRequest.PageSize, pagingRequest.PageNumber, pagingRequest.Condition, pagingRequest.SortOrder);
+        }
+        virtual void GetCustomParamPaging(PagingRequest pagingRequest){
+
         }
     }
 }

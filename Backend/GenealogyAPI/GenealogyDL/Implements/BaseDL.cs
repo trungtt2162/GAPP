@@ -31,6 +31,19 @@ namespace GenealogyDL.Implements
 
         protected string ConnectionString { get; set; }
         public string TableName { get => _tableName; }
+
+        public Task<int> Create(T obj)(){
+            var proc = $"Proc_{_tableName}_Insert";
+            var param = GetParamInsertDB(obj);
+            return await this.QueryFirstOrDefaultAsync<int>(proc, param);
+        }
+
+        public Task<int> Update(T obj)(){
+            var proc = $"Proc_{_tableName}_Update";
+            var param = GetParamUpdateDB(obj);
+            return await this.QueryFirstOrDefaultAsync<int>(proc, param);
+        }
+
         public async Task<T> GetById(object id)
         {
             string sql = $"SELECT * FROM {_tableName} WHERE  Id = @id;";
@@ -105,6 +118,28 @@ namespace GenealogyDL.Implements
             param["p_ModifiedBy"] = _authService.GetUserName();
             param["p_ModifiedDate"] = DateTime.Now;
             return param;
+        }
+        PageResult<dynamic> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder)
+        {
+            if (string.IsNull(condition)){
+                condition = " 1 = 1 ";
+            }
+            if (string.IsNull(sortOrder)){
+                sortOrder = " ModifiedDate Desc ";
+            }
+            using (Ivar dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                string sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
+                string sqlCount = $@"SELECT COUNT(*) FROM {_tableName} WHERE {condition}";
+                var multiQuery = dbContext.QueryMultiple($"{sqlData};{sqlCount}", new { offset = (pageNumber - 1) * pageSize, pageSize});
+                var data = multiQuery.Read();
+                int totalCount = multiQuery.ReadSingle<int>();
+                return new PageResult<dynamic>
+                {
+                    Data = data.AsList(),
+                    TotalCount = totalCount
+                };
+            }
         }
 
         #endregion

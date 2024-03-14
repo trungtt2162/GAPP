@@ -11,15 +11,25 @@ namespace GenealogyDL.Interfaces
     {
         void InitializeDatabaseContext(string connectionString);
 
-        Task<T> GetById(object id);
-
-        Task<int> ExecuteAsync(string commandText, object param = null);
-
         string GetFileSql(string namne);
 
+        Task<int> ExecuteAsync(string commandText, object param = null);
+        
         Task<P> QueryFirstOrDefaultAsync<P>(string procName, object param = null, CommandType commandType = CommandType.StoredProcedure);
 
         Task<P> ExecuteScalarAsync<P>(string commandText, object param = null);
+
+        #region  Data
+        Task<T> GetById(object id);
+
+        Task<int> Create(T obj);
+
+        Task<bool> Update(T obj);
+
+        Task<bool> DeleteById(object id);
+
+        PageResult<dynamic> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder);
+        #endregion
 
     }
 }
