@@ -13,8 +13,6 @@ namespace GenealogyDL.Interfaces
     {
         Task<bool> SaveCredential(Credential credential);
 
-        Task<int> Create(User user);
-
         Task<bool> CheckUserExist(string userName);
 
         Task<T> GetUserPassword<T>(string userName);

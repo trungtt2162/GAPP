@@ -17,6 +17,7 @@ namespace GenealogyDL
             services.AddScoped<IGenealogyDL, GenealogyTreeDL>();
             services.AddScoped<IPermissionDL, PermissionDL>();
             services.AddScoped<IFamilyTreeDL, FamilyTreeDL>();
+            services.AddScoped<IUserGenealogyDL, UserGenealogyDL>();
         }
 
     }

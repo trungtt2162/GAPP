@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GenealogyCommon.Models
 {
+    [Table("genealogy")]
     public class Genealogy: BaseModel
     {
         public string Name { get; set; }
