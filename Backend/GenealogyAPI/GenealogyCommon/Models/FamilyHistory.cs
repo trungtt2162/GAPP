@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace GenealogyCommon.Models
 
     [Table("family_history_detail")]
     public class FamilyHistoryDetail: FamilyHistory{
-        public Datetime Date { get; set; }
+        public DateTime Date { get; set; }
 
         public int IDFamilyHistory {get; set;}
 

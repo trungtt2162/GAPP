@@ -20,9 +20,6 @@ namespace GenealogyBL.Implements
         {
             _userDL = userDL;
             _permissionDL = permissionDL;
-            var conn = _configuration.GetConnectionString("Genealogy_DB");
-            _userDL.InitializeDatabaseContext(conn ?? "");
-            _permissionDL.InitializeDatabaseContext(conn ?? "");
             _passwordHasher = passwordHasher;
         }
 

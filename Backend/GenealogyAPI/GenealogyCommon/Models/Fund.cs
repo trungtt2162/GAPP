@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace GenealogyCommon.Models
         public int IdGenealogy {get; set;}
         public int IdUserGenealogy {get;set;}
         public int Money { get; set; }
-        public Datetime PaymentDate {get; set;} 
+        public DateTime PaymentDate {get; set;} 
     }
 
     [Table("fund_contributor")]
@@ -39,7 +40,7 @@ namespace GenealogyCommon.Models
     }
 
     [Table("fund_feedback")]
-    public class FundSend: BaseModel {
+    public class FundFeedBack: BaseModel {
         public int IdFund { get; set; }
         public int IdGenealogy {get; set;}
         public int Type {get; set;}

@@ -13,7 +13,12 @@ namespace GenealogyBL
             services.AddScoped<IUserBL, UserBL>();
             services.AddScoped<ISuperAdminBL, SuperAdminBL>();
             services.AddScoped<IFamilyTreeBL, FamilyTreeBL>();
-            services.AddScoped<IUserGenealogyBL, UserGenealogy>();
+            services.AddScoped<IUserGenealogyBL, UserGenealogyBL>();
+            services.AddScoped<IFamilyHistoryBL, FamilyHistoryBL>();
+            services.AddScoped<IEventBL, EventBL>();
+            services.AddScoped<IFundBL, FundBL>();
+            services.AddScoped<ILogBL, LogBL>();
+            services.AddScoped<IFamilyAddressBL, FamilyAddressBL>();
 
         }
 

@@ -28,12 +28,7 @@ namespace GenealogyBL.Implements
             _genealDL = genealDL;
             _permissionDL = permissionDL;
             _passwordHasher = passwordHasher;
-            _emailSender = emailSender;
-            var conn = _configuration.GetConnectionString("Genealogy_DB");
-            _userDL.InitializeDatabaseContext(conn ?? "");
-            _permissionDL.InitializeDatabaseContext(conn ?? "");
-            _genealDL.InitializeDatabaseContext(conn ?? "");
-            
+            _emailSender = emailSender;      
         }
 
         public async Task<object> Create(User user, Genealogy genealogy)
@@ -46,9 +41,11 @@ namespace GenealogyBL.Implements
                 UserName = user.Email,
                 Password = _passwordHasher.GenerateRandomPassword(12)
             };
+            // await _emailSender.SendEmailAsync("=", "xin chao", "xin chai");
+            creden.Password = await _passwordHasher.HashPassword(creden.Password);
             await _userDL.SaveCredential(creden);
-           // await _emailSender.SendEmailAsync("=", "xin chao", "xin chai");
             // todo : Send mail
+            
             var param = new Dictionary<string, object>()
             {
                 ["p_UserID"] = idUser,

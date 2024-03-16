@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace GenealogyBL.Implements
 {
-    public class UserGenealogyBL: BaseBL<UserGenealogy>, IUserGenealogyBL
+    internal class UserGenealogyBL: BaseBL<UserGenealogy>, IUserGenealogyBL
     {
         private readonly IUserGenealogyDL _userGenealogyDL;
-        public FamilyTreeBL(IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env) : base(env, userGenealogyDL)
+        public UserGenealogyBL(IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env) : base(env, userGenealogyDL)
         {
             _userGenealogyDL = userGenealogyDL;
         }

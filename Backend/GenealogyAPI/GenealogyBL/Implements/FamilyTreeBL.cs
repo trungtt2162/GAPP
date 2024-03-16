@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GenealogyBL.Implements
 {
-    public class FamilyTreeBL: BaseBL<FamilyTree>, IFamilyTreeBL
+    internal class FamilyTreeBL: BaseBL<FamilyTree>, IFamilyTreeBL
     {
         private readonly IFamilyTreeDL _familyTreeDL;
         public FamilyTreeBL(IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)

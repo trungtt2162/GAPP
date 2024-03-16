@@ -1,9 +1,11 @@
 ﻿using Dapper;
+using GenealogyCommon.Configuration;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Utils;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,13 +22,15 @@ namespace GenealogyDL.Implements
         protected string _tableName;
         private readonly IWebHostEnvironment _env;
         private readonly IAuthService _authService;
-
+        protected readonly IConfiguration _configuration;
         public BaseDL(IDBContextFactory dapperDatabaseContextFactory, IWebHostEnvironment env, IAuthService authService)
         {
             _context = dapperDatabaseContextFactory ;
             _tableName = Utilities.GetTableName<T>();
             _env = env;
             _authService = authService;
+            _configuration = ConfigService.GetConfiguration(env);
+            ConnectionString = _configuration.GetConnectionString("Genealogy_DB");
         }
         #region Properties
 
@@ -106,11 +110,6 @@ namespace GenealogyDL.Implements
         public string GetFileSql(string fileName)
         {
             return Utilities.GeFileContent(fileName, _env);
-        }
-
-        public void InitializeDatabaseContext(string connectionString)
-        {
-            ConnectionString = connectionString;
         }
 
         public Dictionary<string, object> GetParamInsertDB<T>(T obj){

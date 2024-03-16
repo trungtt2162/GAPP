@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +23,11 @@ namespace GenealogyCommon.Models
         
         public string Background {get; set;}
 
-        public Datetime OrganizationDate {get; set;}
+        public DateTime OrganizationDate {get; set;}
 
         public string Location {get; set;}
 
-        public int UserIDHost {get; set}
+        public int UserIDHost { get; set; }
     }
 
     [Table("user_event")]
@@ -45,10 +46,10 @@ namespace GenealogyCommon.Models
         
         public string Background {get; set;}
 
-        public Datetime OrganizationDate {get; set;}
+        public DateTime OrganizationDate {get; set;}
 
         public string Location {get; set;}
 
-        public int UserIDHost {get; set}
+        public int UserIDHost { get; set; }
     }
 }

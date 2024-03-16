@@ -18,6 +18,11 @@ namespace GenealogyDL
             services.AddScoped<IPermissionDL, PermissionDL>();
             services.AddScoped<IFamilyTreeDL, FamilyTreeDL>();
             services.AddScoped<IUserGenealogyDL, UserGenealogyDL>();
+            services.AddScoped<IFamilyHistoryDL, FamilyHistoryDL>();
+            services.AddScoped<IFamilyAddressDL, FamilyAddressDL>();
+            services.AddScoped<ILogDL, LogDL>();
+            services.AddScoped<IFundDL, FundDL>();
+            services.AddScoped<IEventDL, EventDL>();
         }
 
     }
