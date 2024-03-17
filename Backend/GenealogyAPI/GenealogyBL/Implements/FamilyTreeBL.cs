@@ -36,5 +36,25 @@ namespace GenealogyBL.Implements
             return await _familyTreeDL.Create(familyTree);
         }
 
+        public async Task<bool> Update(FamilyTree familyTree)
+        {
+            var check = await _userBL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), SubSystem.Genealogy, PermissionCode.Edit, familyTree.IdGenealogy);
+            if (!check)
+            {
+                throw new ArgumentException("UnAuthorized");
+            }
+            return await _familyTreeDL.Update(familyTree);
+        }
+
+        public async Task<bool> DeleteByID(int id, int idGenealogy)
+        {
+            var check = await _userBL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), SubSystem.Genealogy, PermissionCode.Delete, idGenealogy);
+            if (!check)
+            {
+                throw new ArgumentException("UnAuthorized");
+            }
+            return await _familyTreeDL.DeleteById(id, idGenealogy);
+        }
+
     }
 }

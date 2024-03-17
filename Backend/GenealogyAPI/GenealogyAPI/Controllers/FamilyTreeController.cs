@@ -41,28 +41,43 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Created");
         }
 
-        //[HttpPut("")]
-        //public async Task<ActionResult<object>> UpdateAdmin(UserAdmin userAdmin)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    await _superAdminBL.Update(_mapper.Map<User>(userAdmin));
+        [HttpPost("export")]
+        public async Task<ServiceResult> ExportFamilyTree([FromQuery]int idGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest("Invalid Param");
+            }
+            //await _familyTreeBL.Create(_mapper.Map<FamilyTree>(familytreeParam));
 
-        //    return Ok("Created");
-        //}
+            return serviceResult.OnSuccess("Created");
+        }
 
-        //[HttpDelete("")]
-        //public async Task<ActionResult<object>> UpdateAdmin([FromQuery] int id)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    await _superAdminBL.DeleteByID(id);
+        [HttpPut("")]
+        public async Task<ActionResult<object>> UpdateFamilyTree(FamilyTreeParam familytreeParam)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await _familyTreeBL.Update(_mapper.Map<FamilyTree>(familytreeParam));
 
-        //    return Ok("Created");
-        //}
+            return serviceResult.OnSuccess("Updated");
+        }
+
+        [HttpDelete("")]
+        public async Task<ActionResult<object>> DeleteFamilyTree([FromQuery] int id, [FromQuery]int idGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await _familyTreeBL.DeleteByID(id, idGenealogy);
+
+            return serviceResult.OnSuccess("Deleted");
+        }
     }
 }

@@ -19,6 +19,8 @@ namespace GenealogyCommon.Mapper
             CreateMap<UserAdmin, User>();
             CreateMap<UserAdmin, Genealogy>();
             CreateMap<FamilyTreeParam, FamilyTree>();
+            CreateMap<UserGenealogyParam, UserGenealogy>();
+            CreateMap<User, UserGenealogy>();
         }
     }
 }

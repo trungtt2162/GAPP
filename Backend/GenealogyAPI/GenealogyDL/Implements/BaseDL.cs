@@ -50,6 +50,20 @@ namespace GenealogyDL.Implements
             return (await this.QueryFirstOrDefaultAsync<int>(proc, param)) > 0;
         }
 
+        public async Task<IEnumerable<T>> GetAll(object idGenealogy)
+        {
+            string sql = $"SELECT * FROM {_tableName} WHERE  IdGenealogy = @IdGenealogy;";
+            var param = new Dictionary<string, object>()
+            {
+                ["@IdGenealogy"] = idGenealogy
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return await dbContext.Query<T>(sql, param, commandType: System.Data.CommandType.Text);
+            }
+
+        }
+
         public async Task<T> GetById(object id)
         {
             string sql = $"SELECT * FROM {_tableName} WHERE  Id = @id;";
@@ -74,6 +88,21 @@ namespace GenealogyDL.Implements
                 return (await dbContext.ExecuteAsync(sql, param)) > 0;
             }
   
+        }
+
+        public async Task<bool> DeleteById(object id, object idGenealogy)
+        {
+            string sql = $"DELETE FROM {_tableName} WHERE  Id = @id and IdGenealogy = @IdGenealogy;";
+            var param = new Dictionary<string, object>()
+            {
+                ["@Id"] = id,
+                ["@IdGenealogy"] = idGenealogy
+
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return (await dbContext.ExecuteAsync(sql, param)) > 0;
+            }
         }
 
         public async Task<int> ExecuteAsync(string commandText, object param = null)
@@ -127,7 +156,7 @@ namespace GenealogyDL.Implements
             param["p_ModifiedBy"] = _authService.GetUserName();
             param["p_ModifiedDate"] = DateTime.Now;
             PropertyInfo idProperty = typeof(T).GetProperty("Id");
-            param["p_ID"] = idProperty.GetValue(obj);
+            param["p_Id"] = idProperty.GetValue(obj);
             return param;
         }
         public async Task<PageResult<T>> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder)

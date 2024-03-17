@@ -11,5 +11,6 @@ namespace GenealogyBL.Interfaces
 {
     public interface IFamilyTreeBL: IBaseBL<FamilyTree>
     {
+        
     }
 }

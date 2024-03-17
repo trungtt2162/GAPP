@@ -11,5 +11,8 @@ namespace GenealogyDL.Interfaces
 {
     public interface IUserGenealogyDL: IBaseDL<UserGenealogy>
     {
+        Task<bool> CheckUserExistInTree(int userId, int idGenealogy);
+
+        Task<IEnumerable<UserGenealogy>> GetUserGenealogies(int idFamilyTree, int idGenealogy);
     }
 }

@@ -22,11 +22,15 @@ namespace GenealogyDL.Interfaces
         #region  Data
         Task<T> GetById(object id);
 
+        Task<IEnumerable<T>> GetAll(object idGenealogy);
+
         Task<int> Create(T obj);
 
         Task<bool> Update(T obj);
 
         Task<bool> DeleteById(object id);
+        Task<bool> DeleteById(object id, object idGenealogy);
+
 
         Task<PageResult<T>> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder);
         #endregion

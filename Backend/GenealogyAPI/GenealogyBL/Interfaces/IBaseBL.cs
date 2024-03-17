@@ -10,9 +10,11 @@ namespace GenealogyBL.Interfaces
     public interface IBaseBL<T> 
     {
         Task<T> GetById(object id);
+        Task<IEnumerable<T>> GetAll(object idGenealogy);
         Task<object> Create(T obj);
         Task<bool> Update(T obj);
         Task<bool> DeleteByID(int Id);
+        Task<bool> DeleteByID(int Id, int IdGenealogy);
         Task<PageResult<T>> GetPagingData(PageRequest pagingRequest);
     }
 }

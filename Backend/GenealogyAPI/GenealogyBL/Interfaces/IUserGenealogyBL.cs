@@ -11,5 +11,6 @@ namespace GenealogyBL.Interfaces
 {
     public interface IUserGenealogyBL: IBaseBL<UserGenealogy>
     {
+        Task <IEnumerable<UserGenealogy>> GetUserGenealogyByFamilyTree(int idFamilyTree, int idGenealogy);
     }
 }

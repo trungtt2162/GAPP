@@ -10,8 +10,10 @@ namespace GenealogyCommon.Models
     [Table("user_genealogy")]
     public class UserGenealogy: User
     {
-        public int IDFamilyTree {get; set;}
+        public int IdFamilyTree {get; set;}
 
-        public int IDGenealogy {get; set;}
+        public int IdGenealogy {get; set;}
+
+        public int UserId { get; set; }
     }
 }

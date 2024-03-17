@@ -13,8 +13,6 @@ namespace GenealogyCommon.Models
     [Table("user")]
     public class User: BaseModel
     {
-        public int IdGenealogy { get; set; }
-        public int IdFamilyTree { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
 

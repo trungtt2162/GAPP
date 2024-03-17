@@ -33,9 +33,19 @@ namespace GenealogyBL.Implements
             return await _baseDL.DeleteById(Id);
         }
 
+        public async Task<bool> DeleteByID(int id, int idGenealogy)
+        {
+            return await _baseDL.DeleteById(id , idGenealogy);
+        }
+
         public async Task<T> GetById(object id)
         {
             return await _baseDL.GetById(id);
+        }
+
+        public async Task<IEnumerable<T>> GetAll(object idGenealogy)
+        {
+            return await _baseDL.GetAll(idGenealogy); ;
         }
 
         public Task<bool> Update(T obj)

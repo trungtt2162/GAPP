@@ -15,6 +15,8 @@ namespace GenealogyCommon.Models.Param
         [Required]
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public int ParentID { get; set; }
+        public int? ParentID { get; set; }
+
+        public int? Id { get; set; }
     }
 }
