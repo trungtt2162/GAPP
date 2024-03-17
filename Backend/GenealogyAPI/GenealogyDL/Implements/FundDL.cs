@@ -16,5 +16,15 @@ namespace GenealogyDL.Implements
         {
         }
 
+        public async Task<bool> UpdateMoneyFund(int idFund, int idGenealogy)
+        {
+            var proc = $"Proc_Update_Money_Fund";
+            var param = new Dictionary<string , object>()
+            {
+                ["p_IdGenealogy"] = idGenealogy,
+                ["p_IdFund"] = idFund
+            };
+            return (await this.QueryFirstOrDefaultAsync<int>(proc, param)) > 0;
+        }
     }
 }

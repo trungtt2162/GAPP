@@ -27,6 +27,13 @@ namespace GenealogyCommon.Mapper
             CreateMap<FamilyHistoryParam, FamilyHistory>();
             CreateMap<FamilyHistoryDetailParam, FamilyHistoryDetail>();
             CreateMap<EventParam, Event>();
+            CreateMap<EventUserParam, UserEvent>();
+            CreateMap<FundParam, Fund>();
+            CreateMap<FundContributorParam, FundContributor>();
+            CreateMap<FundSendParam, FundSend>();
+            CreateMap<FeedBackParam, FeedBack>();
+            CreateMap<FamilyTreeClient, FamilyTreeExport>();
+
         }
     }
 }

@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace GenealogyBL.Interfaces
 {
-    public interface IFundBL: IBaseBL<Fund>
+    public interface IFeedbackBL: IBaseBL<FeedBack>
     {
-        Task<bool> UpdateMoneyFund(int idFund, int idGenealogy);
     }
 }

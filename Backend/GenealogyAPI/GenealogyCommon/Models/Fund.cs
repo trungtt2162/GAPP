@@ -19,7 +19,7 @@ namespace GenealogyCommon.Models
         public string SpendPurpose { get; set; }
         
         public long EstimatedMoney { get; set; }
-        
+                
         
     }
 
@@ -27,16 +27,25 @@ namespace GenealogyCommon.Models
     public class FundContributor: BaseModel{
         public int IdFund { get; set; }
         public int IdGenealogy {get; set;}
-        public int IdUserGenealogy {get;set;}
+        public int UserID {get;set;}
         public int Money { get; set; }
-        public DateTime PaymentDate {get; set;} 
+        public DateTime PaymentDate {get; set;}
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string Email { get; set; }
+        public bool Confirmed { get; set; }
     }
 
-    [Table("fund_contributor")]
+    [Table("fund_send")]
     public class FundSend: BaseModel {
         public int IdFund { get; set; }
         public int IdGenealogy {get; set;}
         public string Description {get; set;}
+
+        public long Money { get; set; }
     }
 
     [Table("fund_feedback")]

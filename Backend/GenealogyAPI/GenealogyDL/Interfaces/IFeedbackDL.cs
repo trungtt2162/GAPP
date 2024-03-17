@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GenealogyBL.Interfaces
+namespace GenealogyDL.Interfaces
 {
-    public interface IFundBL: IBaseBL<Fund>
+    public interface IFeedbackDL : IBaseDL<FeedBack>
     {
-        Task<bool> UpdateMoneyFund(int idFund, int idGenealogy);
+
     }
 }

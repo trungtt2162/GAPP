@@ -17,7 +17,10 @@ namespace GenealogyBL.Implements
         {
             _fundDL = fundDL;
         }
-
+        public async Task<bool> UpdateMoneyFund(int idFund, int idGenealogy)
+        {
+            return await _fundDL.UpdateMoneyFund(idFund, idGenealogy);
+        }
     }
 
 }

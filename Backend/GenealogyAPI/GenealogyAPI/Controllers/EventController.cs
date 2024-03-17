@@ -98,20 +98,20 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("user-event")]
-        public async Task<ServiceResult> InsertEventUser(EventParam param)
+        public async Task<ServiceResult> InsertEventUser(EventUserParam param)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
-            await _baseBL.Create(_mapper.Map<Event>(param));
+            await _baseBL.Create(_mapper.Map<UserEvent>(param));
 
             return serviceResult.OnSuccess("Created");
         }
 
-        [HttpDelete("")]
-        public async Task<ServiceResult> DeleteEvent([FromQuery] int id, [FromQuery] int idGenealogy)
+        [HttpDelete("user-event")]
+        public async Task<ServiceResult> DeleteEventUser([FromQuery] int id, [FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
@@ -123,23 +123,23 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Deleted");
         }
 
-        [HttpPost("paging")]
-        public async Task<ServiceResult> GetPagingData(PageRequest pagingRequest)
+        [HttpPost("user-event/paging")]
+        public async Task<ServiceResult> GetPagingDataDetail(PageRequest pagingRequest)
         {
             var serviceResult = new ServiceResult();
             serviceResult.Data = await _baseBL.GetPagingData(pagingRequest);
             return serviceResult;
         }
 
-        [HttpPut("")]
-        public async Task<ServiceResult> UpdateEvent(Event param)
+        [HttpPut("user-event")]
+        public async Task<ServiceResult> UpdateEventUser(EventUserParam param)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
             }
-            await _baseBL.Update(_mapper.Map<Event>(param));
+            await _baseBL.Update(_mapper.Map<UserEvent>(param));
 
             return serviceResult.OnSuccess("Updated");
         }

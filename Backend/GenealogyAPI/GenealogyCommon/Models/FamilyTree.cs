@@ -23,6 +23,13 @@ namespace GenealogyCommon.Models
         public string Description { get; set; }
         public int? ParentID { get; set; } = null;
 
-        public List<UserGenealogy> Users { get; set; }
+        public List<UserGenealogy> Users { get; set; }  = new List<UserGenealogy> { };
+    }
+
+    public class FamilyTreeExport : FamilyTreeClient
+    {
+        public int Weight { get ; set; } = 0;
+
+        public List<FamilyTreeExport> Children { get; set; } = new List<FamilyTreeExport> { };
     }
 }

@@ -9,5 +9,6 @@ namespace GenealogyDL.Interfaces
 {
     public interface IFundDL : IBaseDL<Fund>
     {
+        Task<bool> UpdateMoneyFund(int idFund, int idGenealogy);
     }
 }

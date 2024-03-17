@@ -3,7 +3,6 @@ using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Configuration;
 
 namespace GenealogyDL
 {
@@ -23,6 +22,7 @@ namespace GenealogyDL
             services.AddScoped<ILogDL, LogDL>();
             services.AddScoped<IFundDL, FundDL>();
             services.AddScoped<IEventDL, EventDL>();
+            services.AddScoped<IFeedbackDL, FeedbackDL>();
         }
 
     }

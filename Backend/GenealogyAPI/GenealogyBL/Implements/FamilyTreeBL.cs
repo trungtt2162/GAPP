@@ -45,6 +45,7 @@ namespace GenealogyBL.Implements
                     treeClient.Add(d);
                 }
             }
+            var a = BuildTree(_mapper.Map<List<FamilyTreeExport>>(treeClient));
             return treeClient;
         }
 
@@ -76,6 +77,48 @@ namespace GenealogyBL.Implements
                 throw new ArgumentException("UnAuthorized");
             }
             return await _familyTreeDL.DeleteById(id, idGenealogy);
+        }
+
+        public FamilyTreeExport BuildTree(List<FamilyTreeExport> trees)
+        {
+            var dictionary = trees.ToDictionary(item => item.Id, item => item);
+            var roots = new List<FamilyTreeExport>();
+            foreach (var item in trees)
+            {
+                if (!item.ParentID.HasValue)
+                {
+                    roots.Add(item);
+                }
+                else
+                {
+                    if (dictionary.TryGetValue(item.ParentID.Value ,out var parent))
+                    {
+                        parent.Children.Add(item);
+                    }
+                }
+            }
+            int a = GetWeightTree(roots.FirstOrDefault());
+            return roots.FirstOrDefault();
+        }
+
+        public int GetWeightTree(FamilyTreeExport familyTree)
+        {
+            if (familyTree == null)
+            {
+                return 0;
+            }
+            if (familyTree.Children.Count == 0)
+            {
+                return familyTree.Users.Count;
+            }
+            int weight = familyTree.Users?.Count ?? 0;
+            foreach (var item in familyTree.Children)
+            {
+                weight += GetWeightTree(item);
+            }
+            familyTree.Weight = weight;
+            return weight;
+
         }
 
     }
