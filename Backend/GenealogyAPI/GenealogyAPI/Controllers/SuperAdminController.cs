@@ -23,45 +23,50 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("admin/paging")]
-        public async Task<ActionResult<object>> GetPagingData(PageRequest paggingRequest)
+        public async Task<ServiceResult> GetPagingData(PageRequest paggingRequest)
         {
-            return await _superAdminBL.GetPagingData(paggingRequest);
+            var serviceResult = new ServiceResult();
+            serviceResult.Data =  await _superAdminBL.GetPagingData(paggingRequest);
+            return serviceResult;
         }
         
         [HttpPost("admin")]
-        public async Task<ActionResult<object>> InsertAdmin(UserAdmin userAdmin)
+        public async Task<ServiceResult> InsertAdmin(UserAdmin userAdmin)
         {
+            var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return serviceResult.OnBadRequest();
             }
             await _superAdminBL.Create(_mapper.Map<User>(userAdmin), _mapper.Map<Genealogy>(userAdmin));
 
-            return Ok("Created");
+            return serviceResult.OnSuccess("Created");
         }
 
         [HttpPut("admin")]
-        public async Task<ActionResult<object>> UpdateAdmin(UserAdmin userAdmin)
+        public async Task<ServiceResult> UpdateAdmin(UserAdmin userAdmin)
         {
+            var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return serviceResult.OnBadRequest();
             }
             await _superAdminBL.Update(_mapper.Map<User>(userAdmin));
 
-            return Ok("Created");
+            return serviceResult.OnSuccess("Updated");
         }
 
         [HttpDelete("admin")]
-        public async Task<ActionResult<object>> UpdateAdmin([FromQuery] int id)
+        public async Task<ServiceResult> UpdateAdmin([FromQuery] int id)
         {
+            var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return serviceResult.OnBadRequest();
             }
             await _superAdminBL.DeleteByID(id);
 
-            return Ok("Created");
+            return serviceResult.OnSuccess("Deteted");
         }
     }
 }

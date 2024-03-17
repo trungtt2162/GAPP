@@ -1,6 +1,8 @@
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
+using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,9 +17,23 @@ namespace GenealogyBL.Implements
     internal class FamilyTreeBL: BaseBL<FamilyTree>, IFamilyTreeBL
     {
         private readonly IFamilyTreeDL _familyTreeDL;
-        public FamilyTreeBL(IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
+        private readonly IUserBL _userBL;
+        public readonly IAuthService _authService;
+        public FamilyTreeBL(IAuthService authService,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
         {
             _familyTreeDL = familyTreeDL;
+            _userBL = userBL;
+            _authService = authService;
+        }
+
+        public async Task<object> Create(FamilyTree familyTree)
+        {
+            var check = await _userBL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), SubSystem.Genealogy, PermissionCode.Add, familyTree.IdGenealogy);
+            if (!check)
+            {
+                throw new ArgumentException("UnAuthorized");
+            }
+            return await _familyTreeDL.Create(familyTree);
         }
 
     }

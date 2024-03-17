@@ -31,5 +31,6 @@ namespace GenealogyCommon.Models
         public string HomeTown { get; set; }
 
         public bool InActive { get; set; }
+        public bool IsBlock { get; set; }
     }
 }

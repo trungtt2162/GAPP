@@ -22,5 +22,7 @@ namespace GenealogyDL.Interfaces
         Task<User> GetUserByUserName(string userName);
         Task<List<UserRole>> GetAllUserByRole(string roleCode, int idGen);
         Task<bool> InsertUserRole(int userID, string roleCode);
+
+        Task<bool> CheckPermissionSubSystem(int userId, string subSystemcode, string permissionCode, int idGenealogy);
     }
 }

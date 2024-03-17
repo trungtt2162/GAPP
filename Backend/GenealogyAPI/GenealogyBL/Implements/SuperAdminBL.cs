@@ -63,13 +63,18 @@ namespace GenealogyBL.Implements
             if (string.IsNullOrWhiteSpace(pagingRequest.Condition)){
                 pagingRequest.Condition = " 1 = 1 ";
             }
+
+            if (!string.IsNullOrWhiteSpace(pagingRequest.SearchKey))
+            {
+                pagingRequest.Condition += $" and Name like '%{pagingRequest.SearchKey}%'";
+            }
             var users = _userDL.GetAllUserByRole(UserRoles.Admin, -1).Result;
             if (users != null && users.Count > 0){
                 var con = new StringBuilder();
                 con.Append(" and Id in ( ");
                 users.ForEach(user =>
                 {
-                    con.Append($" {user.Id},");
+                    con.Append($" {user.UserID},");
                 });
                 con.Append(" -1 ) ");
                 pagingRequest.Condition += con.ToString() ;

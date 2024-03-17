@@ -4,7 +4,9 @@ namespace GenealogyCommon.Interfaces
     {
         string GetUserName();
 
-        string GetRoleCode();
+        string GetUserID();
+
+        string GetFullName();
     } 
 }
    

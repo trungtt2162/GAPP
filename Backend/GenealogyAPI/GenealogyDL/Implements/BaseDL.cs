@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -125,6 +126,8 @@ namespace GenealogyDL.Implements
             var param = Utilities.CreateParamDB(obj);
             param["p_ModifiedBy"] = _authService.GetUserName();
             param["p_ModifiedDate"] = DateTime.Now;
+            PropertyInfo idProperty = typeof(T).GetProperty("Id");
+            param["p_ID"] = idProperty.GetValue(obj);
             return param;
         }
         public async Task<PageResult<T>> GetPagingData(int pageSize, int pageNumber, string condition, string sortOrder)
@@ -139,12 +142,19 @@ namespace GenealogyDL.Implements
             {
                 string sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} LIMIT @pageSize OFFSET  @offset";
                 string sqlCount = $@"SELECT COUNT(*) FROM {_tableName} WHERE {condition}";
-                var result = await dbContext.QueryMultipleAsync<T, int>($"{sqlData};{sqlCount};", new { offset = (pageNumber - 1) * pageSize, pageSize}, commandType: CommandType.Text);
+                var param = new
+                {
+                    offset = (pageNumber - 1) * pageSize,
+                    pageSize
+                };
+                var results = await dbContext.QueryMultipleAsync<T, int>($"{sqlData};{sqlCount};", param, commandType: CommandType.Text);
+
                 return new PageResult<T>
                 {
-                    Data = result.Item1.ToList(),
-                    TotalCount = result.Item2.FirstOrDefault()
+                    Data = results.Item1.ToList(),
+                    TotalCount = results.Item2.FirstOrDefault()
                 };
+                
             }
         }
 

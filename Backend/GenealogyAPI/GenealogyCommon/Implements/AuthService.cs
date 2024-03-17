@@ -1,5 +1,7 @@
 using GenealogyCommon.Interfaces;
+using GenealogyCommon.Models;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace GenealogyCommon.Implements
 {
@@ -12,11 +14,17 @@ namespace GenealogyCommon.Implements
         }
 
         public string GetUserName(){
-            return _httpContextAccessor.HttpContext.User.FindFirst("UserName")?.Value;
+            
+            return _httpContextAccessor.HttpContext.User.FindFirstValue("UserName");
         }
 
-        public string GetRoleCode(){
-            return _httpContextAccessor.HttpContext.User.FindFirst("Role")?.Value;
+        public string GetUserID(){
+            return _httpContextAccessor.HttpContext.User.FindFirstValue("UserID");
+        }
+
+        public string GetFullName()
+        {
+            return _httpContextAccessor.HttpContext.User.FindFirstValue("FullName");
         }
 
     }

@@ -13,6 +13,6 @@ namespace GenealogyCommon.Models
         public int IdGenealogy { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int ParentID { get; set; }
+        public int? ParentID { get; set; } = null;
     }
 }

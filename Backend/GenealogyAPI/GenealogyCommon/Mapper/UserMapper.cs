@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
+using GenealogyCommon.Models.Param;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace GenealogyCommon.Mapper
             CreateMap<UserRegister, Credential>();
             CreateMap<UserAdmin, User>();
             CreateMap<UserAdmin, Genealogy>();
+            CreateMap<FamilyTreeParam, FamilyTree>();
         }
     }
 }

@@ -135,11 +135,14 @@ namespace GenealogyDL.DBContext
         {
             using (var transac = _dbConnection.BeginTransaction())
             {
-                var result = await _dbConnection.QueryMultipleAsync(procName, param, commandType: commandType);
+                var result1 = new List<T1>();
+                var result2 = new List<T2>();
+                using (var result = await _dbConnection.QueryMultipleAsync(procName, param, commandType: commandType))
+                {
+                    result1 = result.Read<T1>().ToList();
+                    result2 = result.Read<T2>().ToList();
+                }
                 transac.Commit();
-
-                var result1 = result.Read<T1>().ToList();
-                var result2 = result.Read<T2>().ToList();
                 return (result1, result2);
             }
         }

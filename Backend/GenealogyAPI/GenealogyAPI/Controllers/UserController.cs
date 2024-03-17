@@ -1,4 +1,5 @@
 ﻿using GenealogyBL.Interfaces;
+using GenealogyCommon.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +15,11 @@ namespace GenealogyAPI.Controllers
             _userBL = userBL;
         }
         [HttpGet]
-        public async Task<object> Get(int id)
+        public async Task<ServiceResult> GetUserInfo()
         {
-            return await _userBL.GetById(id);
+            var serviceResult = new ServiceResult();
+            serviceResult.Data = await _userBL.GetUserInfo();
+            return serviceResult;
         }
     }
 }

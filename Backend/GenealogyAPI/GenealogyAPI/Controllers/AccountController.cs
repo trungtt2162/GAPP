@@ -33,92 +33,90 @@ namespace GenealogyAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<object>> RegisterUser(UserRegister userRegister)
+        public async Task<ServiceResult> RegisterUser(UserRegister userRegister)
         {
+            var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return serviceResult.OnBadRequest();
             }
             var isExist = await _userBL.CheckExistUser(userRegister.Username);
 
             if (isExist)
             {
-                return BadRequest("Duplicate user");
+                return serviceResult.OnBadRequest("Duplicate user");
             }
             await _userBL.SaveCredential(_mapper.Map<Credential>(userRegister));
             await _userBL.Create(_mapper.Map<User>(userRegister));
 
-            return Ok("Created");
+            return serviceResult.OnSuccess("Created");
         }
 
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginRequest request)
+        public async Task<ServiceResult> Login([FromBody] LoginRequest request)
         {
+            var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return serviceResult.OnBadRequest();
             }
 
             if (!_userBL.IsValidUserCredentials(request.UserName, request.Password))
             {
-                return Unauthorized();
+                return serviceResult.OnUnAuthen();
             }
 
-            var role = await _userBL.GetUserRole(request.UserName);
-            var claims = new[]
-            {
-            new Claim(ClaimTypes.Name,request.UserName),
-            new Claim(ClaimTypes.Role, role)
-            };
+            var claims = await _userBL.GetClaims(request.UserName);
 
             var jwtResult = _jwtAuthManager.GenerateTokens(request.UserName, claims, DateTime.Now);
-            return Ok(new LoginResult
+            serviceResult.Data = new LoginResult
             {
-                UserName = request.UserName,
-                Role = role,
                 AccessToken = jwtResult.AccessToken,
                 RefreshToken = jwtResult.RefreshToken.TokenString
-            });
+            };
+            return serviceResult;
         }
 
         [HttpPost("logout")]
-        public ActionResult Logout()
+        public ServiceResult Logout()
         {
             var userName = User.Identity?.Name!;
             _jwtAuthManager.RemoveRefreshTokenByUserName(userName);
             string token = HttpContext.Request.Headers["Authorization"];
             _tokenBlacklist.AddToken(token);
-            return Ok("Logout success");
+            return new ServiceResult();
         }
 
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        public async Task<ServiceResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
+            var serviceResult = new ServiceResult();
             try
             {
                 var userName = User.Identity?.Name!;
                 if (string.IsNullOrWhiteSpace(request.RefreshToken))
                 {
-                    return Unauthorized();
+                    return serviceResult.OnUnauthorized();
                 }
 
                 var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
                 var jwtResult = _jwtAuthManager.Refresh(request.RefreshToken, accessToken ?? string.Empty, DateTime.Now);
-                return Ok(new LoginResult
+                serviceResult.Data = new LoginResult
                 {
                     UserName = userName,
                     Role = User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty,
                     AccessToken = jwtResult.AccessToken,
                     RefreshToken = jwtResult.RefreshToken.TokenString
-                });
+                };
             }
             catch (SecurityTokenException e)
             {
-                return Unauthorized(e.Message); 
+                return serviceResult.OnUnauthorized(e.Message);
             }
+            return serviceResult;
         }
 
     }

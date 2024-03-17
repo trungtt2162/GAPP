@@ -129,7 +129,28 @@ namespace GenealogyDL.Implements
             return await this.QueryFirstOrDefaultAsync<int>(proc, param);
         }
 
-    
+
+        #endregion
+
+        #region Permission
+
+        public async Task<bool> CheckPermissionSubSystem(int userId, string subSystemcode, string permissionCode, int idGenealogy)
+        {
+            var sql = "SELECT * FROM permission p WHERE p.UserID = @ID AND p.IdGenealogy  = @IDGenealogy and p.SubSystemCode = @SubSystemCode AND p.PermissionCode = @PermissionCode limit 1";
+            var param = new Dictionary<string, object>()
+            {
+                ["ID"] = userId,
+                ["IDGenealogy"] =  idGenealogy,
+                ["SubSystemCode"] = subSystemcode,
+                ["PermissionCode"] = permissionCode
+            };
+            var permission = await this.ExecuteScalarAsync<object>(sql, param);
+            if (permission != null)
+            {
+                return true;
+            }
+            return false;
+        }
         #endregion
 
     }

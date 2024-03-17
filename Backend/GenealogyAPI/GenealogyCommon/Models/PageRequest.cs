@@ -13,5 +13,7 @@ namespace GenealogyCommon.Models
         public int PageNumber {get; set;}
         public string Condition {get; set;}
         public string SortOrder {get; set;}
+
+        public string SearchKey { get; set; }
     }
 }
