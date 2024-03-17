@@ -11,11 +11,16 @@ namespace GenealogyCommon.Models.Authen
     public class LoginRequest
     {
         [Required]
-        [JsonPropertyName("username")]
         public string UserName { get; set; } = string.Empty;
 
         [Required]
-        [JsonPropertyName("password")]
         public string Password { get; set; } = string.Empty;
+    }
+
+    public class ChangePassword: LoginRequest
+    {
+        [Required]
+        public string PasswordNew { get; set; } = string.Empty;
+
     }
 }

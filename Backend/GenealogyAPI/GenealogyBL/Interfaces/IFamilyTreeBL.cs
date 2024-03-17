@@ -11,6 +11,6 @@ namespace GenealogyBL.Interfaces
 {
     public interface IFamilyTreeBL: IBaseBL<FamilyTree>
     {
-        
+        Task<List<FamilyTreeClient>> GetTrees(object idGenealogy);
     }
 }

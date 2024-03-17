@@ -20,7 +20,7 @@ namespace GenealogyDL.Implements
         public UserDL(IDBContextFactory dbContextFactory, IWebHostEnvironment env, IAuthService authService) : base(dbContextFactory, env, authService)
         {
         }
-
+        #region Credential
         public async Task<bool> SaveCredential(Credential credential)
         {
             var sql = this.GetFileSql("insert_user_password.sql");
@@ -35,7 +35,20 @@ namespace GenealogyDL.Implements
             };
             return (await this.ExecuteAsync(sql, param)) > 0;
         }
-#region User
+
+        public async Task<bool> UpdateCredential(Credential credential)
+        {
+            var sql = this.GetFileSql("update_user_password.sql");
+            var param = new Dictionary<string, object>()
+            {
+                ["UserName"] = credential.UserName,
+                ["Password"] = credential.Password,
+                ["ModifiedBy"] = _authService.GetFullName(),
+            };
+            return (await this.ExecuteAsync(sql, param)) > 0;
+        }
+        #endregion
+        #region User
         public async Task<int> Create(User user)
         {
             var proc = "Proc_user_Insert";

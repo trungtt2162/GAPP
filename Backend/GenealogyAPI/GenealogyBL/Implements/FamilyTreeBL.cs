@@ -1,3 +1,4 @@
+using AutoMapper;
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
 using GenealogyCommon.Interfaces;
@@ -18,12 +19,33 @@ namespace GenealogyBL.Implements
     {
         private readonly IFamilyTreeDL _familyTreeDL;
         private readonly IUserBL _userBL;
-        public readonly IAuthService _authService;
-        public FamilyTreeBL(IAuthService authService,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
+        private readonly IAuthService _authService;
+        private readonly IUserGenealogyDL _userGenealogyDL;
+        private readonly IMapper _mapper;
+        public FamilyTreeBL(IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
         {
             _familyTreeDL = familyTreeDL;
             _userBL = userBL;
             _authService = authService;
+            _userGenealogyDL = userGenealogyDL;
+            _mapper = mapper;
+        }
+
+        public async Task<List<FamilyTreeClient>> GetTrees(object idGenealogy)
+        {
+            var trees =  await _familyTreeDL.GetAll(idGenealogy);
+            var users = await _userGenealogyDL.GetAll(idGenealogy);
+            var treeClient = new List<FamilyTreeClient>();
+            if (trees.Any())
+            {
+                foreach(var t in trees)
+                {
+                    var d = _mapper.Map<FamilyTreeClient>(t);
+                    d.Users = users.Where(x => x.IdFamilyTree == t.Id).ToList();
+                    treeClient.Add(d);
+                }
+            }
+            return treeClient;
         }
 
         public async Task<object> Create(FamilyTree familyTree)

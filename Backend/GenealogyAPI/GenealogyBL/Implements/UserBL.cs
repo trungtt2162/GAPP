@@ -1,4 +1,5 @@
-﻿using GenealogyBL.Interfaces;
+﻿using AutoMapper;
+using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
@@ -21,12 +22,14 @@ namespace GenealogyBL.Implements
         private readonly IPasswordHasher _passwordHasher;
         private readonly IPermissionDL _permissionDL;
         public readonly IAuthService _authService;
-        public UserBL(IAuthService authService, IPermissionDL permissionDL,IUserDL userDL, IPasswordHasher passwordHasher, IWebHostEnvironment env) : base(env, userDL)
+        private readonly IMapper _mapper;
+        public UserBL(IMapper mapper,IAuthService authService, IPermissionDL permissionDL,IUserDL userDL, IPasswordHasher passwordHasher, IWebHostEnvironment env) : base(env, userDL)
         {
             _userDL = userDL;
             _permissionDL = permissionDL;
             _passwordHasher = passwordHasher;
             _authService = authService;
+            _mapper = mapper;
         }
 
         public bool IsValidUserCredentials(string userName, string password)
@@ -103,6 +106,24 @@ namespace GenealogyBL.Implements
                 new Claim("FullName", $"{user.FirstName} {user.LastName}"),
             };
             return claims;
+        }
+
+        public async Task<bool> ChangePassword(ChangePassword obj)
+        {
+            var userName = _authService.GetUserName();
+            if (!obj.UserName.Equals(userName))
+            {
+                throw new ArgumentException("Invalid: userName");
+            }
+           
+            var check = IsValidUserCredentials(obj.UserName, obj.Password);
+            if (!check)
+            {
+                throw new ArgumentException("Invalid: user, password");
+            }
+
+            obj.Password = await _passwordHasher.HashPassword(obj.PasswordNew);
+            return await _userDL.UpdateCredential(_mapper.Map<Credential>(obj));
         }
 
         #region Permission

@@ -5,6 +5,7 @@ using GenealogyCommon.Models;
 using GenealogyCommon.Utils;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace GenealogyDL.Implements
         protected readonly IDBContextFactory _context;
         protected string _tableName;
         private readonly IWebHostEnvironment _env;
-        private readonly IAuthService _authService;
+        protected readonly IAuthService _authService;
         protected readonly IConfiguration _configuration;
         public BaseDL(IDBContextFactory dapperDatabaseContextFactory, IWebHostEnvironment env, IAuthService authService)
         {
@@ -66,7 +67,7 @@ namespace GenealogyDL.Implements
 
         public async Task<T> GetById(object id)
         {
-            string sql = $"SELECT * FROM {_tableName} WHERE  Id = @id;";
+            string sql = $"SELECT * FROM {_tableName} WHERE  Id = @Id;";
             var param = new Dictionary<string, object> (){
                 ["@Id"] = id
             };
@@ -77,9 +78,10 @@ namespace GenealogyDL.Implements
   
         }
 
+
         public async Task<bool> DeleteById(object id)
         {
-            string sql = $"DELETE FROM {_tableName} WHERE  Id = @id;";
+            string sql = $"DELETE FROM {_tableName} WHERE  Id = @Id;";
             var param = new Dictionary<string, object> (){
                 ["@Id"] = id
             };
@@ -92,7 +94,7 @@ namespace GenealogyDL.Implements
 
         public async Task<bool> DeleteById(object id, object idGenealogy)
         {
-            string sql = $"DELETE FROM {_tableName} WHERE  Id = @id and IdGenealogy = @IdGenealogy;";
+            string sql = $"DELETE FROM {_tableName} WHERE  Id = @Id and IdGenealogy = @IdGenealogy;";
             var param = new Dictionary<string, object>()
             {
                 ["@Id"] = id,
@@ -170,6 +172,12 @@ namespace GenealogyDL.Implements
             using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
             {
                 string sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} LIMIT @pageSize OFFSET  @offset";
+
+                // get all
+                if (pageNumber == -1)
+                {
+                    sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} ";
+                }
                 string sqlCount = $@"SELECT COUNT(*) FROM {_tableName} WHERE {condition}";
                 var param = new
                 {

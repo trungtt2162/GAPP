@@ -9,5 +9,6 @@ namespace GenealogyBL.Interfaces
 {
     public interface IFamilyHistoryBL: IBaseBL<FamilyHistory>
     {
+        Task<FamilyHistory> GetByGenealogyId(object id);
     }
 }

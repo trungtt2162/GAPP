@@ -16,7 +16,7 @@ namespace GenealogyAPI.Extensions
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddBLExtension(configuration);
             services.AddDLExtension(configuration);
-            services.AddAutoMapper(typeof(UserMapper));
+            services.AddAutoMapper(typeof(CommonMapper));
             services.AddScoped<IAuthService, AuthService>();
             services.AddTransient<IEmailSender, EmailSender>();
         }

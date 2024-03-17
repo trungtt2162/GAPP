@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace GenealogyCommon.Mapper
 {
-    public class UserMapper: Profile
+    public class CommonMapper: Profile
     {
-        public UserMapper() { 
+        public CommonMapper() { 
             CreateMap<UserRegister, User>()
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Username));
             CreateMap<UserRegister, Credential>();
@@ -21,6 +21,12 @@ namespace GenealogyCommon.Mapper
             CreateMap<FamilyTreeParam, FamilyTree>();
             CreateMap<UserGenealogyParam, UserGenealogy>();
             CreateMap<User, UserGenealogy>();
+            CreateMap<FamilyTree, FamilyTreeClient>();
+            CreateMap<ChangePassword, Credential>();
+            CreateMap<FamilyAddressParam, FamilyAddress>();
+            CreateMap<FamilyHistoryParam, FamilyHistory>();
+            CreateMap<FamilyHistoryDetailParam, FamilyHistoryDetail>();
+            CreateMap<EventParam, Event>();
         }
     }
 }

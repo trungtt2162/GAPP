@@ -89,6 +89,18 @@ namespace GenealogyAPI.Controllers
             return new ServiceResult();
         }
 
+        [HttpPost("change-password")]
+        public async Task<ServiceResult> ChangePassword(ChangePassword obj)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                serviceResult.OnBadRequest();
+            }
+            serviceResult.Success = await _userBL.ChangePassword(obj);
+            return serviceResult;
+        }
+
 
         [HttpPost("refresh-token")]
         public async Task<ServiceResult> RefreshToken([FromBody] RefreshTokenRequest request)

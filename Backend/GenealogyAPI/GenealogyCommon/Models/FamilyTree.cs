@@ -15,4 +15,14 @@ namespace GenealogyCommon.Models
         public string Description { get; set; }
         public int? ParentID { get; set; } = null;
     }
+
+    public class FamilyTreeClient : BaseModel
+    {
+        public int IdGenealogy { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int? ParentID { get; set; } = null;
+
+        public List<UserGenealogy> Users { get; set; }
+    }
 }

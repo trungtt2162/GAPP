@@ -17,7 +17,20 @@ namespace GenealogyBL.Implements
         {
             _familyAddressDL = familyAddressDL;
         }
+        override
+        public void GetCustomParamPaging(PageRequest pagingRequest)
+        {
+            if (string.IsNullOrWhiteSpace(pagingRequest.Condition))
+            {
+                throw new ArgumentException("IDGenealogy is null");
+            }
 
+            if (!string.IsNullOrWhiteSpace(pagingRequest.SearchKey))
+            {
+                pagingRequest.Condition += $" and Name like '%{pagingRequest.SearchKey}%'";
+            }
+
+        }
     }
 
 }

@@ -22,13 +22,15 @@ namespace GenealogyBL.Implements
         private readonly IPermissionDL _permissionDL;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IEmailSender _emailSender;
-        public SuperAdminBL(IEmailSender emailSender, IPasswordHasher passwordHasher, IPermissionDL permissionDL, IUserDL userDL, IGenealogyDL genealDL, IWebHostEnvironment env) : base(env, userDL)
+        private readonly IFamilyHistoryDL _familyHistoryDL; 
+        public SuperAdminBL(IFamilyHistoryDL familyHistoryDL, IEmailSender emailSender, IPasswordHasher passwordHasher, IPermissionDL permissionDL, IUserDL userDL, IGenealogyDL genealDL, IWebHostEnvironment env) : base(env, userDL)
         {
             _userDL = userDL;
             _genealDL = genealDL;
             _permissionDL = permissionDL;
             _passwordHasher = passwordHasher;
             _emailSender = emailSender;      
+            _familyHistoryDL = familyHistoryDL;
         }
 
         public async Task<object> Create(User user, Genealogy genealogy)
@@ -54,6 +56,14 @@ namespace GenealogyBL.Implements
                 ["p_ModifiedBy"] = "superaddmin"
             };
             await _permissionDL.InsertPermission(param);
+            var historyFamily = new FamilyHistory()
+            {
+
+                IDGenealogy = idGen,
+                Image = "",
+                Description = ""
+            };
+            await _familyHistoryDL.Create(historyFamily);
             await _userDL.InsertUserRole(idUser, nameof(UserRoles.Admin));
             return null;
         }

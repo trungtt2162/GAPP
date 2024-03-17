@@ -11,7 +11,7 @@ namespace GenealogyCommon.Models
     public class Event: BaseModel
     {
 
-        public int IDGenealogy {get; set;}
+        public int IdGenealogy {get; set;}
 
         public string Name { get; set; }
         
@@ -34,22 +34,17 @@ namespace GenealogyCommon.Models
     public class UserEvent: BaseModel
     {
 
-        public int IDGenealogy {get; set;}
-
-        public string Name { get; set; }
+        public int IdGenealogy { get; set; }
+        public int UserID { get; set; }
         
-        public string Description { get; set; }
+        public int IdEvent { get; set; }
 
-        public string LinkStream { get; set; }
-        
-        public int Type { get; set; }
-        
-        public string Background {get; set;}
+        public string FirstName { get; set; }
 
-        public DateTime OrganizationDate {get; set;}
+        public string LastName { get; set; }
 
-        public string Location {get; set;}
+        public string Email { get; set; }
 
-        public int UserIDHost { get; set; }
+        public int Type { get; set; } 
     }
 }

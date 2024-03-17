@@ -12,6 +12,7 @@ namespace GenealogyDL.Interfaces
     public interface IUserDL: IBaseDL<User>
     {
         Task<bool> SaveCredential(Credential credential);
+        Task<bool> UpdateCredential(Credential credential);
 
         Task<bool> CheckUserExist(string userName);
 

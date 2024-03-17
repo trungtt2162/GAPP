@@ -9,5 +9,6 @@ namespace GenealogyDL.Interfaces
 {
     public interface IFamilyHistoryDL: IBaseDL<FamilyHistory>
     {
+        Task<FamilyHistory> GetByGenealogyId(object id);
     }
 }

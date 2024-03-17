@@ -18,6 +18,25 @@ namespace GenealogyBL.Implements
         {
             _familyHistoryDL = familyHistoryDL;
         }
+        override
+        public void GetCustomParamPaging(PageRequest pagingRequest)
+        {
+            if (string.IsNullOrWhiteSpace(pagingRequest.Condition))
+            {
+                throw new ArgumentException("IDGenealogy is null");
+            }
+
+            if (!string.IsNullOrWhiteSpace(pagingRequest.SearchKey))
+            {
+                pagingRequest.Condition += $" and Name like '%{pagingRequest.SearchKey}%'";
+            }
+
+        }
+
+        public async Task<FamilyHistory> GetByGenealogyId(object id)
+        {
+            return await _familyHistoryDL.GetByGenealogyId(id);
+        }
 
     }
 

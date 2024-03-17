@@ -13,6 +13,7 @@ namespace GenealogyBL.Interfaces
     public interface IUserBL: IBaseBL<User>
     {
         bool IsValidUserCredentials(string userName, string password);
+        Task<bool> ChangePassword(ChangePassword obj);
         Task<string> GetUserRole(string userName);
 
         Task<bool> CheckExistUser(string userName);

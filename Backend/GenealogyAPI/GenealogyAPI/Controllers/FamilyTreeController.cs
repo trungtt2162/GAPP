@@ -22,11 +22,13 @@ namespace GenealogyAPI.Controllers
             _mapper = mapper;
         }
 
-        //[HttpPost("paging")]
-        //public async Task<ServiceResult> GetPagingData(PageRequest paggingRequest)
-        //{
-        //    return await _superAdminBL.GetPagingData(paggingRequest);
-        //}
+        [HttpGet("")]
+        public async Task<ServiceResult> GetAll([FromQuery]int idGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            serviceResult.Data =  await _familyTreeBL.GetTrees(idGenealogy);
+            return serviceResult;
+        }
 
         [HttpPost("")]
         public async Task<ServiceResult> InsertFamilyTree(FamilyTreeParam familytreeParam)
