@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 // import { default as social } from "../../assets/social.svg";
 // import { default as footer } from "../../assets/footer.svg";
 
-import PrimaryButton from "./ui/PrimaryButton";
+import PrimaryButton from "../common/button/PrimaryButton";
 
 const Footer = () => {
     const handleFormSubmit = (e) => {

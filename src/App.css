@@ -1,8 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -71,7 +69,7 @@ code {
 
 .link {
   text-decoration: none;
-  color: gray;
+  color: white;
   font-size: 1rem;
   padding: 1.5rem;
 }
@@ -148,4 +146,46 @@ code {
 
 .footer-title {
   padding-bottom: 2rem;
+}
+.tabItem{
+  background-color:white;
+  min-width: 200px;
+  padding: 10px;
+  cursor: pointer;
+
+}
+.flex-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-start{
+  display: flex;
+  justify-content: flex-start;
+
+}
+.border{
+  border: 1px solid gray;
+}
+.shadown{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
 }

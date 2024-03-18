@@ -6,14 +6,14 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { store, persistor } from './redux/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Layout from './Layout';
 import { PersistGate } from 'redux-persist/integration/react'
+import ConfigRoutes from './router/configRoutes';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <Layout />
+        <App />
       </BrowserRouter>
     </PersistGate>
   </Provider>

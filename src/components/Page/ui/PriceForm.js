@@ -13,7 +13,7 @@ import {
 // import { default as parcel } from "../../assets/parcel.svg";
 import { theme } from "../../../theme";
 import { useState } from "react";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "../../common/button/PrimaryButton";
 const PriceForm = () => {
   const { palette } = useTheme(theme);
   const [bookingDate, setBookingDate] = useState(new Date());

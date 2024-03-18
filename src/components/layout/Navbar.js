@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import { Menu, Close } from "@mui/icons-material";
-import PrimaryButton from "./ui/PrimaryButton";
+import PrimaryButton from "../common/button/PrimaryButton";
 //import { default as logo } from "../../assets/logo.svg";
 import { theme } from "../../theme";
 
@@ -76,7 +76,7 @@ const Navbar = () => {
                             variant="text"
                             sx={{
                                 p: ".5rem 1.5rem",
-                                color: palette.text.secondary,
+                                color: "white",
                                 backgroundColor: "transparent",
                                 "&:hover": { color: palette.primary.main },
                             }}

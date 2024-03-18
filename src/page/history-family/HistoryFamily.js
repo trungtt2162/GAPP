@@ -1,8 +1,8 @@
 import React from 'react'
-import Navbar from './Navbar'
 import { Box } from '@mui/material'
 import { useTheme } from '@emotion/react';
 import { theme } from '../../theme';
+import Navbar from '../../components/layout/Navbar';
 
 const HistoryFamily = () => {
     const { palette } = useTheme(theme);

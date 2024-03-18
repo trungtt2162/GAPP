@@ -1,15 +1,14 @@
-import React from 'react'
-import Navbar from './Navbar'
-import { Box } from '@mui/material'
 import { useTheme } from '@emotion/react';
+import { Box } from '@mui/material';
+import React from 'react';
 import { theme } from "../../theme";
-import Hero from './ui/Hero';
+import Navbar from '../../components/layout/Navbar';
 
 const PageTree = () => {
     const { palette } = useTheme(theme);
     return (
         <div>
-            <Navbar />
+            {/* <Navbar /> */}
             <Box
                 width="100%"
                 max-width="10w"

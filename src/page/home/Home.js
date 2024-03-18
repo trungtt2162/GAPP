@@ -6,7 +6,7 @@ import {
     Grid,
     useMediaQuery,
 } from "@mui/material";
-import Hero from "./ui/Hero";
+import Hero from "../../components/Page/ui/Hero";
 import { theme } from "../../theme";
 // import { default as star } from "../../assets/star.svg";
 // import { default as truck } from "../../assets/truck.svg";
@@ -14,9 +14,9 @@ import { theme } from "../../theme";
 // import { default as gps } from "../../assets/gps.svg";
 // import Step from "../../components/step";
 // import Card from "./ui/Card";
-import PriceForm from "./ui/PriceForm";
+import PriceForm from "../../components/Page/ui/PriceForm";
 // import Reviews from "./ui/Reviews";
-import PrimaryButton from "./ui/PrimaryButton";
+import PrimaryButton from "../../components/common/button/PrimaryButton";
 
 //import MobileReviews from "./Navbar/MobileReviews";
 
