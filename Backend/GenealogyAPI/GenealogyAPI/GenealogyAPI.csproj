@@ -18,4 +18,8 @@
     <ProjectReference Include="..\GenealogyDL\GenealogyDL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Upload\" />
+  </ItemGroup>
+
 </Project>

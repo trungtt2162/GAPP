@@ -13,5 +13,7 @@ namespace GenealogyBL.Interfaces
     {
         Task<List<FamilyTreeClient>> GetTrees(object idGenealogy);
 
+        Task<string> ExportTree(int idGenealogy);
+
     }
 }

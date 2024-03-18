@@ -22,6 +22,21 @@ namespace GenealogyCommon.Utils
             return fileContent;
         }
 
+        public static FileInfo GetFile(string fileName, IWebHostEnvironment webHostEnvironment)
+        {
+            string rootPath = webHostEnvironment.ContentRootPath;
+            string folderPath = Path.Combine(rootPath, "Upload");
+            string filePath = Path.Combine(folderPath, fileName);
+            return new FileInfo(filePath);
+        }
+
+        public static string GetPathUpload(IWebHostEnvironment webHostEnvironment)
+        {
+            string rootPath = webHostEnvironment.ContentRootPath;
+            string folderPath = Path.Combine(rootPath, "Upload");
+            return folderPath;
+        }
+
         public static Dictionary<string, object>CreateParamDB(object obj)
         {
             Type type = obj.GetType();

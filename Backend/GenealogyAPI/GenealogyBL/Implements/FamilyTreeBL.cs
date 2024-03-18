@@ -22,13 +22,15 @@ namespace GenealogyBL.Implements
         private readonly IAuthService _authService;
         private readonly IUserGenealogyDL _userGenealogyDL;
         private readonly IMapper _mapper;
-        public FamilyTreeBL(IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
+        private readonly IExportService _exportService;
+        public FamilyTreeBL(IExportService exportService, IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
         {
             _familyTreeDL = familyTreeDL;
             _userBL = userBL;
             _authService = authService;
             _userGenealogyDL = userGenealogyDL;
             _mapper = mapper;
+            _exportService = exportService;
         }
 
         public async Task<List<FamilyTreeClient>> GetTrees(object idGenealogy)
@@ -45,7 +47,7 @@ namespace GenealogyBL.Implements
                     treeClient.Add(d);
                 }
             }
-            var a = BuildTree(_mapper.Map<List<FamilyTreeExport>>(treeClient));
+
             return treeClient;
         }
 
@@ -79,7 +81,14 @@ namespace GenealogyBL.Implements
             return await _familyTreeDL.DeleteById(id, idGenealogy);
         }
 
-        public FamilyTreeExport BuildTree(List<FamilyTreeExport> trees)
+        public async Task<string> ExportTree(int idGenealogy)
+        {
+            var treeClient = await GetTrees(idGenealogy);
+            var root = BuildTree(_mapper.Map<List<FamilyTreeExport>>(treeClient));
+            return _exportService.ExportTreeFamily(root);
+        }
+
+        private FamilyTreeExport BuildTree(List<FamilyTreeExport> trees)
         {
             var dictionary = trees.ToDictionary(item => item.Id, item => item);
             var roots = new List<FamilyTreeExport>();
@@ -101,7 +110,7 @@ namespace GenealogyBL.Implements
             return roots.FirstOrDefault();
         }
 
-        public int GetWeightTree(FamilyTreeExport familyTree)
+        private int GetWeightTree(FamilyTreeExport familyTree)
         {
             if (familyTree == null)
             {
@@ -109,14 +118,15 @@ namespace GenealogyBL.Implements
             }
             if (familyTree.Children.Count == 0)
             {
-                return familyTree.Users.Count;
+                familyTree.Weight = familyTree.Users.Count;
+                return familyTree.Weight;
             }
-            int weight = familyTree.Users?.Count ?? 0;
+            int weight = 0;
             foreach (var item in familyTree.Children)
             {
                 weight += GetWeightTree(item);
             }
-            familyTree.Weight = weight;
+            familyTree.Weight = Math.Max(weight, familyTree.Users.Count);
             return weight;
 
         }
