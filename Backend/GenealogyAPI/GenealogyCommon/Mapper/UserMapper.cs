@@ -21,6 +21,7 @@ namespace GenealogyCommon.Mapper
             CreateMap<FamilyTreeParam, FamilyTree>();
             CreateMap<UserGenealogyParam, UserGenealogy>();
             CreateMap<User, UserGenealogy>();
+            CreateMap<UserGenealogy, User>();
             CreateMap<FamilyTree, FamilyTreeClient>();
             CreateMap<ChangePassword, Credential>();
             CreateMap<FamilyAddressParam, FamilyAddress>();
@@ -33,6 +34,7 @@ namespace GenealogyCommon.Mapper
             CreateMap<FundSendParam, FundSend>();
             CreateMap<FeedBackParam, FeedBack>();
             CreateMap<FamilyTreeClient, FamilyTreeExport>();
+            CreateMap<UserParam, User>();
 
         }
     }

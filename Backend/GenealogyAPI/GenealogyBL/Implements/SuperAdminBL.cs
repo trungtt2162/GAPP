@@ -7,6 +7,7 @@ using GenealogyCommon.Models.Authen;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,17 +38,27 @@ namespace GenealogyBL.Implements
         {
             var idGen = await _genealDL.Create(genealogy);
             var idUser = await _userDL.Create(user);
+            var rawPassword = _passwordHasher.GenerateRandomPassword(12);
             // Gen password default: 
             var creden = new Credential()
             {
                 UserName = user.Email,
-                Password = _passwordHasher.GenerateRandomPassword(12)
+                Password = rawPassword
             };
             // await _emailSender.SendEmailAsync("=", "xin chao", "xin chai");
             creden.Password = await _passwordHasher.HashPassword(creden.Password);
             await _userDL.SaveCredential(creden);
             // todo : Send mail
-            
+            var recip = new JObject {
+                                {
+                                    "Email",
+                                    user.Email
+                                }, {
+                                    "Name",
+                                   user.FirstName
+                                }
+                                };
+            await _emailSender.SendEmailAsync(new JArray() { recip }, "Đã tạo tài khoản", $"username: {user.Email}, password: {rawPassword}", $"username: {user.Email}, password: {rawPassword}");
             var param = new Dictionary<string, object>()
             {
                 ["p_UserID"] = idUser,

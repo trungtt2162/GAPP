@@ -14,5 +14,7 @@ namespace GenealogyDL.Interfaces
         Task<bool> CheckUserExistInTree(int userId, int idGenealogy);
 
         Task<IEnumerable<UserGenealogy>> GetUserGenealogies(int idFamilyTree, int idGenealogy);
+
+        Task<int> InsertUserRegister(UserGenealogy user);
     }
 }

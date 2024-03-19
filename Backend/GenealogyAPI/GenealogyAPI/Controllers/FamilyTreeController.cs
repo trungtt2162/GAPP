@@ -11,7 +11,7 @@ namespace GenealogyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize]
     public class FamilyTreeController : ControllerBase
     {
         private readonly IFamilyTreeBL _familyTreeBL;
@@ -31,6 +31,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> InsertFamilyTree(FamilyTreeParam familytreeParam)
         {
             var serviceResult = new ServiceResult();
@@ -51,7 +52,9 @@ namespace GenealogyAPI.Controllers
             return serviceResult;
         }
 
+
         [HttpPut("")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ActionResult<object>> UpdateFamilyTree(FamilyTreeParam familytreeParam)
         {
             var serviceResult = new ServiceResult();
@@ -64,6 +67,7 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Updated");
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("")]
         public async Task<ActionResult<object>> DeleteFamilyTree([FromQuery] int id, [FromQuery]int idGenealogy)
         {

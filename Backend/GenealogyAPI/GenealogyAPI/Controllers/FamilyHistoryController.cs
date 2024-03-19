@@ -6,6 +6,7 @@ using GenealogyCommon.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using GenealogyDL.Interfaces;
 
 namespace GenealogyAPI.Controllers
 {
@@ -17,11 +18,13 @@ namespace GenealogyAPI.Controllers
         private readonly IFamilyHistoryBL _familyHistoryBL;
         private readonly IBaseBL<FamilyHistoryDetail> _baseBL;
         private readonly IMapper _mapper;
-        public FamilyHistoryController(IBaseBL<FamilyHistoryDetail> baseBL,IFamilyHistoryBL familyHistoryBL, IMapper mapper)
+        private readonly IGenealogyBL _genealogyBL;
+        public FamilyHistoryController(IGenealogyBL genealogyBL, IBaseBL<FamilyHistoryDetail> baseBL,IFamilyHistoryBL familyHistoryBL, IMapper mapper)
         {
             _familyHistoryBL = familyHistoryBL;
             _mapper = mapper;
             _baseBL = baseBL;
+            _genealogyBL = genealogyBL;
         }
 
         [HttpGet("")]
@@ -31,6 +34,25 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest();
+            }
+            serviceResult.Data = await _familyHistoryBL.GetByGenealogyId(idGenealogy);
+
+            return serviceResult;
+        }
+
+        [HttpGet("guest")]
+        [AllowAnonymous]
+        public async Task<ActionResult<object>> GetFamilyHistoryGuest([FromQuery] int idGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var gen = await _genealogyBL.GetById(idGenealogy);
+            if (gen == null || !gen.IsPublic)
+            {
+                return serviceResult;
             }
             serviceResult.Data = await _familyHistoryBL.GetByGenealogyId(idGenealogy);
 
@@ -54,6 +76,30 @@ namespace GenealogyAPI.Controllers
         public async Task<ServiceResult> GetPagingData(PageRequest pagingRequest)
         {
             var serviceResult = new ServiceResult();
+            if (string.IsNullOrWhiteSpace(pagingRequest.Condition))
+            {
+                throw new ArgumentException("IDGenealogy is null");
+            }
+
+            if (!string.IsNullOrWhiteSpace(pagingRequest.SearchKey))
+            {
+                pagingRequest.Condition += $" and Name like '%{pagingRequest.SearchKey}%'";
+            }
+            serviceResult.Data = await _baseBL.GetPagingData(pagingRequest);
+            return serviceResult;
+        }
+
+
+        [HttpPost("detail/guest/paging")]
+        [AllowAnonymous]
+        public async Task<ServiceResult> GetPagingDataGuest(PageRequest pagingRequest, [FromQuery] int idGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            var gen = await _genealogyBL.GetById(idGenealogy);
+            if (gen == null || !gen.IsPublic)
+            {
+                return serviceResult;
+            }
             if (string.IsNullOrWhiteSpace(pagingRequest.Condition))
             {
                 throw new ArgumentException("IDGenealogy is null");

@@ -1,6 +1,7 @@
 using AutoMapper;
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
+using GenealogyCommon.Implements;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyDL.Implements;
@@ -23,7 +24,8 @@ namespace GenealogyBL.Implements
         private readonly IUserGenealogyDL _userGenealogyDL;
         private readonly IMapper _mapper;
         private readonly IExportService _exportService;
-        public FamilyTreeBL(IExportService exportService, IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
+        private readonly IEmailSender _emailSender;
+        public FamilyTreeBL(IEmailSender emailSender, IExportService exportService, IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
         {
             _familyTreeDL = familyTreeDL;
             _userBL = userBL;
@@ -31,6 +33,7 @@ namespace GenealogyBL.Implements
             _userGenealogyDL = userGenealogyDL;
             _mapper = mapper;
             _exportService = exportService;
+            _emailSender = emailSender;
         }
 
         public async Task<List<FamilyTreeClient>> GetTrees(object idGenealogy)
@@ -47,7 +50,6 @@ namespace GenealogyBL.Implements
                     treeClient.Add(d);
                 }
             }
-
             return treeClient;
         }
 

@@ -25,5 +25,6 @@ namespace GenealogyDL.Interfaces
         Task<bool> InsertUserRole(int userID, string roleCode);
 
         Task<bool> CheckPermissionSubSystem(int userId, string subSystemcode, string permissionCode, int idGenealogy);
+
     }
 }

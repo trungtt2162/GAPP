@@ -50,7 +50,7 @@ namespace GenealogyCommon.Models
         {
             return new ServiceResult
             {
-                Success = false,
+                Success = true,
                 StatusCode = 200,
                 Data = data
             };

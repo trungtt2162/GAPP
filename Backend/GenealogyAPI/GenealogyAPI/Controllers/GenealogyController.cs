@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GenealogyBL.Interfaces;
+using GenealogyCommon.Constant;
 using GenealogyCommon.Models;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,15 @@ namespace GenealogyAPI.Controllers
         {
             var serviceResult = new ServiceResult();
             serviceResult.Data = await _genealogyBL.GetPagingDataGuest(paggingRequest);
+            return serviceResult;
+        }
+
+        [HttpPut("")]
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<ServiceResult> Upadte(Genealogy param)
+        {
+            var serviceResult = new ServiceResult();
+            serviceResult.Data = await _genealogyBL.Update(param);
             return serviceResult;
         }
     }

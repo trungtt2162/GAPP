@@ -47,5 +47,26 @@ namespace GenealogyDL.Implements
                 return await dbContext.Query<UserGenealogy>(sql, param, commandType: System.Data.CommandType.Text);
             }
         }
+
+        public async Task<int> InsertUserRegister(UserGenealogy user)
+        {
+            var proc = $"Proc_Insert_User_Register";
+            var param = GetParamInsertDB(user);
+            return await this.QueryFirstOrDefaultAsync<int>(proc, param);
+        }
+
+        public async Task<IEnumerable<UserGenealogy>> GetAll(object idGenealogy)
+        {
+            string sql = $"SELECT * FROM {_tableName} WHERE  IdGenealogy = @IdGenealogy and IdFamilyTree is not null;";
+            var param = new Dictionary<string, object>()
+            {
+                ["@IdGenealogy"] = idGenealogy
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return await dbContext.Query<UserGenealogy>(sql, param, commandType: System.Data.CommandType.Text);
+            }
+
+        }
     }
 }

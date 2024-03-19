@@ -16,10 +16,12 @@ namespace GenealogyBL.Implements
     {
         private readonly IEventDL _eventDL;
         public readonly IAuthService _authService;
-        public EventBL(IAuthService authService, IEventDL eventDL, IWebHostEnvironment env) : base(env, eventDL)
+        public readonly IGenealogyBL _genealogyBL;
+        public EventBL(IGenealogyBL genealogyBL, IAuthService authService, IEventDL eventDL, IWebHostEnvironment env) : base(env, eventDL)
         {
             _eventDL = eventDL;
             _authService = authService;
+            _genealogyBL = genealogyBL;
         }
         public async Task<object> Create(Event obj)
         {
@@ -40,6 +42,25 @@ namespace GenealogyBL.Implements
                 pagingRequest.Condition += $" and Name like '%{pagingRequest.SearchKey}%'";
             }
 
+        }
+
+        public async Task<PageResult<Event>> GetPagingDataGuest(PageRequest pagingRequest,int idGenealogy)
+        {
+            var gen = await _genealogyBL.GetById(idGenealogy);
+            if (gen == null || !gen.IsPublic )
+            {
+                return new PageResult<Event>();
+            }
+            if (string.IsNullOrWhiteSpace(pagingRequest.Condition))
+            {
+                pagingRequest.Condition = $" 1 = 1 and IdGenealogy = {idGenealogy} ";
+            }
+
+            if (!string.IsNullOrWhiteSpace(pagingRequest.SearchKey))
+            {
+                pagingRequest.Condition += $" and Name like '%{pagingRequest.SearchKey}%'";
+            }
+            return await _eventDL.GetPagingData(pagingRequest.PageSize, pagingRequest.PageNumber, pagingRequest.Condition, pagingRequest.SortOrder);
         }
     }
 

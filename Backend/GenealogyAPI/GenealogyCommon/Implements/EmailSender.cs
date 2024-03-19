@@ -1,6 +1,10 @@
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
+using Mailjet.Client;
+using Mailjet.Client.Resources;
+using Mailjet.Client.TransactionalEmails;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -18,58 +22,56 @@ namespace GenealogyCommon.Implements
             _emailSetting = emailSettings.Value;
         }
 
-        public Task SendEmailAsync(string email, string subject, string message)
+        public Task SendEmailAsync(JArray recipients, string subject, string message, string htmlBody)
         {
-            Execute(email, subject, message, null).Wait();
+            DoSendMail(recipients, subject, message, htmlBody).Wait();
 
             return Task.FromResult(0);
         }
 
-        public async Task Execute(string email, string subject, string message, List<Attachment> attachments)
+        private async Task<bool> DoSendMail(JArray recipients, string subject, string message, string htmlBody)
         {
-            try
+            MailjetClient client = new MailjetClient(_emailSetting.APIKey, _emailSetting.SecretKey);
+
+            MailjetRequest request = new MailjetRequest
             {
-                var toEmail = string.IsNullOrEmpty(email) ? _emailSetting.ToEmail : email;
-
-                MailMessage mail = new MailMessage()
-                {
-                    From = new MailAddress(_emailSetting.FromAddress, _emailSetting.FromName)
-                };
-
-                mail.To.Add(new MailAddress(toEmail));
-
-                if (!string.IsNullOrEmpty(_emailSetting.CcEmail))
-                    mail.CC.Add(new MailAddress(_emailSetting.CcEmail));
-
-                if (!string.IsNullOrEmpty(_emailSetting.BccEmail))
-                    mail.Bcc.Add(new MailAddress(_emailSetting.BccEmail));
-
-                if (attachments != null)
-                {
-                    foreach (var item in attachments)
+                Resource = Send.Resource,
+            }
+            .Property(Send.Messages, new JArray 
+            {
+                new JObject {
                     {
-                        mail.Attachments.Add(item);
+                        "FromEmail",
+                        _emailSetting.FromAddress
+                    }, 
+                    {
+                        "FromName",
+                        _emailSetting.FromName
+                    }, 
+                    {
+                        "Recipients",
+                        recipients
+                    }, 
+                    {
+                        "Subject",
+                        subject
+                    }, 
+                    {
+                        "Text-part",
+                        message
+                    }, 
+                    {
+                        "Html-part",
+                        htmlBody
                     }
                 }
-
-                mail.Subject = subject;
-                mail.Body = message;
-                mail.IsBodyHtml = true;
-                mail.Priority = MailPriority.Normal;
-
-                using (SmtpClient smtp = new SmtpClient(_emailSetting.ServerAddress, _emailSetting.ServerPort))
-                {
-                    smtp.UseDefaultCredentials = true;
-                    smtp.Credentials = new NetworkCredential(_emailSetting.Username, _emailSetting.Password);
-                    smtp.EnableSsl = true;
-
-                    await smtp.SendMailAsync(mail);
-                }
-            }
-            catch (Exception ex)
+            });
+            MailjetResponse response = await client.PostAsync(request);
+            if (!response.IsSuccessStatusCode)
             {
-                //throw ex;
+                return false;
             }
+            return true;
         }
     }
 }

@@ -71,6 +71,15 @@ namespace GenealogyAPI.Controllers
             return serviceResult;
         }
 
+        [HttpPost("guest/paging")]
+        [AllowAnonymous]
+        public async Task<ServiceResult> GetPagingDataGuest(PageRequest pagingRequest, [FromQuery] int idGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            serviceResult.Data = await _eventBL.GetPagingDataGuest(pagingRequest, idGenealogy);
+            return serviceResult;
+        }
+
         [HttpPut("")]
         public async Task<ServiceResult> UpdateEvent(Event param)
         {

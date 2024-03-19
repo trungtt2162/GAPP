@@ -1,12 +1,14 @@
-using AutoMapper;
+﻿using AutoMapper;
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
+using GenealogyCommon.Implements;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +24,16 @@ namespace GenealogyBL.Implements
         private readonly IMapper _mapper;
         private readonly IPermissionDL _permissionDL;
         private readonly IAuthService _authService;
+        private readonly IEmailSender _emailSender;
 
-        public UserGenealogyBL(IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env) : base(env, userGenealogyDL)
+        public UserGenealogyBL(IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env) : base(env, userGenealogyDL)
         {
             _userGenealogyDL = userGenealogyDL;
             _userBL = userBL;
             _mapper = mapper;
             _permissionDL = permissionDL;
             _authService = authService;
+            _emailSender = emailSender;
         }
 
         public async Task<object> Create(UserGenealogy userGenealogy)
@@ -68,6 +72,22 @@ namespace GenealogyBL.Implements
             return await _userGenealogyDL.GetUserGenealogies(idFamilyTree, idGenealogy);
         }
 
+
+        public async Task<object> ApproveRegister(UserGenealogy user)
+        {
+            await _userGenealogyDL.Update(user);
+            var recip = new JObject {
+                                {
+                                    "Email",
+                                    user.Email
+                                }, {
+                                    "Name",
+                                   user.FirstName
+                                }
+                                };
+            await _emailSender.SendEmailAsync(new JArray() { recip}, "Đã phê duyệt", "Bạn đã được phê duyệt vào cây gia phả", "Bạn đã được phê duyệt vào cây gia phả");
+            return null;
+        }
         override
         public void GetCustomParamPaging(PageRequest pagingRequest)
         {
@@ -75,6 +95,7 @@ namespace GenealogyBL.Implements
             {
                 throw new ArgumentException("IDGenealogy is null");
             }
+            pagingRequest.Condition += $" and IdFamilyTree is not null ";
 
             if (!string.IsNullOrWhiteSpace(pagingRequest.SearchKey))
             {

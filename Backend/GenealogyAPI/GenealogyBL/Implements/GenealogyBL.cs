@@ -31,7 +31,7 @@ namespace GenealogyBL.Implements
             {
                 pagingRequest.Condition += $" and Name like '%{pagingRequest.SearchKey}%'";
             }
-            pagingRequest.Condition += " IsPublic = true ";
+            pagingRequest.Condition += " and IsPublic = true ";
             return await _genealogyDL.GetPagingData(pagingRequest.PageSize, pagingRequest.PageNumber, pagingRequest.Condition, pagingRequest.SortOrder);
         }
     }

@@ -133,6 +133,7 @@ namespace GenealogyDL.Implements
             return (await this.ExecuteAsync(sql, param)) > 0;
         }
 
+
         #region Supper Admin
         public async Task<int> CreateAdmin(User user)
         {
@@ -164,6 +165,8 @@ namespace GenealogyDL.Implements
             }
             return false;
         }
+
+
         #endregion
 
     }

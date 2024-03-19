@@ -20,6 +20,7 @@ namespace GenealogyBL
             services.AddScoped<ILogBL, LogBL>();
             services.AddScoped<IFamilyAddressBL, FamilyAddressBL>();
             services.AddScoped<IFeedbackBL, FeedbackBL>();
+            services.AddScoped<IGenealogyBL, GenealogyBL.Implements.GenealogyBL>();
 
         }
 

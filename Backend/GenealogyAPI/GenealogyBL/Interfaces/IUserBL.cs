@@ -25,5 +25,7 @@ namespace GenealogyBL.Interfaces
         Task<Claim[]> GetClaims(string userName);
 
         Task<bool> CheckPermissionSubSystem(int userId, string subSystemcode, string permissionCode, int idGenealogy);
+
+        Task<bool> RegisterGenealogy(int idGenealogy);
     }
 }

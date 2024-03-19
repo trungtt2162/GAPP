@@ -23,13 +23,15 @@ namespace GenealogyBL.Implements
         private readonly IPermissionDL _permissionDL;
         public readonly IAuthService _authService;
         private readonly IMapper _mapper;
-        public UserBL(IMapper mapper,IAuthService authService, IPermissionDL permissionDL,IUserDL userDL, IPasswordHasher passwordHasher, IWebHostEnvironment env) : base(env, userDL)
+        private readonly IUserGenealogyDL _userGenealogyDL;
+        public UserBL(IUserGenealogyDL userGenealogyDL, IMapper mapper,IAuthService authService, IPermissionDL permissionDL,IUserDL userDL, IPasswordHasher passwordHasher, IWebHostEnvironment env) : base(env, userDL)
         {
             _userDL = userDL;
             _permissionDL = permissionDL;
             _passwordHasher = passwordHasher;
             _authService = authService;
             _mapper = mapper;
+            _userGenealogyDL = userGenealogyDL;
         }
 
         public bool IsValidUserCredentials(string userName, string password)
@@ -124,6 +126,24 @@ namespace GenealogyBL.Implements
 
             obj.Password = await _passwordHasher.HashPassword(obj.PasswordNew);
             return await _userDL.UpdateCredential(_mapper.Map<Credential>(obj));
+        }
+        public async Task<bool> RegisterGenealogy(int idGenealogy)
+        {
+            var userid = int.Parse(_authService.GetUserID());
+            var check = await _userGenealogyDL.CheckUserExistInTree(userid, idGenealogy);
+            if (check)
+            {
+                throw new ArgumentException("User exist in genealogy");
+            }
+            var user = await _userDL.GetById(userid);
+            var userRegister = _mapper.Map<UserGenealogy>(user);
+            userRegister.InActive = true;
+            userRegister.IdFamilyTree = -1;
+            userRegister.UserId = userid;
+
+            await _userGenealogyDL.InsertUserRegister(userRegister);
+            return true;
+
         }
 
         #region Permission

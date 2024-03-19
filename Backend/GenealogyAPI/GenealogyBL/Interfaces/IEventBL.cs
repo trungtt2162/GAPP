@@ -9,5 +9,6 @@ namespace GenealogyBL.Interfaces
 {
     public interface IEventBL: IBaseBL<Event>
     {
+        Task<PageResult<Event>> GetPagingDataGuest(PageRequest pagingRequest, int idGenealogy);
     }
 }

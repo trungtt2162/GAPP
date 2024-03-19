@@ -73,17 +73,16 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Created");
         }
 
-        [HttpPost("export")]
-        public async Task<ServiceResult> ExportFamilyTree([FromQuery] int idGenealogy)
+        [HttpPost("approve")]
+        public async Task<ServiceResult> Approve(UserGenealogyParam userGenealogyParam)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
-            //await _familyTreeBL.Create(_mapper.Map<FamilyTree>(familytreeParam));
-
-            return serviceResult.OnSuccess("Created");
+            await _userGenealogyBL.ApproveRegister(_mapper.Map<UserGenealogy>(userGenealogyParam));
+            return serviceResult.OnSuccess("Approved");
         }
 
 
