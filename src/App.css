@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+  font-family:Arial !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -149,7 +149,8 @@ code {
 }
 .tabItem{
   background-color:white;
-  min-width: 200px;
+  width: 200px;
+  max-width: 100%;
   padding: 10px;
   cursor: pointer;
 
@@ -188,4 +189,7 @@ code {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #a8bbbf;
+}
+.text-center{
+ text-align: center;
 }

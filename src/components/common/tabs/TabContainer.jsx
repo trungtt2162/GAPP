@@ -25,16 +25,16 @@ const TabContainer = ({listSideBar}) => {
             alignItems: { md: "flex-end", xs: "center" },
             flexDirection: { xs: "column", md: "row" },
             justifyContent: { md: "space-between", xs: "center" },
-            p: "6vh 15% 2rem 15%",
+            p: "15px 40px",
           }}
         >
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={3}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={2}>
             <TabSidebar value={value} event={setValue} listSideBar={listSideBar} />
             </Grid>
-            <Grid  item xs={12} md={9}>
+            <Grid  item xs={12} md={10}>
                <div className="shadown" style={{
-                height:"calc(100vh - 130px)",
+                height:"calc(100vh - 100px)",
 
                 overflow:"auto",
                 padding:10,

@@ -13,6 +13,7 @@ import Footer from "../components/layout/footer";
 import PraviteLayout from "../layouts/PrivateLayout";
 import Home from "../page/home/Home";
 import PageTreeAdmin from "../page/family-tree/admin-family-tree/PageTreeAdmin";
+import ManageAdmin from "../page/manage-admin/ManageAdmin";
 const NotFound = () => {
   return (
     <div className="container mt-3 alert alert-danger" role="alert">
@@ -32,10 +33,12 @@ const ConfigRoutes = (props) => {
             <Route path="users" element={<></>} />
         
           <Route path="/pageTree" element={<PageTreeAdmin />}></Route>
+          <Route path="/admin" element={<ManageAdmin />} />
           <Route path="/history" element={<HistoryFamily />}></Route>
           <Route path="/quiz/:id" element={<></>} />
-          <Route path="/admin" element={<></>}>
-            <Route index element={<DashBoard />} />
+          <Route path="/admin1" element={<></>}>
+         
+          
             <Route path="" element={<></>} />
           </Route>
         
