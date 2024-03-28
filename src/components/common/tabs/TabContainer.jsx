@@ -14,8 +14,9 @@ const TabContainer = ({listSideBar}) => {
         width="100%"
        
         sx={{
-          backgroundColor: palette.secondary.main,
+          backgroundColor: "white",
           p: "2.5rem",
+          color:"black"
         }}
       ></Box>
       <div className="how-work">
@@ -25,24 +26,27 @@ const TabContainer = ({listSideBar}) => {
             alignItems: { md: "flex-end", xs: "center" },
             flexDirection: { xs: "column", md: "row" },
             justifyContent: { md: "space-between", xs: "center" },
-            p: "15px 40px",
+            // p: "15px 40px",
           }}
         >
-          <Grid container spacing={1}>
+          <Grid container >
             <Grid item xs={12} md={2}>
             <TabSidebar value={value} event={setValue} listSideBar={listSideBar} />
             </Grid>
             <Grid  item xs={12} md={10}>
-               <div className="shadown" style={{
-                height:"calc(100vh - 100px)",
+               <div className="shadown bg-default" style={{
+                height:"calc(100vh - 80px)",
 
                 overflow:"auto",
-                padding:10,
-                paddingBottom:30
+                padding:40,
+                paddingBottom:30,
+                // background:"#f2f7fb"
                }}>
                {listSideBar.map(i => (
                        <TabPenal value={value} index={i.key}>
-                       <i.component />
+                      <div className="card-item">
+                      <i.component />
+                      </div>
                      </TabPenal>
                 ))}
                </div>

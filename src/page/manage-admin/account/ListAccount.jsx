@@ -61,12 +61,9 @@ function ListAccount() {
           marginBottom: 20,
         }}
       >
-        <ButtonTab
-          index={1}
-          value={1}
-          text={"Danh sách Tài khoản"}
-          onClick={(e) => {}}
-        />
+        <h4 style={{ marginBottom: 20 }} className="bold">
+          Danh sách tài khoản
+        </h4>
       </div>
       <TableContainer component={Paper}>
         <Table>

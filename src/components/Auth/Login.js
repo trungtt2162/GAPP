@@ -49,9 +49,9 @@ const Login = (props) => {
     return (
         <div className="login-container">
             <div className='header' >
-                <span>Don't have an account yet?</span>
+                <span>Bạn chưa có tài khoản?</span>
                 <button className="btn-signup" onClick={() => { navigate('/register') }}>
-                    Sign up
+                    Đăng ký
                 </button>
             </div>
             <div className='title col-3 mx-auto' >
@@ -84,7 +84,7 @@ const Login = (props) => {
                     // onChange={(event) => setPassword(event.target.value)}
                     />
                 </div>
-                <span className='forgot-password'>Forgot your password?</span>
+                <span className='forgot-password'>Quên mật khẩu?</span>
                 <div >
                     <button
                         className='btn-submit'
@@ -92,7 +92,7 @@ const Login = (props) => {
                     // disabled={isLoading}
                     >
                         {/* {isLoading === true && <ImSpinner6 className='loaderIcon' />} */}
-                        <span> Login in to TNTT21</span>
+                        <span> Đăng nhập</span>
 
                     </button>
                 </div>

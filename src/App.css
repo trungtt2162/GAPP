@@ -4,6 +4,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.MuiTableCell-root,
+.MuiTableRow-root {
+  font-family: Arial !important; /* Font chữ */
+}
+.MuiTableCell-head {
+  font-weight: bold !important; /* In đậm */
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -39,7 +46,12 @@ code {
 .App-link {
   color: #61dafb;
 }
-
+.border-right{
+  border-right: 1px solid gray;
+}
+.w100{
+  width: 100%;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -69,9 +81,11 @@ code {
 
 .link {
   text-decoration: none;
-  color: white;
+  color: black;
   font-size: 1rem;
-  padding: 1.5rem;
+  /* padding: 1.5rem; */
+  padding: 10px;
+
 }
 
 .active {
@@ -148,12 +162,32 @@ code {
   padding-bottom: 2rem;
 }
 .tabItem{
-  background-color:white;
-  width: 200px;
   max-width: 100%;
-  padding: 10px;
   cursor: pointer;
-
+}
+.tabItem-active{
+ font-weight: bold;
+ position: relative;
+}
+.tabItem-active::after{
+content: "";
+position: absolute;
+left: 0;
+bottom: -5px;
+width: 100%;
+height: 3px;
+background-color: black;
+}
+.tabItemSideBar{
+  width: 250px;
+  padding: 15px;
+  cursor:pointer;
+  color:#fff;
+  text-align: start;
+  
+}
+.tabItemSideBar:hover{
+  color:#fff;
 }
 .flex-center{
   display: flex;
@@ -192,4 +226,33 @@ code {
 }
 .text-center{
  text-align: center;
+}
+h1,h2,h3,h4,h5,p{
+  padding: 0 ;
+  margin: 0 ;
+}
+.bold{
+  font-weight: bold;
+}
+.card-item{
+    background: #fff;
+    padding: 18px 30px 25px;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    height: calc(100vh - 130px);
+  overflow: scroll;
+}
+.bg-default{
+  
+  background-color:#fbfaf9 ;
+}
+.app-content{
+  /* padding-top: 30px; */
+
+}
+.content-card{
+  height: calc(100vh - 130px);
+  overflow: scroll;
+  padding:20px;
+  
 }

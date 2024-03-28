@@ -46,7 +46,7 @@ function MemberLocation() {
             <TableCell>Email</TableCell>
             <TableCell>Địa Chỉ</TableCell>
             <TableCell>Giới Tính</TableCell>
-            <TableCell>Hành động</TableCell>
+            <TableCell className='text-center'>Hành động</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -57,7 +57,7 @@ function MemberLocation() {
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.address}</TableCell>
               <TableCell>{user.gender}</TableCell>
-              <TableCell>
+              <TableCell className='text-center'>
                 <Button
                   style={{
                     marginRight: 10,

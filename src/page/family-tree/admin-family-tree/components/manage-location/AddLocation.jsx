@@ -23,7 +23,8 @@ function AddLocationForm() {
   };
 
   return (
-    <Container>
+    <Container maxWidth="sm">
+      <h4 className="bold">Thêm địa điểm</h4>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

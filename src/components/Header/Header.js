@@ -14,6 +14,7 @@ const Header = () => {
                         <Nav.Link href="#home">Home</Nav.Link>
                         <Nav.Link href="#link">Cây Gia Phả</Nav.Link>
                         <Nav.Link href="#link">Lịch Sử Gia Đình</Nav.Link>
+                        <Nav.Link href="#link">Lịch Sử Gia Đình</Nav.Link>
                         <Nav.Link href="#link">Link</Nav.Link>
                     </Nav>
                     <Nav>

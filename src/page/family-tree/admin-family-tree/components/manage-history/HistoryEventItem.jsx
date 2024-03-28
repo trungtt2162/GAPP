@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { uploafFileBase64 } from "../../../../../ultils/helper";
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, Card, Grid, TextField } from "@mui/material";
 
 const HisoryEventItem = ({ image, description, setHistory, id }) => {
   const [txtDes, setTxtDes] = useState(description);
@@ -17,11 +17,14 @@ const HisoryEventItem = ({ image, description, setHistory, id }) => {
     });
   }, [imageUrl, setImageUrl]);
   return (
-    <div
+    <Card
       style={{
         marginTop: 10,
+        display:"flex",
+        alignItems:"center",
+        padding:10
       }}
-      className="flex-center"
+     
     >
       <input ref={fileRef} style={{ display: "none" }} type="file" onChange={onChangeImage} />
       <Grid container spacing={3}>
@@ -64,6 +67,7 @@ const HisoryEventItem = ({ image, description, setHistory, id }) => {
               onClick={() => setModeEdit(true)}
               style={{
                 marginRight: 10,
+                marginTop:30
               }}
               variant="contained"
               color="success"
@@ -76,6 +80,7 @@ const HisoryEventItem = ({ image, description, setHistory, id }) => {
               onClick={() => setModeEdit(false)}
               style={{
                 marginRight: 10,
+                marginTop:30
               }}
               variant="contained"
               color="success"
@@ -83,12 +88,15 @@ const HisoryEventItem = ({ image, description, setHistory, id }) => {
               Ok
             </Button>
           )}
-          <Button variant="contained" color="error">
+          <Button  style={{
+                marginRight: 10,
+                marginTop:30
+              }} variant="contained" color="error">
             Xóa
           </Button>
         </Grid>
       </Grid>
-    </div>
+    </Card>
   );
 };
 export default HisoryEventItem;

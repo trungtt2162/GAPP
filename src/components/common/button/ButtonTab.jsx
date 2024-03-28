@@ -1,17 +1,22 @@
 import { useTheme } from "@emotion/react";
 import { theme } from "../../../theme";
+import { useNavigate } from "react-router-dom";
 
-const ButtonTab = ({ text, value, index, onClick,noMargin }) => {
+const ButtonTab = ({ text, value, index, onClick,noMargin,path }) => {
     const { palette } = useTheme(theme);
+    const navigate = useNavigate()
   return (
     <div
-      onClick={() => onClick(1)}
-      className="tabItem border"
+      onClick={() => {
+        onClick(1)
+        if(path){
+          navigate(path)
+        }
+      }}
+      className={`tabItem ${index===value ?"tabItem-active" :""}`}
       style={{
-        border: index === value && `1px solid ${palette.secondary.light} `,
-        background: index === value && `${palette.primary.main} `,
-        color: index === value ? `white` : `${palette.primary.main}`,
-        marginRight: !noMargin && 20,
+        color: `black`,
+        marginRight: !noMargin && 40,
       }}
     >
       {text}

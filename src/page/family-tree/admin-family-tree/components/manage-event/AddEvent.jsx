@@ -1,153 +1,237 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+
+import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 import {
   TextField,
   Button,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  FormLabel,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
+  Checkbox,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Box,
   Grid,
   Container,
 } from "@mui/material";
-import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
-
+import { makeStyles } from "@mui/styles";
+import AddImage from "../../../../../components/common/addImage/AddImage";
+const useStyles = makeStyles((theme) => ({
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 5,
+    alignItems: "center",
+    width: "100%",
+    margin: "auto",
+    "& > *": {
+      marginBottom: theme.spacing(2),
+    },
+  },
+}));
 function AddEventForm() {
-  const [eventData, setEventData] = useState({
-    eventName: "",
-    eventDate: "",
-    eventClose: "",
-    eventMode: "",
-    eventImage: "",
-    eventStreamLink: "",
-    users: [],
-  });
+  const classes = useStyles();
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setEventData({
-      ...eventData,
-      [name]: value,
-    });
-  };
+  const [eventName, setEventName] = useState("");
+  const [eventDescription, setEventDescription] = useState("");
+  const [eventDate, setEventDate] = useState("");
+  const [eventDateClose, setEventDateClose] = useState("");
+  const [userAttendMode, setUserAttendMode] = useState("");
+  const [eventType, setEventType] = useState("online");
+  const [allowRegistration, setAllowRegistration] = useState(false);
+  const [participantLimit, setParticipantLimit] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [privateOrpublic, setPrivateOrpublic] = useState("");
+  const [link, setLink] = useState("");
+  const [image, setImage] = useState("");
+  const fileRef = useRef();
+
+  const handleChangeFile = (event) => {};
+  const handleUserSelection = () => {};
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(eventData); // Thay console.log bằng xử lý submit thực tế ở đây
   };
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+    <Container maxWidth="md">
+      <h4 className="bold">Thêm sự kiện</h4>
+      <Grid container spacing={1}>
+        <Grid item xs={8}>
+          <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
-              fullWidth
               label="Tên sự kiện"
-              variant="outlined"
-              name="eventName"
-              value={eventData.eventName}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
               fullWidth
+              required
+            />
+            <TextField
+              label="Mô tả sự kiện"
+              value={eventDescription}
+              onChange={(e) => setEventDescription(e.target.value)}
+              multiline
+              fullWidth
+              required
+            />
+            <TextField
               label="Ngày tổ chức"
-              variant="outlined"
               type="date"
-              name="eventDate"
-              value={eventData.eventDate}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
+              value={eventDate}
+              onChange={(e) => setEventDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
-              label="Ngày đóng"
-              variant="outlined"
-              type="date"
-              name="eventClose"
-              value={eventData.eventClose}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
+              required
             />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>Chế độ</InputLabel>
-              <Select
-                name="eventMode"
-                value={eventData.eventMode}
-                onChange={handleChange}
-                label="Chế độ"
-              >
-                <MenuItem value="public_offline">Public - Offline</MenuItem>
-                <MenuItem value="public_online">Public - Online</MenuItem>
-                <MenuItem value="private_offline">Private - Offline</MenuItem>
-                <MenuItem value="private_online">Private - Online</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <input
-              accept="image/*"
-              id="contained-button-file"
-              type="file"
-              style={{ display: "none" }}
-              //   onChange={handleImageChange}
+            <TextField
+              label="Ngày đóng"
+              type="date"
+              value={eventDateClose}
+              onChange={(e) => setEventDateClose(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Link stream"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+              multiline
+              fullWidth
+              required
             />
             <div
               style={{
-                display: "flex",
-                justifyContent: "flex-start",
+                width: "100%",
               }}
+              className="flex-start"
             >
-              <label htmlFor="contained-button-file">
-                <PrimaryButton title={"Tải ảnh minh họa lên"} />
-              </label>
+              <FormControl component="fieldset">
+                <FormLabel
+                  style={{
+                    textAlign: "start",
+                  }}
+                  component="legend"
+                >
+                  Chế độ
+                </FormLabel>
+                <RadioGroup
+                  row
+                  value={eventType}
+                  onChange={(e) => setEventType(e.target.value)}
+                >
+                  <FormControlLabel
+                    value="online"
+                    control={<Radio />}
+                    label="Online"
+                  />
+                  <FormControlLabel
+                    value="offline"
+                    control={<Radio />}
+                    label="Offline"
+                  />
+                </RadioGroup>
+              </FormControl>
             </div>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Link Stream"
-              variant="outlined"
-              name="eventStreamLink"
-              value={eventData.eventStreamLink}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              select
-              name="userRoles"
-              id="userRoles"
-              variant="outlined"
-              label="userRoles"
-              SelectProps={{
-                multiple: true,
-                value: eventData.users,
-                // onChange: handleFieldChange,
+            <div
+              style={{
+                width: "100%",
+              }}
+              className="flex-start"
+            >
+              <FormControl component="fieldset">
+                <FormLabel
+                  style={{
+                    textAlign: "start",
+                  }}
+                  component="legend"
+                >
+                  Chế độ
+                </FormLabel>
+                <RadioGroup
+                  row
+                  value={eventType}
+                  onChange={(e) => setPrivateOrpublic(e.target.value)}
+                >
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Private"
+                  />
+                  <FormControlLabel
+                    value="2"
+                    control={<Radio />}
+                    label="Public"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <div
+              style={{
+                width: "150%",
+                display: "flex",
+                justifyContent: "center",
+                marginLeft: "50%",
               }}
             >
-              <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="user1">User1</MenuItem>
-              <MenuItem value="user2">User2</MenuItem>
-            </TextField>
-          </Grid>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Tên</TableCell>
+                      <TableCell>Ngày sinh</TableCell>
+                      <TableCell>Email</TableCell>
+                      <TableCell>Địa chỉ</TableCell>
+                      <TableCell>Giới tính</TableCell>
+                      <TableCell>Tham gia</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {/* Dùng map để render từng user */}
+                    {Array.from({ length: 5 }, (_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>User {index + 1}</TableCell>
+                        <TableCell>01/01/1990</TableCell>
+                        <TableCell>user{index + 1}@example.com</TableCell>
+                        <TableCell>123 Street, City</TableCell>
+                        <TableCell>Male</TableCell>
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedUsers.includes(index)}
+                            onChange={() => handleUserSelection(index)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
 
-          <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
-              Thêm Sự Kiện
+              Tạo
             </Button>
-          </Grid>
+          </form>
         </Grid>
-      </form>
+        <Grid item xs={4}>
+          <input
+            onChange={handleChangeFile}
+            type="file"
+            style={{
+              display: "none",
+            }}
+            ref={fileRef}
+          />
+          <AddImage click={() => fileRef.current.click()} url={image} />
+        </Grid>
+      </Grid>
     </Container>
   );
 }

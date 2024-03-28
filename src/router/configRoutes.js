@@ -14,6 +14,12 @@ import PraviteLayout from "../layouts/PrivateLayout";
 import Home from "../page/home/Home";
 import PageTreeAdmin from "../page/family-tree/admin-family-tree/PageTreeAdmin";
 import ManageAdmin from "../page/manage-admin/ManageAdmin";
+import ManageMemberFund from "../page/funds/member-fund/MemberFund";
+import ManageAdminFund from "../page/funds/admin-fund/AdminFund";
+import ProfileManager from "../page/profile/ProfileManage";
+import EventMember from "../page/member-event.jsx/EventMember";
+import RequestEvents from "../page/request-event/RequestEvent";
+import HomeNoLogin from "../page/home/HomeNologin";
 const NotFound = () => {
   return (
     <div className="container mt-3 alert alert-danger" role="alert">
@@ -29,12 +35,23 @@ const ConfigRoutes = (props) => {
         <Routes>
           <Route path="/" element={<PraviteLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/home-nologin" element={<HomeNoLogin />} />
+
 
             <Route path="users" element={<></>} />
         
           <Route path="/pageTree" element={<PageTreeAdmin />}></Route>
           <Route path="/admin" element={<ManageAdmin />} />
-          <Route path="/history" element={<HistoryFamily />}></Route>
+          <Route path="/member-fund" element={<ManageMemberFund />} />
+          <Route path="/admin-fund" element={<ManageAdminFund />} />
+          <Route path="/profile" element={<ProfileManager />} />
+          <Route path="/event" element={<EventMember />} />
+          <Route path="/request-event" element={<RequestEvents />} />
+          <Route path="/history" element={<HistoryFamily />}>
+            
+            
+            
+          </Route>
           <Route path="/quiz/:id" element={<></>} />
           <Route path="/admin1" element={<></>}>
          

@@ -28,7 +28,7 @@ function ListEvent() {
             <TableCell>Tên sự kiện</TableCell>
             <TableCell>Ngày tổ chức</TableCell>
             <TableCell>Chế độ</TableCell>
-            <TableCell>Hành động</TableCell>
+            <TableCell className='text-center'>Hành động</TableCell>
 
             
           </TableRow>
@@ -39,7 +39,7 @@ function ListEvent() {
               <TableCell>{user.eventName}</TableCell>
               <TableCell>{user.eventDate}</TableCell>
               <TableCell>{user.eventMode}</TableCell>
-              <TableCell>
+              <TableCell className='text-center'>
                 <Button
                   style={{
                     marginRight: 10,

@@ -1,0 +1,43 @@
+.fund-wrap {
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10px;
+  height: 100px;
+  margin-top: 20px;
+  position: relative;
+  .button-more {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    cursor: pointer;
+    color: #116466;
+  }
+}
+.funddetail-wrap {
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  min-height: 100px;
+  .title {
+    width:300px;
+    text-align: start;
+    border-right: 1px solid gray;
+  }
+  .content {
+    flex: 1;
+    text-align: start;
+    padding-left: 20px;
+  }
+  
+}
+.funddetail-wrap.vertical{
+    flex-direction: column !important;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   TextField,
   Button,
@@ -9,6 +9,7 @@ import {
   Grid,
   Container,
 } from "@mui/material";
+import AddImage from "../../../../../components/common/addImage/AddImage";
 
 function AddMemberForm() {
   const [memberData, setMemberData] = useState({
@@ -25,6 +26,7 @@ function AddMemberForm() {
     branch: "",
     image:""
   });
+  const fileRef = useRef()
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -136,18 +138,15 @@ function AddMemberForm() {
           <Grid item xs={6}>
            
             <input
+            ref={fileRef}
               accept="image/*"
               id="contained-button-file"
               type="file"
               style={{ display: "none" }}
                 onChange={handleImageChange}
             />
+            <AddImage url={memberData.image} click={() =>fileRef.current.click() } />
            
-              <label style={{display:"inline-block",width:"100%",height:300}} htmlFor="contained-button-file">
-                <div   style={{width:"100%",height:300,cursor:"pointer",background:`url(${memberData.image})`}}  className="border flex-center">
-                  {memberData.image ? "" : "Tải ảnh lên"}
-                </div>
-              </label>
            
           </Grid>
           <Grid item xs={12}>
@@ -203,6 +202,7 @@ function AddMemberForm() {
             </Grid>
           </Grid>
           <Grid item xs={12}>
+           
                 <Button type="submit" variant="contained" color="primary">
                   Thêm Thành Viên
                 </Button>

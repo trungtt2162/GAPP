@@ -4,12 +4,13 @@ import ManageSiteAdmin from "./components/manage-site-admin/ManageSiteAdmin";
 import AdminLog from "./components/admin-log/LogAdmin";
 import ListFeedBack from "./components/feedback/ListFeedback";
 import ListAccount from "./account/ListAccount";
+import ManageAccount from "./account/AccountManage";
 const ManageAdmin = () => {
   const listSideBar = [
     {
       key: 1,
       name: "Tài khoản",
-      component: ListAccount,
+      component: ManageAccount,
     },
     {
       key: 2,
@@ -27,11 +28,11 @@ const ManageAdmin = () => {
       component:ListFeedBack,
     },
     
-    {
-      key: 5,
-      name: "Report",
-      component:ListAccount,
-    },
+    // {
+    //   key: 5,
+    //   name: "Report",
+    //   component:ListAccount,
+    // },
   ];
   return <TabContainer listSideBar={listSideBar} />;
 };
