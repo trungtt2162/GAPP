@@ -80,6 +80,7 @@ namespace GenealogyBL.Implements
             {
                 throw new ArgumentException("UnAuthorized");
             }
+            await _userGenealogyDL.ResetUserGenealogy(id, idGenealogy);
             return await _familyTreeDL.DeleteById(id, idGenealogy);
         }
 

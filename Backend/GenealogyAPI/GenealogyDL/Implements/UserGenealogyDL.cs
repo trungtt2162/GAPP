@@ -68,5 +68,19 @@ namespace GenealogyDL.Implements
             }
 
         }
+
+        public async Task<bool> ResetUserGenealogy(int idFamilyTree, int idGenealogy)
+        {
+            string sql = $"UPDATE user_genealogy ug set ug.IdFamilyTree = NULL WHERE ug.IdFamilyTree = @IdFamilyTree AND ug.IdGenealogy = @IdGenealogy;";
+            var param = new Dictionary<string, object>()
+            {
+                ["@IdGenealogy"] = idGenealogy,
+                ["@IdFamilyTree"] = idFamilyTree
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return (await dbContext.ExecuteAsync(sql, param, commandType: System.Data.CommandType.Text)) > 0;
+            }
+        }
     }
 }

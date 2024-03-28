@@ -5,6 +5,7 @@ using GenealogyCommon.Models;
 using GenealogyCommon.Models.Param;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Data;
 
 namespace GenealogyAPI.Controllers
