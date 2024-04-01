@@ -15,12 +15,10 @@ namespace GenealogyBL.Implements
     internal class EventBL : BaseBL<Event>, IEventBL
     {
         private readonly IEventDL _eventDL;
-        public readonly IAuthService _authService;
         public readonly IGenealogyBL _genealogyBL;
-        public EventBL(IGenealogyBL genealogyBL, IAuthService authService, IEventDL eventDL, IWebHostEnvironment env) : base(env, eventDL)
+        public EventBL(IGenealogyBL genealogyBL, IEventDL eventDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, eventDL, logDL, authService)
         {
             _eventDL = eventDL;
-            _authService = authService;
             _genealogyBL = genealogyBL;
         }
         public async Task<object> Create(Event obj)

@@ -1,4 +1,5 @@
 ﻿using GenealogyBL.Interfaces;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
@@ -12,10 +13,8 @@ namespace GenealogyBL.Implements
 {
     internal class LogBL : BaseBL<Log>, ILogBL
     {
-        private readonly ILogDL _logDL;
-        public LogBL(ILogDL logDL, IWebHostEnvironment env) : base(env, logDL)
+        public LogBL( IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, logDL,logDL, authService)
         {
-            _logDL = logDL;
         }
 
     }

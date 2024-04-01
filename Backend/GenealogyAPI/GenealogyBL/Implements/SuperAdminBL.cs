@@ -1,4 +1,5 @@
-﻿using GenealogyBL.Interfaces;
+﻿using AutoMapper;
+using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
 using GenealogyCommon.Implements;
 using GenealogyCommon.Interfaces;
@@ -23,8 +24,10 @@ namespace GenealogyBL.Implements
         private readonly IPermissionDL _permissionDL;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IEmailSender _emailSender;
-        private readonly IFamilyHistoryDL _familyHistoryDL; 
-        public SuperAdminBL(IFamilyHistoryDL familyHistoryDL, IEmailSender emailSender, IPasswordHasher passwordHasher, IPermissionDL permissionDL, IUserDL userDL, IGenealogyDL genealDL, IWebHostEnvironment env) : base(env, userDL)
+        private readonly IFamilyHistoryDL _familyHistoryDL;
+        private readonly IUserGenealogyDL _userGenealogyDL;
+        private readonly IMapper _mapper;
+        public SuperAdminBL(IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService, IFamilyHistoryDL familyHistoryDL, IEmailSender emailSender, IPasswordHasher passwordHasher, IPermissionDL permissionDL, IUserDL userDL, IGenealogyDL genealDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userDL, logDL, authService)
         {
             _userDL = userDL;
             _genealDL = genealDL;
@@ -32,12 +35,21 @@ namespace GenealogyBL.Implements
             _passwordHasher = passwordHasher;
             _emailSender = emailSender;      
             _familyHistoryDL = familyHistoryDL;
+            _userGenealogyDL = userGenealogyDL;
+            _mapper = mapper;
         }
 
         public async Task<object> Create(User user, Genealogy genealogy)
         {
+            if (_userDL.CheckUserExist(user.Email).Result)
+            {
+                throw new ArgumentException("User exist");
+            }
             var idGen = await _genealDL.Create(genealogy);
             var idUser = await _userDL.Create(user);
+            var userGenology = _mapper.Map<UserGenealogy>(user);
+            userGenology.IdGenealogy = idGen;
+            var idUserGenealogy = await _userGenealogyDL.Create(userGenology);
             var rawPassword = _passwordHasher.GenerateRandomPassword(12);
             // Gen password default: 
             var creden = new Credential()
@@ -45,7 +57,6 @@ namespace GenealogyBL.Implements
                 UserName = user.Email,
                 Password = rawPassword
             };
-            // await _emailSender.SendEmailAsync("=", "xin chao", "xin chai");
             creden.Password = await _passwordHasher.HashPassword(creden.Password);
             await _userDL.SaveCredential(creden);
             // todo : Send mail
@@ -58,13 +69,13 @@ namespace GenealogyBL.Implements
                                    user.FirstName
                                 }
                                 };
-            await _emailSender.SendEmailAsync(new JArray() { recip }, "Đã tạo tài khoản", $"username: {user.Email}, password: {rawPassword}", $"username: {user.Email}, password: {rawPassword}");
+            await _emailSender.SendEmailAsync(new JArray() { recip }, "Tài khoản Admin cây gia phả", $"<div>UserName: {user.Email}</div> <div>password: {rawPassword}</div>", $"<div>UserName: {user.Email}</div> <div>password: {rawPassword}</div>");
             var param = new Dictionary<string, object>()
             {
                 ["p_UserID"] = idUser,
                 ["p_RoleCode"] = nameof(UserRoles.Admin),
                 ["P_IdGenealogy"] = idGen,
-                ["p_ModifiedBy"] = "superaddmin"
+                ["p_ModifiedBy"] = _authService.GetFullName()
             };
             await _permissionDL.InsertPermission(param);
             var historyFamily = new FamilyHistory()
@@ -76,6 +87,7 @@ namespace GenealogyBL.Implements
             };
             await _familyHistoryDL.Create(historyFamily);
             await _userDL.InsertUserRole(idUser, nameof(UserRoles.Admin));
+            _ = InsertLog(LogAction.CreateAdmin, userGenology);
             return null;
         }
 

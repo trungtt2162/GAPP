@@ -23,16 +23,14 @@ namespace GenealogyBL.Implements
         private readonly IUserBL _userBL;
         private readonly IMapper _mapper;
         private readonly IPermissionDL _permissionDL;
-        private readonly IAuthService _authService;
         private readonly IEmailSender _emailSender;
 
-        public UserGenealogyBL(IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env) : base(env, userGenealogyDL)
+        public UserGenealogyBL(IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userGenealogyDL, logDL, authService)
         {
             _userGenealogyDL = userGenealogyDL;
             _userBL = userBL;
             _mapper = mapper;
             _permissionDL = permissionDL;
-            _authService = authService;
             _emailSender = emailSender;
         }
 
@@ -64,6 +62,7 @@ namespace GenealogyBL.Implements
                 ["p_ModifiedBy"] = _authService.GetFullName()
             };
             await _permissionDL.InsertPermission(param);
+            _ = InsertLog(LogAction.CreateAdmin, userGenealogy);
             return await _userGenealogyDL.Create(userSave);
         }
 

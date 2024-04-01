@@ -37,7 +37,6 @@ namespace GenealogyDL.Implements
         #region Properties
 
         protected string ConnectionString { get; set; }
-        public string TableName { get => _tableName; }
 
         public async Task<int> Create(T obj){
             var proc = $"Proc_{_tableName}_Insert";

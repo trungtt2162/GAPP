@@ -20,16 +20,14 @@ namespace GenealogyBL.Implements
     {
         private readonly IFamilyTreeDL _familyTreeDL;
         private readonly IUserBL _userBL;
-        private readonly IAuthService _authService;
         private readonly IUserGenealogyDL _userGenealogyDL;
         private readonly IMapper _mapper;
         private readonly IExportService _exportService;
         private readonly IEmailSender _emailSender;
-        public FamilyTreeBL(IEmailSender emailSender, IExportService exportService, IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env) : base(env, familyTreeDL)
+        public FamilyTreeBL(IEmailSender emailSender, IExportService exportService, IMapper mapper, IUserGenealogyDL userGenealogyDL,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, familyTreeDL, logDL, authService)
         {
             _familyTreeDL = familyTreeDL;
             _userBL = userBL;
-            _authService = authService;
             _userGenealogyDL = userGenealogyDL;
             _mapper = mapper;
             _exportService = exportService;

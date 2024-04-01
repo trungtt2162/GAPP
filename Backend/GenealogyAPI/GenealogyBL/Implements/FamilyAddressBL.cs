@@ -1,5 +1,7 @@
 ﻿using GenealogyBL.Interfaces;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
+using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using System;
@@ -13,7 +15,7 @@ namespace GenealogyBL.Implements
     internal class FamilyAddressBL : BaseBL<FamilyAddress>, IFamilyAddressBL
     {
         private readonly IFamilyAddressDL _familyAddressDL;
-        public FamilyAddressBL(IFamilyAddressDL familyAddressDL, IWebHostEnvironment env) : base(env, familyAddressDL)
+        public FamilyAddressBL(IFamilyAddressDL familyAddressDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, familyAddressDL, logDL, authService)
         {
             _familyAddressDL = familyAddressDL;
         }

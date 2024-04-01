@@ -1,4 +1,5 @@
 ﻿using GenealogyBL.Interfaces;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
@@ -14,7 +15,7 @@ namespace GenealogyBL.Implements
     internal class FamilyHistoryBL : BaseBL<FamilyHistory>, IFamilyHistoryBL
     {
         private readonly IFamilyHistoryDL _familyHistoryDL;
-        public FamilyHistoryBL(IFamilyHistoryDL familyHistoryDL, IWebHostEnvironment env) : base(env, familyHistoryDL)
+        public FamilyHistoryBL(IFamilyHistoryDL familyHistoryDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, familyHistoryDL, logDL, authService)
         {
             _familyHistoryDL = familyHistoryDL;
         }

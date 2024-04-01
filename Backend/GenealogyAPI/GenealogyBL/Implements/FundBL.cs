@@ -1,4 +1,5 @@
 ﻿using GenealogyBL.Interfaces;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +14,7 @@ namespace GenealogyBL.Implements
     internal class FundBL : BaseBL<Fund>, IFundBL
     {
         private readonly IFundDL _fundDL;
-        public FundBL(IFundDL fundDL, IWebHostEnvironment env) : base(env, fundDL)
+        public FundBL(IFundDL fundDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, fundDL, logDL, authService)
         {
             _fundDL = fundDL;
         }

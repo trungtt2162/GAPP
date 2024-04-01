@@ -13,10 +13,12 @@ namespace GenealogyCommon.Models
 
         public int IDGenealogy {get; set;}
 
-        public string ActionName { get; set; }
+        public string Action { get; set; }
 
-        public int Action {get; set;}
+        public DateTime? Date {get; set;}
         
-        public string ActionRoleCode {get;set;}
+        public string Description {get;set;}
+
+        public string RawData { get; set; }
     }
 }

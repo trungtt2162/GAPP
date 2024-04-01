@@ -118,8 +118,6 @@ namespace GenealogyAPI.Controllers
                 var jwtResult = _jwtAuthManager.Refresh(request.RefreshToken, accessToken ?? string.Empty, DateTime.Now);
                 serviceResult.Data = new LoginResult
                 {
-                    UserName = userName,
-                    Role = User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty,
                     AccessToken = jwtResult.AccessToken,
                     RefreshToken = jwtResult.RefreshToken.TokenString
                 };

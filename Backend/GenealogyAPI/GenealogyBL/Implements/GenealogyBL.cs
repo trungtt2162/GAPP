@@ -1,5 +1,6 @@
 ﻿using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
@@ -15,7 +16,7 @@ namespace GenealogyBL.Implements
     internal class GenealogyBL : BaseBL<Genealogy>, IGenealogyBL
     {
         private readonly IGenealogyDL _genealogyDL;
-        public GenealogyBL(IGenealogyDL genealogyDL, IWebHostEnvironment env) : base(env, genealogyDL)
+        public GenealogyBL(IGenealogyDL genealogyDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, genealogyDL, logDL, authService)
         {
             _genealogyDL = genealogyDL;
         }

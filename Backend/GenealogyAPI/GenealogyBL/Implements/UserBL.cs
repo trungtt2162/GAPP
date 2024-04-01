@@ -21,15 +21,15 @@ namespace GenealogyBL.Implements
         private readonly IUserDL _userDL;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IPermissionDL _permissionDL;
-        public readonly IAuthService _authService;
         private readonly IMapper _mapper;
         private readonly IUserGenealogyDL _userGenealogyDL;
-        public UserBL(IUserGenealogyDL userGenealogyDL, IMapper mapper,IAuthService authService, IPermissionDL permissionDL,IUserDL userDL, IPasswordHasher passwordHasher, IWebHostEnvironment env) : base(env, userDL)
+        public UserBL(IUserGenealogyDL userGenealogyDL, IMapper mapper, IAuthService authService,
+            IPermissionDL permissionDL, IUserDL userDL,
+            IPasswordHasher passwordHasher, IWebHostEnvironment env, ILogDL logDL) : base(env, userDL, logDL, authService)
         {
             _userDL = userDL;
             _permissionDL = permissionDL;
             _passwordHasher = passwordHasher;
-            _authService = authService;
             _mapper = mapper;
             _userGenealogyDL = userGenealogyDL;
         }
