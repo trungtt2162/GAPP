@@ -1,14 +1,14 @@
 import axios from 'axios';
-import { LOCAL_STORAGE_KEY } from '../constants/common';
+import { LOCAL_STORAGE_KEY } from '../constant/common';
 
-const api = axios.create({
-  baseURL: 'http://localhost:8080/',
+export  const API = axios.create({
+  baseURL: 'http://localhost:5210/',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-api.interceptors.request.use(
+API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(LOCAL_STORAGE_KEY.token); 
     if (token) {
@@ -21,4 +21,3 @@ api.interceptors.request.use(
   }
 );
 
-export default api;

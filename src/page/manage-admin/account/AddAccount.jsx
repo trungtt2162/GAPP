@@ -13,33 +13,58 @@ import {
 } from "@mui/material";
 import AddImage from "../../../components/common/addImage/AddImage";
 import { genderOptions } from "../../../constant/common";
+import ButtonLoading from "../../../components/common/button/ButtonLoading";
+import { handleError } from "../../../ultils/helper";
+import { supperAdminApi } from "../../../api/supperAdmin.api";
+import { toast } from "react-toastify";
 
 function AddAccount() {
-  const [formData, setFormData] = useState({
+  const originData = {
+    Id: 0,
+    ModifiedBy: "string",
+    ModifiedDate: "2024-04-02T16:00:23.634Z",
+    CreatedBy: "string",
+    CreatedDate: "2024-04-02T16:00:23.634Z",
     firstName: "",
     lastName: "",
     email: "",
-    idNumber: "",
-    phoneNumber: "",
+    indentification: "",
+    phone: "",
     address: "",
-    gender: "",
-    birthday: "",
-    image: "",
-  });
+    gender: 0,
+    dateOfBirth: "",
+    dateOfDeath: "2024-04-02T16:00:23.634Z",
+    avatar: "string",
+    Type: 0,
+    HomeTown: "a",
+    InActive: false,
+    IsBlock: false,
+    Name: "a",
+    Description: "string",
+  }
+  const [formData, setFormData] = useState(originData);
+  const [loading,setLoading] = useState(false)
   const fileRef = useRef();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission here
-    console.log(formData);
+  const handleSubmit = async() => {
+    try {
+      setLoading(true)
+      const res = await supperAdminApi.createAdmin({...formData,gender:formData.gender == true ? 1:0});
+      console.log(res.data)
+      if(res.data.StatusCode===200 ){
+        toast.success("Thêm thành công");
+        setFormData(originData)
+      }
+      setLoading(false);
+    } catch (error) {
+      handleError(error,true)
+      setLoading(false)
   };
-  const handleChangeFile = (e) => {
-    const file = e.target.files[0];
-  };
+}
 
   return (
     <form onSubmit={handleSubmit}>
@@ -73,7 +98,7 @@ function AddAccount() {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <TextField
               fullWidth
               label="Mật khẩu"
@@ -82,13 +107,22 @@ function AddAccount() {
               type="password"
               onChange={handleChange}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <TextField
               fullWidth
               label="Số điện thoại"
-              name="phoneNumber"
-              value={formData.phoneNumber}
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="CMND/CCCD"
+              name="indentification"
+              value={formData.indentification}
               onChange={handleChange}
             />
           </Grid>
@@ -122,8 +156,8 @@ function AddAccount() {
               fullWidth
               type="date"
               label="Ngày sinh nhật"
-              name="birthday"
-              value={formData.birthday}
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
               onChange={handleChange}
               InputLabelProps={{
                 shrink: true,
@@ -131,9 +165,14 @@ function AddAccount() {
             />
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Thêm tài khoản
-            </Button>
+            <ButtonLoading
+              title={" Thêm tài khoản"}
+              loading={loading}
+              type="submit"
+              variant="contained"
+              color="primary"
+              event={() => handleSubmit()}
+            ></ButtonLoading>
           </Grid>
         </Grid>
       </Container>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,50 +9,81 @@ import {
   Paper,
   TablePagination,
   Button,
+  IconButton,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { makeStyles } from "@mui/styles";
 import ButtonTab from "../../../components/common/button/ButtonTab";
-
-const users = [
-  {
-    name: "Admin1",
-    action: "Thêm",
-    email: "Admin1@gmail.com",
-  },
-  {
-    name: "18-3-2024",
-    action: "Sửa",
-    email: "Admin1@gmail.com",
-  },
-  {
-    name: "Admin1",
-    action: "Xóa",
-    email: "Admin1@gmail.com",
-  },
-  {
-    name: "Admin1",
-    action: "01/01/1990",
-    email: "Admin1@gmail.com",
-  },
-  {
-    name: "Admin1",
-    action: "01/01/1990",
-    email: "Admin1@gmail.com",
-  },
-];
+import { supperAdminApi } from "../../../api/supperAdmin.api";
+import { handleError } from "../../../ultils/helper";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function ListAccount() {
   // State cho việc phân trang
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+  const [ListAccount, setListAccount] = useState([]);
   // Hàm xử lý thay đổi trang
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  //
+  const getListAcount = async () => {
+    try {
+      const res = await supperAdminApi.getListAdmin({});
+      if (res.data.StatusCode === 200) {
+        setListAccount(res.data.Data.Data);
+      }
+    } catch (error) {
+      console.log(error);
+      handleError(error);
+    }
+  };
+
+  // LOCK ACC
+  const handleLockAcc = async (row, status) => {
+    try {
+      const res = await supperAdminApi.updateAdmin({
+        ...row,
+        IsBlock: status === 0 ? true : false,
+      });
+      if (res.data.StatusCode === 200) {
+        toast.success(
+          "Đã " +
+            (status === 1 ? "mở" : "") +
+            " khóa account của admin " +
+            row.FirstName +
+            " " +
+            row.LastName
+        );
+        getListAcount();
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  // Delete ACC
+  const handleDelete = async (row) => {
+    try {
+      const res = await supperAdminApi.deleteAdmin(row.Id);
+      if (res.data.StatusCode === 200) {
+        toast.success(
+          "Đã xóa account của admin " + row.FirstName + " " + row.LastName
+        );
+        getListAcount();
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  useEffect(() => {
+    getListAcount();
+  }, []);
   return (
     <div>
       <div
@@ -71,35 +102,76 @@ function ListAccount() {
             <TableRow>
               <TableCell className={"text-center"}>Tên</TableCell>
               <TableCell className={"text-center"}>Email</TableCell>
-              <TableCell className={"text-center"}>Hành động</TableCell>
+              <TableCell className={"text-center"}>Link gia phả</TableCell>
+              <TableCell className={"text-center"}>Khóa/Mở khóa</TableCell>
+              <TableCell className={"text-center"}>Xóa</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className={"text-center"}>{row.name}</TableCell>
-                  <TableCell className={"text-center"}>{row.email}</TableCell>
-                  <TableCell className={"text-center"}>
+            {ListAccount.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            ).map((row) => (
+              <TableRow key={row.id}>
+                <TableCell className={"text-center"}>
+                  {row?.FirstName + " " + row?.LastName}
+                </TableCell>
+                <TableCell className={"text-center"}>{row.Email}</TableCell>
+                <TableCell className={"text-center"}>
+                  <Link to={"/family-tree-detail/" + row.Id}>
+                    Link gia phả của {row?.FirstName + " " + row?.LastName}
+                  </Link>
+                </TableCell>
+                <TableCell className={"text-center"}>
+                  {!row.IsBlock ? (
                     <Button
+                      onClick={() => {
+                        handleLockAcc(row, 0);
+                      }}
                       style={{
                         marginRight: 10,
                       }}
                       variant="contained"
-                      color="error"
+                      color="warning"
                     >
                       Khóa
                     </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        handleLockAcc(row, 1);
+                      }}
+                      style={{
+                        marginRight: 10,
+                      }}
+                      variant="contained"
+                      color="primary"
+                    >
+                      Mở Khóa
+                    </Button>
+                  )}
+                </TableCell>
+                <TableCell className={"text-center"}>
+                  {" "}
+                  <Button
+                    onClick={() => {
+                      handleDelete(row);
+                    }}
+                    variant="contained"
+                    color="error"
+                    aria-label="delete"
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         component="div"
-        count={users.length}
+        count={ListAccount.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

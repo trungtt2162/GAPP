@@ -7,19 +7,20 @@ import ButtonTab from "../../../components/common/button/ButtonTab";
 
 const ManageAccount = () => {
   const [value, setValue] = useState(1);
+  
   return (
     <div>
       <div className="flex-center">
         <ButtonTab
           index={1}
           value={value}
-          text={"Danh sách tài khoản"}
+          text={"Danh sách tài khoản Admin"}
           onClick={(e) => setValue(1)}
         />
         <ButtonTab
           index={2}
           value={value}
-          text={"Thêm tài khoản"}
+          text={"Thêm tài khoản Admin"}
           onClick={(e) => setValue(2)}
         />
       </div>

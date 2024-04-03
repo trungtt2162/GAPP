@@ -1,27 +1,52 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import useFetchData from "../customHook/useFetchData";
+import { API } from "../api";
+import { authApi } from "../api/auth.api";
+import { LOCAL_STORAGE_KEY } from "../constant/common";
 const useAuthStore = create(
   persist(
     (set) => ({
-      isAuthenticated: false,
       user: null,
-      emailReset:null,
-      login: (userData) => {
-        set({ isAuthenticated: true, user: userData });
+      error: null,
+      isLogin: false,
+      roleCode: null,
+      roleName: null,
+      setUser: (user) => {
+        set({
+          user,
+        });
       },
-      logout: () => {
-        set({ isAuthenticated: false, user: null });
-      },
-      setUser: (userData) => {
-        set({ user: userData });
-      },
-      setEmailReset: (email) => {
-        set({ emailReset: email });
+      login: async ({ userName, password }) => {
+        set({ isLoading: true, error: null });
+        try {
+          const res = await authApi.login({
+            userName,
+            password,
+          });
+          const data = res.data.Data;
+          if (res.data.StatusCode === 200) {
+            localStorage.setItem(LOCAL_STORAGE_KEY.token, data.accessToken);
+            const infoRes = await authApi.getInfoUser();
+            const currentUser = infoRes.data.Data.User;
+            const userRole = infoRes.data.Data.UserRole;
+
+            set({
+              user: currentUser,
+              roleCode: userRole.RoleCode,
+              roleName: userRole.RoleName,
+            });
+          } else {
+            throw new Error("Đăng nhập thất bại");
+          }
+        } catch (error) {
+          throw error;
+        }
       },
     }),
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

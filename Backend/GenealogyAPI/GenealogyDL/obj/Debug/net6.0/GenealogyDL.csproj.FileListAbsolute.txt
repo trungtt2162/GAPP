@@ -1,0 +1,15 @@
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\bin\Debug\net6.0\GenealogyDL.deps.json
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\bin\Debug\net6.0\GenealogyDL.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\bin\Debug\net6.0\GenealogyDL.pdb
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\bin\Debug\net6.0\GenealogyCommon.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\bin\Debug\net6.0\GenealogyCommon.pdb
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\GenealogyDL.csproj.AssemblyReference.cache
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\GenealogyDL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\GenealogyDL.AssemblyInfoInputs.cache
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\GenealogyDL.AssemblyInfo.cs
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\GenealogyDL.csproj.CoreCompileInputs.cache
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\GenealogyDL.csproj.CopyComplete
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\GenealogyDL.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\refint\GenealogyDL.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\GenealogyDL.pdb
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyDL\obj\Debug\net6.0\ref\GenealogyDL.dll

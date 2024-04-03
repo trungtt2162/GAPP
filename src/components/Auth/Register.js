@@ -18,24 +18,23 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { genderOptions } from "../../constant/common";
+import { authApi } from "../../api/auth.api";
+import { handleError } from "../../ultils/helper";
 
 const Register = (props) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    email: "",
-    idNumber: "",
-    phoneNumber: "",
+    username: "",
+    indentification: "",
+    phone: "",
     address: "",
     gender: "",
-    birthday: "",
+    dayOfBirth: "",
     image: "",
   });
 
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(<VscEyeClosed />);
   const handleChange = (event) => {
@@ -50,22 +49,19 @@ const Register = (props) => {
       setType("password");
     }
   };
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
+  // const validateusername = (username) => {
+  //   return String(username)
+  //     .toLowerCase()
+  //     .match(
+  //       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  //     );
+  // };
   const handlleRegister = async () => {
-    const isValidateEmail = validateEmail(email);
-    if (!isValidateEmail) {
-      toast.error("Invalid Email !!!");
-      return;
-    }
-    if (!password) {
-      toast.error("Invalid Password !!!");
-      return;
+    try {
+      const res = await authApi.register({...formData,HomeTown:"111",Avatar:"111"});
+      console.log(res)
+    } catch (error) {
+      handleError(error,true)
     }
     
   };
@@ -157,10 +153,10 @@ const Register = (props) => {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
-                      type="email"
-                      label="Email"
-                      name="email"
-                      value={formData.email}
+                      type="username"
+                      label="username"
+                      name="username"
+                      value={formData.username}
                       onChange={handleChange}
                     />
                   </Grid>
@@ -178,8 +174,17 @@ const Register = (props) => {
                     <TextField
                       fullWidth
                       label="Số điện thoại"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="CMND/CCCD"
+                      name="indentification"
+                      value={formData.indentification}
                       onChange={handleChange}
                     />
                   </Grid>
@@ -213,8 +218,8 @@ const Register = (props) => {
                       fullWidth
                       type="date"
                       label="Ngày sinh nhật"
-                      name="birthday"
-                      value={formData.birthday}
+                      name="dayOfBirth"
+                      value={formData.dayOfBirth}
                       onChange={handleChange}
                       InputLabelProps={{
                         shrink: true,
@@ -222,7 +227,7 @@ const Register = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <Button type="submit" variant="contained" color="primary">
+                    <Button onClick={() => handlleRegister()} variant="contained" color="primary">
                      Đăng ký
                     </Button>
                   </Grid>

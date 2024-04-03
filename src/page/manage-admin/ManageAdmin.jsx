@@ -9,14 +9,14 @@ const ManageAdmin = () => {
   const listSideBar = [
     {
       key: 1,
-      name: "Tài khoản",
+      name: "Quản lý tài khoản",
       component: ManageAccount,
     },
-    {
-      key: 2,
-      name: "Quản lý site admin",
-      component:ManageSiteAdmin,
-    },
+    // {
+    //   key: 2,
+    //   name: "Quản lý site admin",
+    //   component:ManageSiteAdmin,
+    // },
     {
       key: 3,
       name: "Quản lý log",

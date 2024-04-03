@@ -1,8 +1,11 @@
 export const LOCAL_STORAGE_KEY = {
-    token:"token-footbal"
+    token:"token-giapa"
 }
 export const  genderOptions = [
-    { value: 'male', label: 'Nam' },
-    { value: 'female', label: 'Nữ' },
-    { value: 'other', label: 'Khác' }
+    { value: true, label: 'Nam' },
+    { value: false, label: 'Nữ' },
+  ];
+  export const  genderOptions2 = [
+    { value: 0, label: 'Nam' },
+    { value: 1, label: 'Nữ' },
   ];

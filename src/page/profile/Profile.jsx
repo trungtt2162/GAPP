@@ -1,37 +1,53 @@
 import React, { useRef, useState } from 'react';
 import { TextField, Button, FormControl, FormLabel, RadioGroup, Radio, FormControlLabel, Grid, MenuItem } from '@mui/material';
-import { genderOptions } from '../../constant/common';
 import AddImage from '../../components/common/addImage/AddImage';
+import useAuthStore from '../../zustand/authStore';
+import { genderOptions, genderOptions2 } from '../../constant/common';
+import moment from 'moment';
+import { handleError } from '../../ultils/helper';
+import { authApi } from '../../api/auth.api';
+import { toast } from 'react-toastify';
 
 function Profile() {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    idNumber: '',
-    phoneNumber: '',
-    address: '',
-    gender: '',
-    birthday: '',
-    image:""
-  });
+  const {user,setUser} = useAuthStore();
+  const [formData, setFormData] = useState({...user,DateOfBirth:user.DateOfBirth?moment(user.DateOfBirth).format("YYYY-MM-DD"):""});
   const fileRef = useRef();
+  const [loading,setLoading] = useState(false);
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission here
-    console.log(formData);
+  const handleSubmit = async() => {
+    try {
+      setLoading(true)
+      const res = await authApi.upadteinfoAdmin(formData);
+      if(res.data.StatusCode ===200){
+        toast.success("Cập nhật thành công");
+        setUser(formData)
+      }
+    } catch (error) {
+      handleError(error)
+    }finally{
+      setLoading(false)
+    }
   };
-  const handleChangeFile = (e) => {
- const file = e.target.files[0]
-  }
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+  
+      reader.onloadend = () => {
+        const url = reader.result;
+        setFormData({...formData,Avatar:url})
+      };
+  
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }; 
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
         <h4 style={{marginBottom:20}} className="bold">Thông tin cá nhân</h4>
       <Grid container>
        <Grid item xs={8}>
@@ -40,8 +56,8 @@ function Profile() {
           <TextField
             fullWidth
             label="Họ"
-            name="firstName"
-            value={formData.firstName}
+            name="FirstName"
+            value={formData.FirstName}
             onChange={handleChange}
           />
         </Grid>
@@ -49,18 +65,17 @@ function Profile() {
           <TextField
             fullWidth
             label="Tên"
-            name="lastName"
-            value={formData.lastName}
+            name="LastName"
+            value={formData.LastName}
             onChange={handleChange}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
             fullWidth
-            type="email"
             label="Email"
-            name="email"
-            value={formData.email}
+            name="Email"
+            value={formData.Email}
             onChange={handleChange}
           />
         </Grid>
@@ -68,8 +83,8 @@ function Profile() {
           <TextField
             fullWidth
             label="CCCD/CMND"
-            name="idNumber"
-            value={formData.idNumber}
+            name="Indentification"
+            value={formData.Indentification}
             onChange={handleChange}
           />
         </Grid>
@@ -77,8 +92,8 @@ function Profile() {
           <TextField
             fullWidth
             label="Số điện thoại"
-            name="phoneNumber"
-            value={formData.phoneNumber}
+            name="Phone"
+            value={formData.Phone}
             onChange={handleChange}
           />
         </Grid>
@@ -86,21 +101,21 @@ function Profile() {
           <TextField
             fullWidth
             label="Địa chỉ"
-            name="address"
-            value={formData.address}
+            name="Address"
+            value={formData.Address}
             onChange={handleChange}
           />
         </Grid>
         <Grid item xs={6}>
         <TextField
-        name="gender"
+        name="Gender"
         select
         label="Giới tính"
-        value={formData.gender}
+        value={formData.Gender}
         onChange={handleChange}
         fullWidth
       >
-        {genderOptions.map((option) => (
+        {genderOptions2.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
@@ -112,26 +127,27 @@ function Profile() {
             fullWidth
             type="date"
             label="Ngày sinh nhật"
-            name="birthday"
-            value={formData.birthday}
+            name="DateOfBirth"
+            value={formData.DateOfBirth}
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,
             }}
           />
+           
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" variant="contained" color="primary">
+          <Button disabled={loading} onClick={()=>handleSubmit()} type="submit" variant="contained" color="primary">
             Lưu thông tin
           </Button>
         </Grid>
       </Grid>
        </Grid>
        <Grid item xs={4}>
-        <input onChange={handleChangeFile} type ="file" ref={fileRef} style={{
+        <input onChange={handleFileChange} type ="file" ref={fileRef} style={{
             display:"none"
         }} />
-             <AddImage click={() => fileRef.current.click()} url={formData.image} />
+             <AddImage click={() => fileRef.current.click()} url={formData.Avatar} />
        </Grid>
       </Grid>
     </form>

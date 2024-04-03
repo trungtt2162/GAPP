@@ -1,0 +1,17 @@
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\bin\Debug\net6.0\GenealogyBL.deps.json
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\bin\Debug\net6.0\GenealogyBL.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\bin\Debug\net6.0\GenealogyBL.pdb
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\bin\Debug\net6.0\GenealogyCommon.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\bin\Debug\net6.0\GenealogyDL.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\bin\Debug\net6.0\GenealogyCommon.pdb
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\bin\Debug\net6.0\GenealogyDL.pdb
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\GenealogyBL.csproj.AssemblyReference.cache
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\GenealogyBL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\GenealogyBL.AssemblyInfoInputs.cache
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\GenealogyBL.AssemblyInfo.cs
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\GenealogyBL.csproj.CoreCompileInputs.cache
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\GenealogyBL.csproj.CopyComplete
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\GenealogyBL.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\refint\GenealogyBL.dll
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\GenealogyBL.pdb
+C:\Users\thanh\Desktop\gia phả\SEP_GAPP_GSP24SE58\Backend\GenealogyAPI\GenealogyBL\obj\Debug\net6.0\ref\GenealogyBL.dll
