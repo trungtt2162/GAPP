@@ -103,6 +103,11 @@ namespace GenealogyBL.Implements
 
         }
 
+        public async Task<IEnumerable<UserGenealogy>> GetAllByUserId(int userID)
+        {
+            return await _userGenealogyDL.GetAllByUserID(userID);
+        }
+
 
     }
 }

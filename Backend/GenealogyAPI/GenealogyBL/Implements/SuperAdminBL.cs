@@ -49,6 +49,9 @@ namespace GenealogyBL.Implements
             var idUser = await _userDL.Create(user);
             var userGenology = _mapper.Map<UserGenealogy>(user);
             userGenology.IdGenealogy = idGen;
+            userGenology.UserId = idUser;
+            userGenology.InActive = false;
+            userGenology.IsBlock = false;
             var idUserGenealogy = await _userGenealogyDL.Create(userGenology);
             var rawPassword = _passwordHasher.GenerateRandomPassword(12);
             // Gen password default: 

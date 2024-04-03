@@ -2,6 +2,7 @@ using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Utils;
 using GenealogyDL.Interfaces;
+using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
@@ -80,6 +81,19 @@ namespace GenealogyDL.Implements
             using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
             {
                 return (await dbContext.ExecuteAsync(sql, param, commandType: System.Data.CommandType.Text)) > 0;
+            }
+        }
+
+        public async Task<IEnumerable<UserGenealogy>> GetAllByUserID(int userID)
+        {
+            var sql = "select * FROM user_genealogy ug WHERE  ug.UserId = @UserId and InActive = false and IsBlock = false;";
+            var param = new Dictionary<string, object>()
+            {
+                ["@UserId"] = userID,
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return await dbContext.Query<UserGenealogy>(sql, param, commandType: System.Data.CommandType.Text);
             }
         }
     }

@@ -65,7 +65,7 @@ namespace GenealogyAPI.Controllers
 
             if (!_userBL.IsValidUserCredentials(request.UserName, request.Password))
             {
-                return serviceResult.OnUnAuthen();
+                return serviceResult.OnBadRequest();
             }
 
             var claims = await _userBL.GetClaims(request.UserName);

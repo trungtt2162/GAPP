@@ -89,10 +89,12 @@ namespace GenealogyBL.Implements
             var userid = int.Parse(_authService.GetUserID());
             var userRole = await _userDL.GetUserRole(userid);
             var user = await _userDL.GetById(userid);
+            var userGenealogy = await _userGenealogyDL.GetAllByUserID(userid);
             return new
             {
                 User = user,
-                UserRole = userRole
+                UserRole = userRole,
+                UserGenealogy = userGenealogy
             };
         }
 
