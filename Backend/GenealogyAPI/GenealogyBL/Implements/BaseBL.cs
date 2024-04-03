@@ -88,7 +88,7 @@ namespace GenealogyBL.Implements
                 idGenealogy = (int)propertyInfo.GetValue(obj);
             }
             log.Action = action;
-            log.Id = idGenealogy;
+            log.IDGenealogy = idGenealogy;
             log.Date = DateTime.Now;
             
             switch (action)

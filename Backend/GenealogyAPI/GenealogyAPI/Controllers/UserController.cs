@@ -18,10 +18,12 @@ namespace GenealogyAPI.Controllers
         private readonly IUserBL _userBL;
         private readonly IMapper _mapper;
         private readonly IAuthService _authService;
-        public UserController(IAuthService authService, IUserBL userBL, IMapper mapper) { 
+        private readonly ILogBL _logBL;
+        public UserController(ILogBL logBL, IAuthService authService, IUserBL userBL, IMapper mapper) { 
             _userBL = userBL;
             _mapper = mapper;
             _authService = authService;
+            _logBL = logBL;
         }
         [HttpGet]
         public async Task<ServiceResult> GetUserInfo()
@@ -74,6 +76,14 @@ namespace GenealogyAPI.Controllers
             }
             await _userBL.RegisterGenealogy(idGenealogy);
             return serviceResult.OnSuccess("Success");
+        }
+
+        [HttpPost("log")]
+        public async Task<ServiceResult> GetLogPagingData(PageRequest paggingRequest)
+        {
+            var serviceResult = new ServiceResult();
+            serviceResult.Data = await _logBL.GetPagingData(paggingRequest);
+            return serviceResult;
         }
 
     }
