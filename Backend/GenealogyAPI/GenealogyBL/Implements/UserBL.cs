@@ -142,6 +142,7 @@ namespace GenealogyBL.Implements
             userRegister.InActive = true;
             userRegister.IdFamilyTree = -1;
             userRegister.UserId = userid;
+            userRegister.IdGenealogy = idGenealogy;
 
             await _userGenealogyDL.InsertUserRegister(userRegister);
             return true;

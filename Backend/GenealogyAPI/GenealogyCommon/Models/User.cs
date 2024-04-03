@@ -30,5 +30,7 @@ namespace GenealogyCommon.Models
 
         public bool InActive { get; set; }
         public bool IsBlock { get; set; }
+
+        public string TypeRole  { get; set; }
     }
 }

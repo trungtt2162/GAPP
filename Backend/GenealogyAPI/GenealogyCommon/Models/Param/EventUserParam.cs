@@ -23,6 +23,6 @@ namespace GenealogyCommon.Models.Param
 
         public string Email { get; set; }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
     }
 }

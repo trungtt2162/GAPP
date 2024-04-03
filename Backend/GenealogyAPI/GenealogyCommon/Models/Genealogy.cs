@@ -15,5 +15,7 @@ namespace GenealogyCommon.Models
         public string Description { get; set; }
 
         public bool IsPublic { get; set; } = false;
+
+        public int UserId { get; set; }
     }
 }

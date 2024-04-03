@@ -23,6 +23,7 @@ namespace GenealogyCommon.Models.Param
     {
         public DateTime Date { get; set; }
 
+        [Required]
         public int IdFamilyHistory { get; set; }
 
         public int Type { get; set; }

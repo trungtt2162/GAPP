@@ -94,7 +94,6 @@ namespace GenealogyBL.Implements
             {
                 throw new ArgumentException("IDGenealogy is null");
             }
-            pagingRequest.Condition += $" and IdFamilyTree is not null ";
 
             if (!string.IsNullOrWhiteSpace(pagingRequest.SearchKey))
             {

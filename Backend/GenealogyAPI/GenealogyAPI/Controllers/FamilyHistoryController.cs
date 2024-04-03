@@ -12,7 +12,7 @@ namespace GenealogyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = UserRoles.Admin)]
+
     public class FamilyHistoryController : Controller
     {
         private readonly IFamilyHistoryBL _familyHistoryBL;
@@ -60,6 +60,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ActionResult<object>> UpdateFamilyHistoryDetail(FamilyHistoryParam familyHistoryParam)
         {
             var serviceResult = new ServiceResult();
@@ -121,6 +122,7 @@ namespace GenealogyAPI.Controllers
             return serviceResult;
         }
         [HttpPost("detail")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> InsertFamilyHistoryDetail(FamilyHistoryDetailParam param)
         {
             var serviceResult = new ServiceResult();
@@ -134,6 +136,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("detail")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> UpdateFamilyHistoryDetail(FamilyHistoryDetailParam param)
         {
             var serviceResult = new ServiceResult();
@@ -147,6 +150,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpDelete("detail")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> DeleteFamilyHistoryDetail([FromQuery] int id, [FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();

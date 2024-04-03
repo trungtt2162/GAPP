@@ -38,6 +38,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> InsertEvent(EventParam param)
         {
             var serviceResult = new ServiceResult();
@@ -51,6 +52,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpDelete("")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> DeleteEvent([FromQuery] int id, [FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
@@ -81,6 +83,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> UpdateEvent(Event param)
         {
             var serviceResult = new ServiceResult();
@@ -107,6 +110,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("user-event")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> InsertEventUser(EventUserParam param)
         {
             var serviceResult = new ServiceResult();
@@ -120,6 +124,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpDelete("user-event")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> DeleteEventUser([FromQuery] int id, [FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
@@ -141,6 +146,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("user-event")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> UpdateEventUser(EventUserParam param)
         {
             var serviceResult = new ServiceResult();

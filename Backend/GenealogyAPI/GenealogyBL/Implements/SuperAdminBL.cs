@@ -45,8 +45,10 @@ namespace GenealogyBL.Implements
             {
                 throw new ArgumentException("User exist");
             }
-            var idGen = await _genealDL.Create(genealogy);
+            user.IsBlock = false;
             var idUser = await _userDL.Create(user);
+            genealogy.UserId = idUser;
+            var idGen = await _genealDL.Create(genealogy);
             var userGenology = _mapper.Map<UserGenealogy>(user);
             userGenology.IdGenealogy = idGen;
             userGenology.UserId = idUser;
@@ -54,6 +56,9 @@ namespace GenealogyBL.Implements
             userGenology.IsBlock = false;
             var idUserGenealogy = await _userGenealogyDL.Create(userGenology);
             var rawPassword = _passwordHasher.GenerateRandomPassword(12);
+#if DEBUG
+            rawPassword = "1234568";
+#endif
             // Gen password default: 
             var creden = new Credential()
             {

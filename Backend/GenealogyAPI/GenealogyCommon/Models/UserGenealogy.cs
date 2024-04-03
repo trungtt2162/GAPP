@@ -15,5 +15,6 @@ namespace GenealogyCommon.Models
         public int IdGenealogy {get; set;}
 
         public int UserId { get; set; }
+
     }
 }
