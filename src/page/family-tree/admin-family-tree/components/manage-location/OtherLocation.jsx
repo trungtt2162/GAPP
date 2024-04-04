@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,52 +11,62 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { handleError } from "../../../../../ultils/helper";
+import { addressApi } from "../../../../../api/address.api";
+import useAuthStore from "../../../../../zustand/authStore";
+import { getLocationName } from "../../../../../constant/common";
+import { toast } from "react-toastify";
 
 function OtherLocation() {
-  const users = [
-    {
-      name: "Nguyễn Văn A",
-      birthdate: "01/01/1990",
-      email: "nguyenvana@example.com",
-      address: "Hà Nội",
-      gender: "Nam",
-    },
-    {
-      name: "Trần Thị B",
-      birthdate: "05/05/1985",
-      email: "tranthib@example.com",
-      address: "Hồ Chí Minh",
-      gender: "Nữ",
-    },
-    {
-      name: "Phạm Văn C",
-      birthdate: "10/10/1995",
-      email: "phamvanc@example.com",
-      address: "Đà Nẵng",
-      gender: "Nam",
-    },
-  ];
+ const [listAddress,setListAddress] = useState([]);
+ const {userGenealogy } = useAuthStore();
+ console.log(userGenealogy);
+ const getListAddress = async(id) => {
+  try {
+    const res = await addressApi.getListAddress(id)
+    if(res.data.StatusCode===200){
+      setListAddress(res.data.Data.Data)
+    }
+  } catch (error) {
+    handleError(error)
+  }
+ }
+ const handleDelete = async (id) => {
+  try {
+    const res = await addressApi.deleteAddress(id,userGenealogy[0]?.IdGenealogy)
+    if(res.data.StatusCode===200){
+      toast.success("Xóa thành công")
+     setListAddress(listAddress.filter(i => i.Id !== id))
+    }
+  } catch (error) {
+    handleError(error)
+  }
+ }
+ 
+ useEffect(() => {
+  if(userGenealogy?.length > 0){
+    getListAddress(userGenealogy[0].IdGenealogy)
+  }
+ },[userGenealogy])
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>Tên</TableCell>
-            <TableCell>Ngày Sinh</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Địa Chỉ</TableCell>
-            <TableCell>Giới Tính</TableCell>
+            <TableCell>Vị trí</TableCell>
+            <TableCell>Loại địa điểm</TableCell>
+           
             <TableCell className='text-center'>Hành động</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user, index) => (
+          {listAddress.map((user, index) => (
             <TableRow key={index}>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.birthdate}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.address}</TableCell>
-              <TableCell>{user.gender}</TableCell>
+              <TableCell>{user.Name}</TableCell>
+              <TableCell>{user.Location}</TableCell>
+              <TableCell>{getLocationName(user.Type)}</TableCell>
+             
               <TableCell className='text-center'>
                 <Button
                   style={{
@@ -67,7 +77,7 @@ function OtherLocation() {
                 >
                  Sửa
                 </Button>
-                <Button variant="contained" color="error">
+                <Button onClick={() => handleDelete(user.Id)} variant="contained" color="error">
                  Xóa
                 </Button>
               </TableCell>

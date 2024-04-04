@@ -12,6 +12,7 @@ const useAuthStore = create(
       isLogin: false,
       roleCode: null,
       roleName: null,
+      userGenealogy:[],
       setUser: (user) => {
         set({
           user,
@@ -30,11 +31,14 @@ const useAuthStore = create(
             const infoRes = await authApi.getInfoUser();
             const currentUser = infoRes.data.Data.User;
             const userRole = infoRes.data.Data.UserRole;
+            const giapha = infoRes.data.Data.UserGenealogy
 
             set({
               user: currentUser,
               roleCode: userRole.RoleCode,
               roleName: userRole.RoleName,
+              userGenealogy:giapha
+
             });
           } else {
             throw new Error("Đăng nhập thất bại");
@@ -52,3 +56,4 @@ const useAuthStore = create(
 );
 
 export default useAuthStore;
+
