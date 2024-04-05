@@ -5,6 +5,7 @@ import TabPenal from "../../../../../components/common/tabs/TabPenal";
 import { theme } from "../../../../../theme";
 import EditInfoHistory from "./EditInfoHistory";
 import HistoryEvent from "./HistoryEvent"
+import AddHistory from "./AddHostory";
 const ManageHistory = () => {
   const { palette } = useTheme(theme);
   const [value, setValue] = useState(1);
@@ -23,6 +24,12 @@ const ManageHistory = () => {
           text={"Các mốc sự kiện lịch sử"}
           onClick={(e) => setValue(2)}
         />
+         <ButtonTab
+          index={3}
+          value={value}
+          text={"Thêm sự kiện lịch sử"}
+          onClick={(e) => setValue(3)}
+        />
         
       </div>
       <div>
@@ -36,6 +43,9 @@ const ManageHistory = () => {
           </TabPenal>
           <TabPenal value={value} index={2}>
           <HistoryEvent />
+          </TabPenal>
+          <TabPenal value={value} index={3}>
+          <AddHistory />
           </TabPenal>
        
         </div>

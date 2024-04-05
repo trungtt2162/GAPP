@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,53 +11,50 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import useAuthStore from "../../../../../zustand/authStore";
+import { handleError } from "../../../../../ultils/helper";
+import { genealogyApi } from "../../../../../api/genealogy.api";
 
 function MemberLocation() {
-  const users = [
-    {
-      name: "Nguyễn Văn A",
-      birthdate: "01/01/1990",
-      email: "nguyenvana@example.com",
-      address: "Hà Nội",
-      gender: "Nam",
-    },
-    {
-      name: "Trần Thị B",
-      birthdate: "05/05/1985",
-      email: "tranthib@example.com",
-      address: "Hồ Chí Minh",
-      gender: "Nữ",
-    },
-    {
-      name: "Phạm Văn C",
-      birthdate: "10/10/1995",
-      email: "phamvanc@example.com",
-      address: "Đà Nẵng",
-      gender: "Nam",
-    },
-  ];
+  const { userGenealogy } = useAuthStore();
+  const [listMember, setlistMember] = useState([]);
+
+  // get List member
+  const getListMember = async () => {
+    const IDGenealogy = userGenealogy[0]?.IdGenealogy;
+    try {
+      const res = await genealogyApi.getListUserFromGenealogy(IDGenealogy);
+      if (res.data.StatusCode === 200) {
+        setlistMember(res.data.Data.Data);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  useEffect(() => {
+    getListMember();
+  }, [userGenealogy]);
+
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>Tên</TableCell>
-            <TableCell>Ngày Sinh</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Địa Chỉ</TableCell>
-            <TableCell>Giới Tính</TableCell>
-            <TableCell className='text-center'>Hành động</TableCell>
+            {/* <TableCell className='text-center'>Hành động</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user, index) => (
+          {listMember.map((user, index) => (
             <TableRow key={index}>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.birthdate}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.address}</TableCell>
-              <TableCell>{user.gender}</TableCell>
-              <TableCell className='text-center'>
+              <TableCell>{user?.FirstName + " " + user?.LastName}</TableCell>
+
+              <TableCell>{user.Email}</TableCell>
+              <TableCell>{user.Address}</TableCell>
+              {/* <TableCell className='text-center'>
                 <Button
                   style={{
                     marginRight: 10,
@@ -70,7 +67,7 @@ function MemberLocation() {
                 <Button variant="contained" color="error">
                  Xóa
                 </Button>
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>

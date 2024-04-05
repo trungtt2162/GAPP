@@ -23,6 +23,11 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import AddImage from "../../../../../components/common/addImage/AddImage";
+import useAuthStore from "../../../../../zustand/authStore";
+import { eventApi } from "../../../../../api/event.api";
+import { handleError } from "../../../../../ultils/helper";
+import { toast } from "react-toastify";
+import moment from "moment/moment";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -36,47 +41,85 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-function AddEventForm() {
+function AddEventForm({ item,updateItem }) {
+  console.log(item)
   const classes = useStyles();
-
-  const [eventName, setEventName] = useState("");
-  const [eventDescription, setEventDescription] = useState("");
-  const [eventDate, setEventDate] = useState("");
-  const [eventDateClose, setEventDateClose] = useState("");
-  const [userAttendMode, setUserAttendMode] = useState("");
-  const [eventType, setEventType] = useState("online");
-  const [allowRegistration, setAllowRegistration] = useState(false);
-  const [participantLimit, setParticipantLimit] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [privateOrpublic, setPrivateOrpublic] = useState("");
-  const [link, setLink] = useState("");
-  const [image, setImage] = useState("");
   const fileRef = useRef();
+  const { userGenealogy } = useAuthStore();
 
-  const handleChangeFile = (event) => {};
+const originData = {
+  IdGenealogy: 0,
+  Name: "",
+  Description: "",
+  LinkStream: "",
+  Type: 0,
+  Background: "",
+  OrganizationDate: "",
+  Location: "",
+  UserIDHost: 0,
+}
+  const [formData, setFormData] = useState(
+    {...item,OrganizationDate:moment(item?.OrganizationDate)?.format("YYYY-MM-DD")} || originData
+  );
+
+  const handleChangeData = key => e => {
+    const newValue = e?.target?.value;
+    setFormData({...formData,[key]:newValue})
+  }
+
+  const handleChangeFile = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setFormData({...formData,Background:reader.result});
+      };
+    }
+  };
   const handleUserSelection = () => {};
 
   const handleSubmit = (event) => {
     event.preventDefault();
   };
 
+  // SAVE
+  const onSave = async() =>{
+    try {
+      const data = { ...formData, IDGenealogy: userGenealogy[0]?.IdGenealogy };
+      const res = !item
+        ? await eventApi.addEvent(data)
+        : await eventApi.updateEvent(data);
+      if (res.data.StatusCode === 200) {
+        toast.success(item ? "Cập nhât thành công" : "Thêm thành công");
+        if (!item) {
+          setFormData(originData);
+        } else {
+          updateItem(data);
+        }
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
   return (
     <Container maxWidth="md">
-      <h4 className="bold">Thêm sự kiện</h4>
+      <h4 className="bold">{item ?"Sửa sự kiên" :"Thêm sự kiện"}</h4>
       <Grid container spacing={1}>
         <Grid item xs={8}>
           <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
               label="Tên sự kiện"
-              value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
+              value={formData.Name}
+              onChange={handleChangeData("Name")}
               fullWidth
               required
             />
             <TextField
               label="Mô tả sự kiện"
-              value={eventDescription}
-              onChange={(e) => setEventDescription(e.target.value)}
+              value={formData.Description}
+              onChange={handleChangeData("Description")}
               multiline
               fullWidth
               required
@@ -84,13 +127,21 @@ function AddEventForm() {
             <TextField
               label="Ngày tổ chức"
               type="date"
-              value={eventDate}
-              onChange={(e) => setEventDate(e.target.value)}
+              value={formData.OrganizationDate}
+              onChange={handleChangeData("OrganizationDate")}
               InputLabelProps={{ shrink: true }}
               fullWidth
               required
             />
-            <TextField
+              <TextField
+              label="Địa điểm"
+              type="text"
+              value={formData.Location}
+              onChange={handleChangeData("Location")}
+              fullWidth
+              required
+            />
+            {/* <TextField
               label="Ngày đóng"
               type="date"
               value={eventDateClose}
@@ -98,11 +149,11 @@ function AddEventForm() {
               InputLabelProps={{ shrink: true }}
               fullWidth
               required
-            />
+            /> */}
             <TextField
               label="Link stream"
-              value={link}
-              onChange={(e) => setLink(e.target.value)}
+              value={formData.LinkStream}
+              onChange={handleChangeData("LinkStream")}
               multiline
               fullWidth
               required
@@ -124,23 +175,23 @@ function AddEventForm() {
                 </FormLabel>
                 <RadioGroup
                   row
-                  value={eventType}
-                  onChange={(e) => setEventType(e.target.value)}
+                  value={formData.Type}
+                  onChange={handleChangeData("Type")}
                 >
                   <FormControlLabel
-                    value="online"
+                    value={0}
                     control={<Radio />}
                     label="Online"
                   />
                   <FormControlLabel
-                    value="offline"
+                    value={1}
                     control={<Radio />}
                     label="Offline"
                   />
                 </RadioGroup>
               </FormControl>
             </div>
-            <div
+            {/* <div
               style={{
                 width: "100%",
               }}
@@ -172,8 +223,8 @@ function AddEventForm() {
                   />
                 </RadioGroup>
               </FormControl>
-            </div>
-            <div
+            </div> */}
+            {/* <div
               style={{
                 width: "150%",
                 display: "flex",
@@ -194,7 +245,6 @@ function AddEventForm() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {/* Dùng map để render từng user */}
                     {Array.from({ length: 5 }, (_, index) => (
                       <TableRow key={index}>
                         <TableCell>User {index + 1}</TableCell>
@@ -213,10 +263,10 @@ function AddEventForm() {
                   </TableBody>
                 </Table>
               </TableContainer>
-            </div>
+            </div> */}
 
-            <Button type="submit" variant="contained" color="primary">
-              Tạo
+            <Button onClick={() => onSave()} variant="contained" color="primary">
+              {item ?"Cập nhật":"Tạo"}
             </Button>
           </form>
         </Grid>
@@ -229,7 +279,7 @@ function AddEventForm() {
             }}
             ref={fileRef}
           />
-          <AddImage click={() => fileRef.current.click()} url={image} />
+          <AddImage click={() => fileRef.current.click()} url={formData.Background} />
         </Grid>
       </Grid>
     </Container>

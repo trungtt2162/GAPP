@@ -1,21 +1,38 @@
 import { useEffect, useRef, useState } from "react";
-import { uploafFileBase64 } from "../../../../../ultils/helper";
+import { handleError, uploafFileBase64 } from "../../../../../ultils/helper";
 import { Button, Card, Grid, TextField } from "@mui/material";
+import { toast } from "react-toastify";
+import { historyApi } from "../../../../../api/history.api";
 
-const HisoryEventItem = ({ image, description, setHistory, id }) => {
-  const [txtDes, setTxtDes] = useState(description);
-  const [imageUrl, setImageUrl] = useState(image);
+const HisoryEventItem = ({ Image, Description, setHistory, Id,setListHistory,listHistory,IDGenealogy,curr,setCurrentItem }) => {
+  const [txtDes, setTxtDes] = useState(Description);
+  const [imageUrl, setImageUrl] = useState(Image);
   const [modeEdit, setModeEdit] = useState(false);
   const fileRef = useRef();
   const onChangeImage = (e) => {
     const base64 = uploafFileBase64(e, setImageUrl);
   };
   useEffect(() => {
-    setHistory(id, {
-      description: txtDes,
-      image: imageUrl,
+    setHistory(Id, {
+      Description: txtDes,
+      Image: imageUrl,
     });
   }, [imageUrl, setImageUrl]);
+
+  const deleteHistory = async( ) => {
+    try {
+       const res = await historyApi.deleteHistory(Id,IDGenealogy);
+       if(res.data.StatusCode === 200){
+        toast.success("Xóa thành công");
+
+        console.log(Id)
+        console.log(listHistory)
+      setListHistory(listHistory.filter(i => i.Id != Id))
+       }
+    } catch (error) {
+      handleError(error)
+    }
+  }
   return (
     <Card
       style={{
@@ -38,7 +55,7 @@ const HisoryEventItem = ({ image, description, setHistory, id }) => {
             style={{
               width: "100%",
               height: 100,
-              background: `url(${imageUrl})`,
+              background: `url(${Image})`,
               backgroundSize: "contain",
               cursor: "pointer",
             }}
@@ -53,7 +70,7 @@ const HisoryEventItem = ({ image, description, setHistory, id }) => {
               }}
               className="flex-start"
             >
-              {txtDes}
+              {Description}
             </p>
           ) : (
             <div className="flex-start">
@@ -72,7 +89,7 @@ const HisoryEventItem = ({ image, description, setHistory, id }) => {
         <Grid item xs={3}>
           {!modeEdit && (
             <Button
-              onClick={() => setModeEdit(true)}
+              onClick={() => setCurrentItem(curr)}
               style={{
                 marginRight: 10,
                 marginTop: 30,
@@ -97,6 +114,7 @@ const HisoryEventItem = ({ image, description, setHistory, id }) => {
             </Button>
           )}
           <Button
+          onClick={() => deleteHistory()}
             style={{
               marginRight: 10,
               marginTop: 30,

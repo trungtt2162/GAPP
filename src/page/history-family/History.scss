@@ -1,12 +1,26 @@
-.item-history{
+.item-history {
     display: flex;
     justify-content: space-between;
-    align-items:center ;
-    margin: 10px 0;
-    padding: 10px;
+    align-items: center;
    
-    img{
+
+    img {
         width: 70px;
         height: auto;
     }
+}
+.item-history-wrap{
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.display-3-line {
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    /* Số dòng tối đa */
+
 }

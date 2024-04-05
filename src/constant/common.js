@@ -21,6 +21,10 @@ export const  genderOptions = [
     { id: 8, value: "Di Tích và Địa Điểm Lịch Sử" },
     { id: 9, value: "Nơi Thờ Phụng" }
   ];
+  export const TYPE_EVENT = {
+    0:"Online",
+    1:"Offline"
+  }
   export function getLocationName(id) {
     const location = listLocation.find(location => location.id === id);
     return location ? location.value : '';

@@ -12,7 +12,8 @@ const useAuthStore = create(
       isLogin: false,
       roleCode: null,
       roleName: null,
-      userGenealogy:[],
+      userGenealogy: [],
+      currentIdGenealogy: null,
       setUser: (user) => {
         set({
           user,
@@ -31,19 +32,21 @@ const useAuthStore = create(
             const infoRes = await authApi.getInfoUser();
             const currentUser = infoRes.data.Data.User;
             const userRole = infoRes.data.Data.UserRole;
-            const giapha = infoRes.data.Data.UserGenealogy
+            const giapha = infoRes.data.Data.UserGenealogy;
+            const currentId = giapha?.length > 0 ? giapha[0].IdGenealogy : null;
 
             set({
               user: currentUser,
               roleCode: userRole.RoleCode,
               roleName: userRole.RoleName,
-              userGenealogy:giapha
-
+              userGenealogy: giapha,
+              currentIdGenealogy: currentId,
             });
           } else {
             throw new Error("Đăng nhập thất bại");
           }
         } catch (error) {
+          console.log(error)
           throw error;
         }
       },
@@ -56,4 +59,3 @@ const useAuthStore = create(
 );
 
 export default useAuthStore;
-

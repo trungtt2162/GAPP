@@ -16,11 +16,13 @@ import { addressApi } from "../../../../../api/address.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { getLocationName } from "../../../../../constant/common";
 import { toast } from "react-toastify";
+import CustomModal from "../../../../../components/common/modal/CustomModal";
+import AddLocationForm from "./AddLocation";
 
 function OtherLocation() {
  const [listAddress,setListAddress] = useState([]);
  const {userGenealogy } = useAuthStore();
- console.log(userGenealogy);
+ const [currentId,setCurrentId] = useState(null)
  const getListAddress = async(id) => {
   try {
     const res = await addressApi.getListAddress(id)
@@ -48,7 +50,18 @@ function OtherLocation() {
     getListAddress(userGenealogy[0].IdGenealogy)
   }
  },[userGenealogy])
+
+ //update
+ const updateNewItem = (item) => {
+  const index = listAddress.findIndex(i => i.Id === item.Id);
+  if(index >=0){
+    const newLisaddress= [...listAddress];
+    newLisaddress[index] = item;
+    setListAddress(newLisaddress)
+  }
+ }
   return (
+   <>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -69,6 +82,9 @@ function OtherLocation() {
              
               <TableCell className='text-center'>
                 <Button
+                onClick={() => {
+                  setCurrentId(user)
+                }}
                   style={{
                     marginRight: 10,
                   }}
@@ -86,6 +102,10 @@ function OtherLocation() {
         </TableBody>
       </Table>
     </TableContainer>
+    <CustomModal onClose={() => setCurrentId(null)} open={currentId}>
+      <AddLocationForm updateNewItem={updateNewItem} item={currentId}  onClose={() => setCurrentId(null)} />
+    </CustomModal>
+    </>
   );
 }
 

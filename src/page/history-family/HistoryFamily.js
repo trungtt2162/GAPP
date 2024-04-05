@@ -1,33 +1,55 @@
-import React, { useState } from "react";
-import { Box, Card, Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Card, Grid } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
 import "./History.scss";
+import { historyApi } from "../../api/history.api";
+import { handleError } from "../../ultils/helper";
+import useAuthStore from "../../zustand/authStore";
+import CustomModal from "../../components/common/modal/CustomModal";
 const HistoryFamily = () => {
   const { palette } = useTheme(theme);
-  const [listHistory, setListHistory] = useState([
-    {
-      content: "A va B cưới",
-      image:
-        "https://tonywedding.vn/wp-content/uploads/2022/09/z3734234968634_dd7394041c1d896cef94a62260f808e0.jpg",
-    },
-    {
-      content: "A va B cưới",
-      image:
-        "https://tonywedding.vn/wp-content/uploads/2022/09/z3734234968634_dd7394041c1d896cef94a62260f808e0.jpg",
-    },
-    {
-      content: "A va B cưới",
-      image:
-        "https://tonywedding.vn/wp-content/uploads/2022/09/z3734234968634_dd7394041c1d896cef94a62260f808e0.jpg",
-    },
-    {
-      content: "A va B cưới",
-      image:
-        "https://tonywedding.vn/wp-content/uploads/2022/09/z3734234968634_dd7394041c1d896cef94a62260f808e0.jpg",
-    },
-  ]);
+  const [des, setDes] = useState("");
+  const { currentIdGenealogy } = useAuthStore();
+  const modifyInitialValue = (value) => {
+    const modifiedValue = value.replace(
+      /<img/g,
+      '<img style="width: 100%; height: auto;"'
+    );
+    return modifiedValue;
+  };
+  const [curent, setCurrent] = useState(null);
+  const [listHistory, setListHistory] = useState([]);
+  const getListHistory = async (id) => {
+    try {
+      const res = await historyApi.getListAllHistoryByGenealogyId(id);
+      if (res.data.StatusCode === 200) {
+        setListHistory(res.data.Data.Data);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  useEffect(() => {
+    getListHistory(currentIdGenealogy);
+  }, [currentIdGenealogy]);
+  const getDes = async (id) => {
+    try {
+      const res = await historyApi.getDescriptionHistorufamily(id);
+      if (res.data.StatusCode === 200) {
+        setDes(res.data.Data.Description);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  useEffect(() => {
+    if (currentIdGenealogy) {
+      getDes(currentIdGenealogy);
+    }
+  }, [currentIdGenealogy]);
   return (
     <div>
       <Navbar />
@@ -53,31 +75,12 @@ const HistoryFamily = () => {
             <Grid item xs={6}>
               <div className="content-card card-item">
                 <h4 className="bold">Giới thiệu lịch sử</h4>
-                <p style={{textAlign:"start"}}>
-                  Chào mừng bạn đến với trang web gia phả của gia đình Nguyễn,
-                  nơi chúng tôi lưu giữ và chia sẻ câu chuyện của dòng họ qua
-                  nhiều thế hệ. Dòng họ Nguyễn bắt nguồn từ tỉnh Nghệ An, một
-                  vùng đất nổi tiếng với truyền thống văn hóa và lịch sử phong
-                  phú. Từ những năm 1800, tổ tiên chúng tôi đã đặt nền móng cho
-                  một gia phả đầy tự hào, mở đầu là cụ tổ Nguyễn Văn A, người
-                  được biết đến với tài năng và lòng nhân ái. Qua các thế hệ,
-                  mỗi thành viên trong gia đình đã góp phần viết nên những trang
-                  sử mới, từ những người nông dân chăm chỉ, thợ thủ công tài
-                  hoa, đến các nhà giáo dục, bác sĩ, và những nhân vật có ảnh
-                  hưởng trong cộng đồng. Dù cho cuộc sống có đưa chúng ta đến
-                  những miền đất mới, tinh thần và giá trị của dòng họ Nguyễn
-                  vẫn luôn được gìn giữ và truyền từ thế hệ này sang thế hệ
-                  khác. Website này không chỉ là nơi để tìm hiểu về lịch sử và
-                  truyền thống của gia đình chúng tôi mà còn là một không gian
-                  để chúng tôi kết nối, chia sẻ những câu chuyện, hình ảnh, và
-                  ghi chép quan trọng. Qua đó, chúng tôi hy vọng không chỉ giữ
-                  gìn kỷ niệm và di sản của tổ tiên mà còn tạo điều kiện để các
-                  thế hệ tương lai có thể hiểu và trân trọng nguồn cội của mình.
-                  Chúng tôi mời bạn lướt qua các trang của website, khám phá câu
-                  chuyện của gia đình Nguyễn, và chia sẻ niềm tự hào của chúng
-                  tôi. Hãy cùng chúng tôi duy trì và phát triển di sản này, để
-                  câu chuyện của dòng họ Nguyễn có thể tiếp tục được kể lại qua
-                  nhiều thế hệ tiếp theo.
+                <p style={{ textAlign: "start" }}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: modifyInitialValue(des),
+                    }}
+                  />
                 </p>
               </div>
             </Grid>
@@ -85,9 +88,24 @@ const HistoryFamily = () => {
               <div className="content-card card-item">
                 <h4 className="bold">Các mốc sự kiện lịch sử</h4>
                 {listHistory.map((item, index) => (
-                  <Card className="item-history">
-                    <p>{item.content}</p>
-                    <img src={item.image} />
+                  <Card className="item-history-wrap">
+                    <div className="item-history">
+                      <p
+                        className="display-3-line "
+                        style={{
+                          width: "calc(100% - 80px)",
+                          textAlign: "start",
+                        }}
+                      >
+                        {item.Description}
+                      </p>
+                      <img src={item.Image} />
+                    </div>
+                    <div style={{ textAlign: "start" }}>
+                      <Button onClick={() => setCurrent(item)} variant="contained" style={{}}>
+                        Xem chi tiết
+                      </Button>
+                    </div>
                   </Card>
                 ))}
               </div>
@@ -95,6 +113,28 @@ const HistoryFamily = () => {
           </Grid>
         </Box>
       </div>
+      <CustomModal minHeight={600} open={curent} onClose={() => setCurrent(null)}>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <img
+              src={curent?.Image}
+              style={{
+                width: "100%",
+                height: "auto",
+              }}
+            />
+          </Grid>
+          <Grid item xs={8}>
+            <p
+              style={{
+                textAlign: "start",
+              }}
+            >
+              {curent?.Description}
+            </p>
+          </Grid>
+        </Grid>
+      </CustomModal>
     </div>
   );
 };
