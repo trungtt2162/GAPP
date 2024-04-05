@@ -16,4 +16,7 @@ export const authApi = {
   upadteinfoUser: (data) => {
     return API.put("/api/User", data);
   },
+  changePass:(data) => {
+    return API.post("/api/Account/change-password",data)
+  }
 };

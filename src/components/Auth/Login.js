@@ -3,6 +3,7 @@ import "./Login.scss";
 import useAuthStore from "../../zustand/authStore";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { handleError } from "../../ultils/helper";
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,15 +21,15 @@ const Login = (props) => {
   };
   const handlleLogin = async () => {
     //validate
-    // const isValidateEmail = validateEmail(email);
-    // if (!isValidateEmail) {
-    //   //   toast.error("Invalid Email !!!");
-    //   return;
-    // }
-    // if (!password) {
-    //   //   toast.error("Invalid Password !!!");
-    //   return;
-    // }
+    const isValidateEmail = validateEmail(email);
+    if (!isValidateEmail) {
+        toast.error("Invalid Email !!!");
+      return;
+    }
+    if (!password) {
+        toast.error("Invalid Password !!!");
+      return;
+    }
    try {
    await login({
         userName:email,
@@ -36,6 +37,7 @@ const Login = (props) => {
       });
       navigate("/")
    } catch (error) {
+    handleError(error)
     console.log("Loi login")
    }
   };

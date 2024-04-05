@@ -24,15 +24,17 @@ import { handleError } from "../../ultils/helper";
 const Register = (props) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    username: "",
-    indentification: "",
-    phone: "",
-    address: "",
-    gender: "",
-    dayOfBirth: "",
-    image: "",
+    Username: "",
+    FirstName: "",
+    LastName: "",
+    Password: "",
+    Phone: "",
+    Address: "",
+    Gender: "",
+    DateOfBirth: "",
+    HomeTown: "",
+    Indentification: "string",
+    Avatar: "string",
   });
 
   const [type, setType] = useState("password");
@@ -49,21 +51,30 @@ const Register = (props) => {
       setType("password");
     }
   };
-  // const validateusername = (username) => {
-  //   return String(username)
-  //     .toLowerCase()
-  //     .match(
-  //       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  //     );
-  // };
+  const validateusername = () => {
+    return String(formData.Username)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
   const handlleRegister = async () => {
-    try {
-      const res = await authApi.register({...formData,HomeTown:"111",Avatar:"111"});
-      console.log(res)
-    } catch (error) {
-      handleError(error,true)
+    if (!validateusername()) {
+      toast.error("Invalid Email")
+      return;
     }
-    
+    try {
+      const res = await authApi.register({
+        ...formData,
+        
+      });
+      if(res.data.StatusCode ===200){
+        toast.success("Đăng ký thành công");
+        navigate("/login")
+      }
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   const handleSubmit = (event) => {
@@ -126,120 +137,125 @@ const Register = (props) => {
           </span>
         </div>
 
-        <div style={{
-            padding:70
-        }}>
+        <div
+          style={{
+            padding: 70,
+          }}
+        >
           <form onSubmit={handleSubmit}>
-           
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Họ"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Tên"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      type="username"
-                      label="username"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Mật khẩu"
-                      name="password"
-                      value={formData.password}
-                      type="password"
-                      onChange={handleChange}
-                      />
-                    </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Số điện thoại"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="CMND/CCCD"
-                      name="indentification"
-                      value={formData.indentification}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Địa chỉ"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      name="gender"
-                      select
-                      label="Giới tính"
-                      value={formData.gender}
-                      onChange={handleChange}
-                      fullWidth
-                    >
-                      {genderOptions.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      type="date"
-                      label="Ngày sinh nhật"
-                      name="dayOfBirth"
-                      value={formData.dayOfBirth}
-                      onChange={handleChange}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button onClick={() => handlleRegister()} variant="contained" color="primary">
-                     Đăng ký
-                    </Button>
-                  </Grid>
-                </Grid>
-             
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Họ"
+                  name="FirstName"
+                  value={formData.FirstName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Tên"
+                  name="LastName"
+                  value={formData.LastName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  type="Username"
+                  label="Username"
+                  name="Username"
+                  value={formData.Username}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Mật khẩu"
+                  name="Password"
+                  value={formData.Password}
+                  type="password"
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Số điện thoại"
+                  name="Phone"
+                  value={formData.Phone}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="CMND/CCCD"
+                  name="Indentification"
+                  value={formData.Indentification}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Địa chỉ"
+                  name="Address"
+                  value={formData.Address}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  name="Gender"
+                  select
+                  label="Giới tính"
+                  value={formData.Gender}
+                  onChange={handleChange}
+                  fullWidth
+                >
+                  {genderOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  type="date"
+                  label="Ngày sinh nhật"
+                  name="DateOfBirth"
+                  value={formData.DateOfBirth}
+                  onChange={handleChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  onClick={() => handlleRegister()}
+                  variant="contained"
+                  color="primary"
+                >
+                  Đăng ký
+                </Button>
+              </Grid>
+            </Grid>
           </form>
-          <div>
-          
-          </div>
-          <div style={{
-            marginTop:10
-          }} className="text-center">
+          <div></div>
+          <div
+            style={{
+              marginTop: 10,
+            }}
+            className="text-center"
+          >
             <span
               className="back"
               onClick={() => {

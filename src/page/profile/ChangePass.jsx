@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
+import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { makeStyles } from "@mui/styles";
+import { handleError } from "../../ultils/helper";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { authApi } from "../../api/auth.api";
+import useAuthStore from "../../zustand/authStore";
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '50%',
-    margin: 'auto',
-    '& > *': {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "50%",
+    margin: "auto",
+    "& > *": {
       marginBottom: theme.spacing(2),
     },
   },
@@ -18,11 +23,37 @@ const useStyles = makeStyles((theme) => ({
 
 function ChangePasswordForm() {
   const classes = useStyles();
+  const {user} = useAuthStore();
   const [formData, setFormData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    UserName: "string",
+    Password: "",
+    PasswordNew: "",
+    ConfirmPasswordNew: "",
   });
+
+  const changePass  =async() => {
+    try {
+      if(formData.ConfirmPasswordNew !== formData.PasswordNew){
+        toast.error("Confirm password không trùng khớp")
+        return;
+      }
+      const res = await authApi.changePass({
+        ...formData,
+        UserName:user?.Email
+      })
+      if(res.data.StatusCode === 200){
+        toast.success("Đổi mật khẩu thành công");
+        setFormData({
+          UserName: "string",
+          Password: "",
+          PasswordNew: "",
+          ConfirmPasswordNew: "",
+        })
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -37,32 +68,34 @@ function ChangePasswordForm() {
 
   return (
     <form className={classes.form} onSubmit={handleSubmit}>
-         <h4 style={{marginBottom:20}} className="bold">Đổi mật khẩu</h4>
+      <h4 style={{ marginBottom: 20 }} className="bold">
+        Đổi mật khẩu
+      </h4>
       <TextField
-        name="currentPassword"
+        name="Password"
         label="Mật khẩu hiện tại"
         type="password"
-        value={formData.currentPassword}
+        value={formData.Password}
         onChange={handleChange}
         fullWidth
       />
       <TextField
-        name="newPassword"
+        name="PasswordNew"
         label="Mật khẩu mới"
         type="password"
-        value={formData.newPassword}
+        value={formData.PasswordNew}
         onChange={handleChange}
         fullWidth
       />
       <TextField
-        name="confirmPassword"
+        name="ConfirmPasswordNew"
         label="Xác nhận mật khẩu mới"
         type="password"
-        value={formData.confirmPassword}
+        value={formData.ConfirmPasswordNew}
         onChange={handleChange}
         fullWidth
       />
-      <Button type="submit" variant="contained" color="primary">
+      <Button onClick={() => changePass()} variant="contained" color="primary">
         Đổi mật khẩu
       </Button>
     </form>
