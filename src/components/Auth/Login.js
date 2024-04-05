@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./Login.scss";
 import useAuthStore from "../../zustand/authStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { handleError } from "../../ultils/helper";
 const Login = (props) => {
@@ -10,7 +10,7 @@ const Login = (props) => {
   const navigate = useNavigate();
   // const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuthStore();
+  const { login,logOutAction } = useAuthStore();
 
   const validateEmail = (email) => {
     return String(email)
@@ -41,7 +41,9 @@ const Login = (props) => {
     console.log("Loi login")
    }
   };
-
+ useEffect(() => {
+  logOutAction(false)
+ },[])
   return (
     <div className="login-container">
       <div className="header">

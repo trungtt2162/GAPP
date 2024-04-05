@@ -4,6 +4,7 @@ import useFetchData from "../customHook/useFetchData";
 import { API } from "../api";
 import { authApi } from "../api/auth.api";
 import { LOCAL_STORAGE_KEY } from "../constant/common";
+import { logout } from "../ultils/helper";
 const useAuthStore = create(
   persist(
     (set) => ({
@@ -18,6 +19,17 @@ const useAuthStore = create(
         set({
           user,
         });
+      },
+      logOutAction:(flag=true) => {
+       logout(flag);
+       set({
+        user: null,
+        roleCode:null,
+        roleName: null,
+        userGenealogy: [],
+        currentIdGenealogy: null,
+        isLogin:false
+      });
       },
       login: async ({ userName, password }) => {
         set({ isLoading: true, error: null });
@@ -41,6 +53,7 @@ const useAuthStore = create(
               roleName: userRole.RoleName,
               userGenealogy: giapha,
               currentIdGenealogy: currentId,
+              isLogin:true
             });
           } else {
             throw new Error("Đăng nhập thất bại");

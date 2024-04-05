@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { LOCAL_STORAGE_KEY } from "../constant/common";
 
 export function uploafFileBase64(event, setValue) {
   const file = event.target.files[0];
@@ -65,3 +66,12 @@ export const handleError = (error,isshowToast=true) => {
   }
   return mess;
 };
+
+
+
+export const logout = (isRedirect = true) => {
+  localStorage.removeItem(LOCAL_STORAGE_KEY.token);
+  if(isRedirect){
+    window.location.href = "/login";
+  }
+}

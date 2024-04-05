@@ -30,3 +30,8 @@ export const  genderOptions = [
     return location ? location.value : '';
   }
   
+  export const USER_ROLE = {
+    User:"Account",
+    SiteAdmin:"Admin",
+    SupperAdmin:"SuperAdmin"
+  }

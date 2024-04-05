@@ -13,15 +13,18 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { postRegister } from '../../services/apiServices';
 import { toast } from "react-toastify";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { genderOptions } from "../../constant/common";
 import { authApi } from "../../api/auth.api";
 import { handleError } from "../../ultils/helper";
+import useAuthStore from "../../zustand/authStore";
 
 const Register = (props) => {
+  const { login,logOutAction } = useAuthStore();
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     Username: "",
@@ -82,6 +85,9 @@ const Register = (props) => {
     // Handle form submission here
     console.log(formData);
   };
+  useEffect(() => {
+    logOutAction(false)
+   },[])
   return (
     <div className="signup-container">
       <div

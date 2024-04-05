@@ -12,6 +12,8 @@ import { Menu, Close } from "@mui/icons-material";
 import PrimaryButton from "../common/button/PrimaryButton";
 //import { default as logo } from "../../assets/logo.svg";
 import { theme } from "../../theme";
+import { USER_ROLE } from "../../constant/common";
+import useAuthStore from "../../zustand/authStore";
 
 const Navbar = () => {
   const { palette } = useTheme(theme);
@@ -22,13 +24,18 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
 
   const isNotMobile = useMediaQuery("(min-width: 1200px)");
+  const { isLogin, roleCode,user ,logOutAction} = useAuthStore();
 
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isSiteAdmin;
   useEffect(() => {
     setUrl(location.pathname);
   }, [location]);
 
   const isNotHome =
-    location.pathname !== "/"&& !location.pathname.includes("home");
+    location.pathname !== "/" && !location.pathname.includes("home");
   return (
     <Box
       position="absolute"
@@ -56,63 +63,72 @@ const Navbar = () => {
         <>
           <Box>
             {/* EMPTY FAKE LINKS */}
-            <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
+          {isLogin &&   <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
               Home
-            </Link>
-            <Link
-              to="/pageTree"
-              className={"link" + (url === "/pageTree" ? " active" : "")}
-            >
-              Cây Gia Phả
-            </Link>
-            <Link
-              to="/history"
-              className={"link" + (url === "/history" ? " active" : "")}
-            >
-              Lịch Sử Gia Đình
-            </Link>
-            <Link
-              to="/admin"
-              className={"link" + (url === "/admin" ? " active" : "")}
-            >
-              supper Admin
-            </Link>
-            <Link
-              to="/event"
-              className={"link" + (url === "/event" ? " active" : "")}
-            >
-              Sự kiện
-            </Link>
-            <Link
-              to="/request-event"
-              className={"link" + (url === "/request-event" ? " active" : "")}
-            >
-              Request Sự kiện
-            </Link>
+            </Link>}
+            {isMember&& (
+                <Link
+                  to="/pageTree"
+                  className={"link" + (url === "/pageTree" ? " active" : "")}
+                >
+                  Cây Gia Phả
+                </Link>
+              )}
+            {isMember && (
+              <Link
+                to="/history"
+                className={"link" + (url === "/history" ? " active" : "")}
+              >
+                Lịch Sử Gia Đình
+              </Link>
+            )}
+            {isSupperAdmin && (
+              <Link
+                to="/admin"
+                className={"link" + (url === "/admin" ? " active" : "")}
+              >
+                Quản lý admin
+              </Link>
+            )}
+            {isMember && (
+              <Link
+                to="/event"
+                className={"link" + (url === "/event" ? " active" : "")}
+              >
+                Sự kiện
+              </Link>
+            )}
+            {isMember && (
+              <Link
+                to="/request-event"
+                className={"link" + (url === "/request-event" ? " active" : "")}
+              >
+                Request Sự kiện
+              </Link>
+            )}
             {/* <Link
               to="/#"
               className={"link" + (url === "/locations" ? " active" : "")}
             >
               Locations
             </Link> */}
-            <Link
-              to="/member-fund"
-              className={"link" + (url === "/member-fund" ? " active" : "")}
-            >
-              Member-fund
-            </Link>
-            <Link
-              to="/admin-fund"
-              className={"link" + (url === "/admin-fund" ? " active" : "")}
-            >
-              admin-fund
-            </Link>
-            <Link
-              to="/profile"
-              className={"link" + (url === "/profile" ? " active" : "")}
-            >
-              profile
-            </Link>
+            {isUser && (
+              <Link
+                to="/member-fund"
+                className={"link" + (url === "/member-fund" ? " active" : "")}
+              >
+               Quỹ
+              </Link>
+            )}
+            {isSiteAdmin && (
+              <Link
+                to="/admin-fund"
+                className={"link" + (url === "/admin-fund" ? " active" : "")}
+              >
+                Quản lý quỹ
+              </Link>
+            )}
+            
             {/* <Link
               to="/#"
               className={"link" + (url === "/support" ? " active" : "")}
@@ -121,7 +137,32 @@ const Navbar = () => {
             </Link> */}
           </Box>
           <Box display="flex" gap="1.5rem">
-            <Button
+           {
+            user &&  <div onClick={() => navigate("/profile")} style={{
+              cursor:"pointer",
+              display:"flex",
+              justifyContent:'center',
+              alignItems:'center',
+              gap:10
+            }}>
+            <Avatar sx={{ width: 25,height:25}} src={user?.Avatar}></Avatar>
+            <span>{user?.FirstName + " " + user?.LastName}</span>
+            </div>
+           }
+           {isLogin &&  <Button
+
+              variant="contained"
+              sx={{
+                p: ".5rem 1.5rem",
+                color: "white",
+                           }}
+              onClick={() => {
+                logOutAction(true)
+              }}
+            >
+              Đăng xuất
+            </Button>}
+           {!isLogin &&  <Button
               variant="text"
               sx={{
                 p: ".5rem 1.5rem",
@@ -134,8 +175,8 @@ const Navbar = () => {
               }}
             >
               Đăng nhập
-            </Button>
-            <Button
+            </Button>}
+           {!isLogin &&  <Button
               variant="text"
               sx={{
                 p: ".5rem 1.5rem",
@@ -150,7 +191,7 @@ const Navbar = () => {
               }}
             >
               Đăng kí
-            </Button>
+            </Button>}
           </Box>
         </>
       )}
@@ -160,7 +201,6 @@ const Navbar = () => {
           <IconButton
             onClick={() => {
               setIsMobileMenuToggled(!isMobileMenuToggled);
-              console.log("te");
             }}
           >
             <Menu />

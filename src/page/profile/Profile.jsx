@@ -1,12 +1,12 @@
-import React, { useRef, useState } from 'react';
-import { TextField, Button, FormControl, FormLabel, RadioGroup, Radio, FormControlLabel, Grid, MenuItem } from '@mui/material';
-import AddImage from '../../components/common/addImage/AddImage';
-import useAuthStore from '../../zustand/authStore';
-import { genderOptions, genderOptions2 } from '../../constant/common';
+import { Button, Grid, MenuItem, TextField } from '@mui/material';
 import moment from 'moment';
-import { handleError } from '../../ultils/helper';
-import { authApi } from '../../api/auth.api';
+import React, { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import { authApi } from '../../api/auth.api';
+import AddImage from '../../components/common/addImage/AddImage';
+import { genderOptions2 } from '../../constant/common';
+import { handleError } from '../../ultils/helper';
+import useAuthStore from '../../zustand/authStore';
 
 function Profile() {
   const {user,setUser} = useAuthStore();
@@ -21,10 +21,15 @@ function Profile() {
   const handleSubmit = async() => {
     try {
       setLoading(true)
-      const res = await authApi.upadteinfoAdmin(formData);
+      const res = await authApi.upadteinfoAdmin({...formData,TypeRole: "string",});
       if(res.data.StatusCode ===200){
-        toast.success("Cập nhật thành công");
-        setUser(formData)
+        
+        toast.success("Cập nhật thành công",{
+          onClose:() => {
+            setUser(formData)
+          }
+        });
+       
       }
     } catch (error) {
       handleError(error)

@@ -7,8 +7,6 @@ import "./../history-family/History.scss";
 import { handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { eventApi } from "../../api/event.api";
-const fakeContent =
-  "Hòa mình trong không khí ấm áp của tình gia đình, sự kiện lần này đã mang đến cho mọi người những trải nghiệm đáng nhớ và ý nghĩa. Từ những tiếng cười vang vọng trong bữa tiệc sum họp, đến những trò chơi vui nhộn dành cho cả gia đình, mỗi khoảnh khắc đều được tô điểm bởi sự gắn kết và tình thân thiết. Qua những câu chuyện, kỷ niệm, và những bức ảnh ghi lại, chúng ta cùng nhìn lại quãng thời gian đáng quý này và ghi nhận tình yêu thương và sự đoàn kết của mỗi thành viên trong gia đình. Đây thực sự là một sự kiện không chỉ để kỷ niệm mà còn để ghi nhận giá trị vô hạn của tình gia đình.";
 const EventMember = () => {
   const { palette } = useTheme(theme);
   const { currentIdGenealogy } = useAuthStore();
