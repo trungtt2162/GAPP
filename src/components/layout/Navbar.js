@@ -62,6 +62,9 @@ const Navbar = () => {
       {isNotMobile && (
         <>
           <Box>
+          {/* <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
+              Event Guest
+            </Link> */}
             {/* EMPTY FAKE LINKS */}
           {isLogin &&   <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
               Home
@@ -90,7 +93,7 @@ const Navbar = () => {
                 Quản lý admin
               </Link>
             )}
-            {isMember && (
+            {(isMember || !isLogin) && (
               <Link
                 to="/event"
                 className={"link" + (url === "/event" ? " active" : "")}

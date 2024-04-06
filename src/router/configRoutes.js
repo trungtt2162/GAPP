@@ -22,6 +22,7 @@ import RequestEvents from "../page/request-event/RequestEvent";
 import HomeNoLogin from "../page/home/HomeNologin";
 import useAuthStore from "../zustand/authStore";
 import { USER_ROLE } from "../constant/common";
+import EventGuest from "../page/event-guest/EventGuest";
 const NotFound = () => {
   return (
     <div className="container mt-3 alert alert-danger" role="alert">
@@ -47,13 +48,13 @@ const isUser = isLogin && roleCode === USER_ROLE.User;
             {!isLogin && (
               <Route path="/home-nologin" element={<HomeNoLogin />} />
             )}
-
+          
             {(isSiteAdmin||isUser) && <Route path="/pageTree" element={<PageTreeAdmin />}></Route>}
            {isSupperAdmin &&  <Route path="/admin" element={<ManageAdmin />} />}
             {isUser && <Route path="/member-fund" element={<ManageMemberFund />} />}
             {isSiteAdmin && <Route path="/admin-fund" element={<ManageAdminFund />} />}
             {isLogin && <Route path="/profile" element={<ProfileManager />} />}
-            {(isUser || isSiteAdmin) && <Route path="/event" element={<EventMember />} />}
+            {(isUser || isSiteAdmin | !isLogin) && <Route path="/event" element={isLogin ?<EventMember />:<EventGuest />} />}
             {(isUser ||  isSiteAdmin) && <Route path="/request-event" element={<RequestEvents />} />}
            {(isSiteAdmin || isUser) &&  <Route path="/history" element={<HistoryFamily />} />}
           </Route>

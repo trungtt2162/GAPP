@@ -18,6 +18,15 @@ export const eventApi = {
         "SearchKey": ""
     });
   },
+  getListEventGuest: (id) => {
+    return API.post("api/Event/guest/paging?idGenealogy="+id, {
+        "PageSize": 1,
+        "PageNumber": -1,
+        "Condition": `IdGenealogy=${id}`,
+        "SortOrder": "",
+        "SearchKey": ""
+    });
+  },
   addEvent:(data)=>{
     return API.post("/api/Event",data);
   },
