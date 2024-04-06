@@ -11,7 +11,7 @@ namespace GenealogyCommon.Models
     public class Log: BaseModel
     {
 
-        public int IDGenealogy {get; set;}
+        public int IdGenealogy {get; set;}
 
         public string Action { get; set; }
 

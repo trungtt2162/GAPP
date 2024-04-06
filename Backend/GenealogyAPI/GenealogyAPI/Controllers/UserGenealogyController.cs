@@ -2,6 +2,7 @@
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
 using GenealogyCommon.Models;
+using GenealogyCommon.Models.Authen;
 using GenealogyCommon.Models.Param;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -98,6 +99,35 @@ namespace GenealogyAPI.Controllers
             await _userGenealogyBL.ApproveRegister(_mapper.Map<UserGenealogy>(userGenealogyParam));
             return serviceResult.OnSuccess("Approved");
         }
+
+        [HttpPost("newmember")]
+        public async Task<ServiceResult> AddNewMember(UserGenealogy userGenealogyParam)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest("Invalid Param");
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Add, userGenealogyParam.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
+            var userRegister = _mapper.Map<UserRegister>(userGenealogyParam);
+            var isExist = await _userBL.CheckExistUser(userRegister.Username);
+            if (isExist)
+            {
+                return serviceResult.OnBadRequest("Duplicate user");
+            }
+            // tạo user : fix cố định password
+            userRegister.Password = "12345678";
+            await _userBL.SaveCredential(_mapper.Map<Credential>(userRegister));
+            var iduser = await _userBL.Create(_mapper.Map<User>(userRegister));
+            userGenealogyParam.UserId = (int)iduser;
+            await _userGenealogyBL.Create(userGenealogyParam);
+            return serviceResult.OnSuccess("Created");
+        }
+
 
 
         [HttpDelete("")]

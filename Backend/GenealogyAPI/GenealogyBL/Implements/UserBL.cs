@@ -77,7 +77,7 @@ namespace GenealogyBL.Implements
             await InsertUserRole(lastId, nameof(UserRoles.Account), -1);
 
            
-            return null;
+            return lastId;
         }
         public async Task<bool> InsertUserRole(int userID, string roleCode, int idGenealogy)
         {

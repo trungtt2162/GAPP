@@ -36,13 +36,13 @@ namespace GenealogyBL.Implements
 
         public async Task<object> Create(UserGenealogy userGenealogy)
         {
-            var check = await _userBL.CheckPermissionSubSystem( SubSystem.Genealogy, PermissionCode.Add, userGenealogy.IdFamilyTree);
+            var check = await _userBL.CheckPermissionSubSystem( SubSystem.Genealogy, PermissionCode.Add, userGenealogy.IdGenealogy);
             if (!check)
             {
                 throw new ArgumentException("UnAuthorized");
             }
             var checkExist = await _userGenealogyDL.CheckUserExistInTree(userGenealogy.UserId, userGenealogy.IdGenealogy);
-            if (!checkExist)
+            if (checkExist)
             {
                 throw new ArgumentException("User Exist in Tree");
             }
@@ -118,8 +118,6 @@ namespace GenealogyBL.Implements
         {
             return await _userGenealogyDL.GetAllByUserID(userID);
         }
-
-
 
 
     }
