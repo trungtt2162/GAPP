@@ -6,10 +6,20 @@ import { theme } from "../../../../../theme";
 import ListMember from "./ListMember";
 import ListMemberPending from "./ListMemberPending";
 import AddMemberForm from "./AddMember";
+import { USER_ROLE } from "../../../../../constant/common";
+import useAuthStore from "../../../../../zustand/authStore";
 
 const ManageMember = () => {
   const { palette } = useTheme(theme);
   const [value, setValue] = useState(1);
+  const { isLogin, roleCode } = useAuthStore();
+
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isSiteAdmin || isPeopleAdmin;
+
   return (
     <div>
       <div className="flex-center">
@@ -19,12 +29,14 @@ const ManageMember = () => {
           text={"Danh sách thành viên"}
           onClick={(e) => setValue(1)}
         />
-        <ButtonTab
-          index={2}
-          value={value}
-          text={"Danh sách chờ duyệt"}
-          onClick={(e) => setValue(2)}
-        />
+        {isSiteAdmin && (
+          <ButtonTab
+            index={2}
+            value={value}
+            text={"Danh sách chờ duyệt"}
+            onClick={(e) => setValue(2)}
+          />
+        )}
         <ButtonTab
           index={3}
           value={value}

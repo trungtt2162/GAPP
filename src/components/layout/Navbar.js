@@ -26,10 +26,12 @@ const Navbar = () => {
   const isNotMobile = useMediaQuery("(min-width: 1200px)");
   const { isLogin, roleCode,user ,logOutAction} = useAuthStore();
 
+  const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USER_ROLE.PeopleAdmin);
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
   const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
   const isUser = isLogin && roleCode === USER_ROLE.User;
-  const isMember = isUser || isSiteAdmin;
+  const isMember = isUser || isAdmin;
   useEffect(() => {
     setUrl(location.pathname);
   }, [location]);
@@ -51,9 +53,13 @@ const Navbar = () => {
       }}
     >
       <span
+      onClick = {() => {
+        navigate("/")
+      }}
         style={{
           fontSize: 30,
           fontWeight: "bold",
+          cursor:"pointer"
         }}
       >
         GAPP
@@ -69,7 +75,7 @@ const Navbar = () => {
           {isLogin &&   <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
               Home
             </Link>}
-            {isMember&& (
+            {(isMember ||!isLogin)&& (
                 <Link
                   to="/pageTree"
                   className={"link" + (url === "/pageTree" ? " active" : "")}
@@ -77,7 +83,7 @@ const Navbar = () => {
                   Cây Gia Phả
                 </Link>
               )}
-            {isMember && (
+            {(isMember || !isLogin)&& (
               <Link
                 to="/history"
                 className={"link" + (url === "/history" ? " active" : "")}
@@ -115,7 +121,7 @@ const Navbar = () => {
             >
               Locations
             </Link> */}
-            {isUser && (
+            {(isUser || isPeopleAdmin) && (
               <Link
                 to="/member-fund"
                 className={"link" + (url === "/member-fund" ? " active" : "")}
@@ -166,13 +172,15 @@ const Navbar = () => {
               Đăng xuất
             </Button>}
            {!isLogin &&  <Button
-              variant="text"
-              sx={{
-                p: ".5rem 1.5rem",
-                color: "white",
-                backgroundColor: "transparent",
-                "&:hover": { color: palette.primary.main },
-              }}
+             variant="text"
+             sx={{
+               p: ".5rem 1.5rem",
+               backgroundColor: palette.primary.main,
+               color: "#ffffff",
+               borderRadius: 2,
+               boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
+               "&:hover": { color: palette.primary.main },
+             }}
               onClick={() => {
                 navigate("/login");
               }}

@@ -13,9 +13,10 @@ const PageTreeAdmin = () => {
 
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
   const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
   const isUser = isLogin && roleCode === USER_ROLE.User;
-  const isMember = isUser || isSiteAdmin;
-  
+  const isMember = isUser || isSiteAdmin || isPeopleAdmin;
+
   const listSideBar = [
     {
       key: 1,
@@ -27,7 +28,7 @@ const PageTreeAdmin = () => {
       key: 2,
       name: "Quản lý thành viên",
       component:ManageMember,
-      show:isSiteAdmin
+      show:isSiteAdmin || isPeopleAdmin
     },
     {
       key: 3,

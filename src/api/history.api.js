@@ -2,13 +2,13 @@ import { API } from ".";
 
 export const historyApi = {
   getListAllHistoryByGenealogyId: (id) => {
-    return API.post("/api/FamilyHistory/detail/paging",{
-        PageSize: -1,
-        PageNumber: -1,
-        Condition: `IdGenealogy=${id}`,
-        SortOrder: "",
-        SearchKey: ""
-      });
+    return API.post("/api/FamilyHistory/detail/paging", {
+      PageSize: -1,
+      PageNumber: -1,
+      Condition: `IdGenealogy=${id}`,
+      SortOrder: "",
+      SearchKey: "",
+    });
   },
   addHistory: (data) => {
     return API.post("/api/FamilyHistory/detail", data);
@@ -16,13 +16,27 @@ export const historyApi = {
   updateHistory: (data) => {
     return API.put("/api/FamilyHistory/detail", data);
   },
-  deleteHistory: (id,idGenealogy) => {
-    return API.delete("/api/FamilyHistory/detail?id="+id + "&idGenealogy="+idGenealogy);
+  deleteHistory: (id, idGenealogy) => {
+    return API.delete(
+      "/api/FamilyHistory/detail?id=" + id + "&idGenealogy=" + idGenealogy
+    );
   },
-  getDescriptionHistorufamily:(id) => {
-    return API.get("/api/FamilyHistory?idGenealogy="+id)
+  getDescriptionHistorufamily: (id) => {
+    return API.get("/api/FamilyHistory?idGenealogy=" + id);
   },
-  updateDescriptionHistorufamily:(data) => {
-    return API.put("/api/FamilyHistory",data)
+  updateDescriptionHistorufamily: (data) => {
+    return API.put("/api/FamilyHistory", data);
+  },
+  getDescriptionHistoryGuest: (id) => {
+    return API.get("/api/FamilyHistory/guest?idGenealogy=" + id);
+  },
+  getListHistoryGuest: (id) => {
+    return API.post("/api/FamilyHistory/detail/guest/paging?idGenealogy=" + id, {
+      PageSize: 0,
+      PageNumber: -1,
+      Condition: "IDGenealogy ="+id,
+      SortOrder: "",
+      SearchKey: "",
+    });
   },
 };

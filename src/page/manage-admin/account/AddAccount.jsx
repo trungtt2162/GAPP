@@ -41,6 +41,7 @@ function AddAccount() {
     IsBlock: false,
     Name: "a",
     Description: "string",
+    TypeRole:"string"
   }
   const [formData, setFormData] = useState(originData);
   const [loading,setLoading] = useState(false)

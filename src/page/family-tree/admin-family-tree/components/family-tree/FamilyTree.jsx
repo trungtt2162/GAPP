@@ -151,7 +151,7 @@ const renderRectSvgNode = ({ nodeDatum, toggleNode }) => (
   
 );
 
-export default function Tree1() {
+export default function Tree1({isGuest}) {
   const [dimensions, translate, containerRef] = useCenteredTree();
   return (
     <div style={{...containerStyles}} ref={containerRef}>
@@ -178,13 +178,13 @@ export default function Tree1() {
         borderTop:"1px solid lightgray"
 
       }}>
-       <div style={{
+     {!isGuest &&   <div style={{
         marginTop:20
-       }}> <PrimaryButton title={"Export PNG "} /></div>
-       <div  style={{
+       }}> <PrimaryButton title={"Export PNG "} /></div>}
+      {!isGuest &&  <div  style={{
         marginTop:20,
         marginLeft:15
-       }}> <PrimaryButton title={"Export EXCEL "} /></div>
+       }}> <PrimaryButton title={"Export EXCEL "} /></div>}
       </div>
     </div>
   );

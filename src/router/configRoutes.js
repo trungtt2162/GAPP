@@ -1,28 +1,26 @@
-import { Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { Route, Routes } from "react-router-dom";
 import { theme } from "./../theme";
 
-import App from "./../App";
 import { ToastContainer } from "react-toastify";
-import Login from "./../components/Auth/Login";
-import DashBoard from "./../components/Auth/DashBoard";
-import Register from "./../components/Auth/Register";
-import PageTree from "../page/family-tree/PageTree";
-import HistoryFamily from "../page/history-family/HistoryFamily";
-import Footer from "../components/layout/footer";
-import PraviteLayout from "../layouts/PrivateLayout";
-import Home from "../page/home/Home";
-import PageTreeAdmin from "../page/family-tree/admin-family-tree/PageTreeAdmin";
-import ManageAdmin from "../page/manage-admin/ManageAdmin";
-import ManageMemberFund from "../page/funds/member-fund/MemberFund";
-import ManageAdminFund from "../page/funds/admin-fund/AdminFund";
-import ProfileManager from "../page/profile/ProfileManage";
-import EventMember from "../page/member-event.jsx/EventMember";
-import RequestEvents from "../page/request-event/RequestEvent";
-import HomeNoLogin from "../page/home/HomeNologin";
-import useAuthStore from "../zustand/authStore";
 import { USER_ROLE } from "../constant/common";
+import PraviteLayout from "../layouts/PrivateLayout";
 import EventGuest from "../page/event-guest/EventGuest";
+import PageTreeAdmin from "../page/family-tree/admin-family-tree/PageTreeAdmin";
+import ManageAdminFund from "../page/funds/admin-fund/AdminFund";
+import ManageMemberFund from "../page/funds/member-fund/MemberFund";
+import HistoryFamily from "../page/history-family/HistoryFamily";
+import Home from "../page/home/Home";
+import HomeNoLogin from "../page/home/HomeNologin";
+import ManageAdmin from "../page/manage-admin/ManageAdmin";
+import EventMember from "../page/member-event.jsx/EventMember";
+import ProfileManager from "../page/profile/ProfileManage";
+import RequestEvents from "../page/request-event/RequestEvent";
+import useAuthStore from "../zustand/authStore";
+import Login from "./../components/Auth/Login";
+import Register from "./../components/Auth/Register";
+import HistoryGuest from "../page/history-guest/HistoryGuest";
+import GeneGuest from "../page/gene-guest/GeneGuest";
 const NotFound = () => {
   return (
     <div className="container mt-3 alert alert-danger" role="alert">
@@ -35,9 +33,13 @@ const NotFound = () => {
 const ConfigRoutes = (props) => {
   
 const { isLogin, roleCode } = useAuthStore();
-const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
-const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
-const isUser = isLogin && roleCode === USER_ROLE.User;
+console.log(roleCode,isLogin)
+const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USER_ROLE.PeopleAdmin);
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isAdmin;
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -49,14 +51,14 @@ const isUser = isLogin && roleCode === USER_ROLE.User;
               <Route path="/home-nologin" element={<HomeNoLogin />} />
             )}
           
-            {(isSiteAdmin||isUser) && <Route path="/pageTree" element={<PageTreeAdmin />}></Route>}
+            {(isAdmin||isUser || !isLogin) && <Route path="/pageTree" element={isLogin ? <PageTreeAdmin /> :<GeneGuest />}></Route>}
            {isSupperAdmin &&  <Route path="/admin" element={<ManageAdmin />} />}
-            {isUser && <Route path="/member-fund" element={<ManageMemberFund />} />}
+            {(isUser || isPeopleAdmin) && <Route path="/member-fund" element={<ManageMemberFund />} />}
             {isSiteAdmin && <Route path="/admin-fund" element={<ManageAdminFund />} />}
             {isLogin && <Route path="/profile" element={<ProfileManager />} />}
-            {(isUser || isSiteAdmin | !isLogin) && <Route path="/event" element={isLogin ?<EventMember />:<EventGuest />} />}
-            {(isUser ||  isSiteAdmin) && <Route path="/request-event" element={<RequestEvents />} />}
-           {(isSiteAdmin || isUser) &&  <Route path="/history" element={<HistoryFamily />} />}
+            {(isUser || isAdmin | !isLogin) && <Route path="/event" element={isLogin ?<EventMember />:<EventGuest />} />}
+            {(isUser ||  isAdmin) && <Route path="/request-event" element={<RequestEvents />} />}
+           {(isUser || isAdmin | !isLogin) &&  <Route path="/history" element={isLogin?<HistoryFamily />:<HistoryGuest />} />}
           </Route>
           { <Route path="/login" element={<Login />} />}
           {!isLogin && <Route path="/register" element={<Register />} />}

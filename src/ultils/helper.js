@@ -1,8 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { LOCAL_STORAGE_KEY } from "../constant/common";
-
-export function uploafFileBase64(event, setValue) {
+ export function uploafFileBase64(event, setValue) {
   const file = event.target.files[0];
   const reader = new FileReader();
   let base64;
@@ -74,4 +73,19 @@ export const logout = (isRedirect = true) => {
   if(isRedirect){
     window.location.href = "/login";
   }
+}
+ export function isTokenExpired(token) {
+  // Tách phần payload của token từ phần còn lại bằng cách tách chuỗi bằng dấu chấm
+  const tokenParts = token?.split('.');
+  const payload = JSON.parse(atob(tokenParts[1]));
+
+  // Lấy thời gian hết hạn (exp) từ payload
+  const expirationTime = payload?.exp;
+  console.log(expirationTime)
+
+  // Lấy thời gian hiện tại (tính bằng giây)
+  const currentTime = Math.floor(Date.now() / 1000);
+
+  // So sánh thời gian hết hạn với thời gian hiện tại
+  return expirationTime < currentTime;
 }

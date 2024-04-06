@@ -12,19 +12,16 @@ const EventMember = () => {
   const { currentIdGenealogy } = useAuthStore();
 
   const [listEvent, setListEvent] = useState([]);
-  const [currentEvent, setCurrentEvent] = useState(
-    listEvent.length > 0 ? listEvent[0] : {}
-  );
+  const [currentEvent, setCurrentEvent] = useState(null);
   const getListEvent = async (id) => {
     try {
       const res = await eventApi.getListEventAdmin(id);
       if (res.data.StatusCode === 200) {
         setListEvent(res.data.Data.Data);
-        if(res.data.Data.Data.length > 0){
-          setCurrentEvent(res.data.Data.Data[0])
+        if (res.data.Data.Data.length > 0) {
+          setCurrentEvent(res.data.Data.Data[0]);
         }
       }
-
     } catch (error) {
       handleError(error);
     }
@@ -57,60 +54,65 @@ const EventMember = () => {
         >
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              {currentEvent && <div className="content-card card-item">
-                <h4 className="bold">{currentEvent?.Name}</h4>
-                <div
-                  style={{
-                    textAlign: "start",
-                    marginTop: 10,
-                  }}
-                >
-                  <span className="bold">Link sự kiện : </span>
-                  <a
-                    style={{
-                      color: "blue",
-                    }}
-                    href={currentEvent?.LinkStream}
-                  >
-                    {currentEvent?.LinkStream}
-                  </a>
-                </div>
-                <div
-                  style={{
-                    textAlign: "start",
-                    marginTop: 10,
-                  }}
-                >
-                  <span className="bold">Ngày diễn ra : </span>
-                  <span>{currentEvent?.OrganizationDate}</span>
-                </div>
-                <div
-                  style={{
-                    textAlign: "start",
-                    marginTop: 10,
-                  }}
-                >
-                  <span className="bold">Địa điểm tổ chức: </span>
-                  <span>{currentEvent?.Location}</span>
-                </div>
-                <div
-                  style={{
-                    textAlign: "start",
-                    marginTop: 10,
-                  }}
-                >
-                  <span className="bold">Nội dung : </span>
-                  <span>{currentEvent?.Description}</span>
-                </div>
-                <div
-                  style={{
-                    textAlign: "start",
-                  marginTop: 10,
-                  }}
-                >
-                  <img src={currentEvent?.Background} />
-                </div>
-              </div>}
+              <div className="content-card card-item">
+                {currentEvent && (
+                  <>
+                    {" "}
+                    <h4 className="bold">{currentEvent?.Name}</h4>
+                    <div
+                      style={{
+                        textAlign: "start",
+                        marginTop: 10,
+                      }}
+                    >
+                      <span className="bold">Link sự kiện : </span>
+                      <a
+                        style={{
+                          color: "blue",
+                        }}
+                        href={currentEvent?.LinkStream}
+                      >
+                        {currentEvent?.LinkStream}
+                      </a>
+                    </div>
+                    <div
+                      style={{
+                        textAlign: "start",
+                        marginTop: 10,
+                      }}
+                    >
+                      <span className="bold">Ngày diễn ra : </span>
+                      <span>{currentEvent?.OrganizationDate}</span>
+                    </div>
+                    <div
+                      style={{
+                        textAlign: "start",
+                        marginTop: 10,
+                      }}
+                    >
+                      <span className="bold">Địa điểm tổ chức: </span>
+                      <span>{currentEvent?.Location}</span>
+                    </div>
+                    <div
+                      style={{
+                        textAlign: "start",
+                        marginTop: 10,
+                      }}
+                    >
+                      <span className="bold">Nội dung : </span>
+                      <span>{currentEvent?.Description}</span>
+                    </div>
+                    <div
+                      style={{
+                        textAlign: "start",
+                        marginTop: 10,
+                      }}
+                    >
+                      <img src={currentEvent?.Background} />
+                    </div>
+                  </>
+                )}
+              </div>
             </Grid>
             <Grid item xs={6}>
               <div
@@ -126,7 +128,7 @@ const EventMember = () => {
                     style={{
                       marginTop: 10,
                       cursor: "pointer",
-                      
+
                       border:
                         item.Id === currentEvent.Id ? "1px solid gray" : "",
                       minHeight: 100,
