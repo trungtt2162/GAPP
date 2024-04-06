@@ -10,7 +10,6 @@ namespace GenealogyCommon.Constant
     {
         public const string Add = nameof(Add);
         public const string View = nameof(View);
-        public const string Edit = nameof(Edit);
         public const string Update = nameof(Update);
         public const string Delete = nameof(Delete);
         public const string Export = nameof(Export);

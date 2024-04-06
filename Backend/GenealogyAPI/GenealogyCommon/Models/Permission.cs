@@ -20,4 +20,11 @@ namespace GenealogyCommon.Models
 
         public int UserID { get; set; }
     }
+
+    public class PermissionClient
+    {
+        public List<Permission> Permissions { get; set; }
+
+        public List<UserRoleClient> Roles { get; set; }
+    }
 }

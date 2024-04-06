@@ -94,7 +94,7 @@ namespace GenealogyBL.Implements
                 Description = ""
             };
             await _familyHistoryDL.Create(historyFamily);
-            await _userDL.InsertUserRole(idUser, nameof(UserRoles.Admin));
+            await _userDL.InsertUserRole(idUser, nameof(UserRoles.Admin), idGen);
             _ = InsertLog(LogAction.CreateAdmin, userGenology);
             return null;
         }

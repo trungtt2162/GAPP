@@ -1,17 +1,24 @@
-﻿using GenealogyCommon.Interfaces;
+﻿using GenealogyCommon.Constant;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
+using GenealogyCommon.Models.Param;
 using GenealogyCommon.Utils;
+using GenealogyDL.DBContext;
 using GenealogyDL.Interfaces;
+using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.Contracts;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Net;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+using User = GenealogyCommon.Models.User;
 
 namespace GenealogyDL.Implements
 {
@@ -122,13 +129,14 @@ namespace GenealogyDL.Implements
             return new List<UserRole>();
         }
 
-        public async Task<bool> InsertUserRole(int userID , string roleCode)
+        public async Task<bool> InsertUserRole(int userID , string roleCode, int IdGenealogy = -1)
         {
             var sql = this.GetFileSql("insert_user_role.sql");
             var param = new Dictionary<string, object>()
             {
                 ["RoleCode"] = roleCode,
-                ["UserID"] = userID
+                ["UserID"] = userID,
+                ["IdGenealogy"] = IdGenealogy
             };
             return (await this.ExecuteAsync(sql, param)) > 0;
         }
@@ -164,6 +172,55 @@ namespace GenealogyDL.Implements
                 return true;
             }
             return false;
+        }
+
+        public async Task<PermissionClient> GetAllPermission(int? idGenealogy, int userID)
+        {
+            var param = new 
+            {
+                p_IDGenealogy = idGenealogy,
+                p_UserID = userID
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                var results = await dbContext.QueryMultipleAsync<UserRoleClient, Permission>($"Proc_GetAllPermission", param, commandType: CommandType.StoredProcedure);
+                return new PermissionClient()
+                {
+                    Roles = results.Item1.ToList(),
+                    Permissions = results.Item2.ToList()
+                };
+
+            }
+        }
+
+        public async Task<object> GetRoles()
+        {
+            return await this.Query<object>("Proc_GetRoles", null, CommandType.StoredProcedure);
+        }
+
+        public async Task<bool> AdminDecentralization(DecentralizationParam param)
+        {
+            var param1 = new Dictionary<string, object>()
+            {
+                ["p_UserID"] = param.UserID,
+                ["p_IDGenealogy"] = param.IdGenealogy,
+                ["p_RoleCode"] = param.RoleCode,
+                ["p_ModifiedBy"] = _authService.GetFullName()
+            };
+            var proc = "Proc_Admin_Decentralization";
+            return (await this.QueryFirstOrDefaultAsync<int>(proc, param1)) > 0;
+        }
+
+        public async Task<bool> DeletePermission(DecentralizationParam param)
+        {
+            var param1 = new Dictionary<string, object>()
+            {
+                ["p_UserID"] = param.UserID,
+                ["p_IDGenealogy"] = param.IdGenealogy,
+                ["p_RoleCode"] = param.RoleCode
+            };
+            var proc = "Proc_Delete_Permission";
+            return (await this.QueryFirstOrDefaultAsync<int>(proc, param1)) > 0;
         }
 
 

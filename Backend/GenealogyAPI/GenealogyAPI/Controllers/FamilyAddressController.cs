@@ -12,15 +12,17 @@ namespace GenealogyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize]
     public class FamilyAddressController : Controller
     {
         private readonly IFamilyAddressBL _familyAddressBL;
         private readonly IMapper _mapper;
-        public FamilyAddressController(IFamilyAddressBL familyAddressBL, IMapper mapper)
+        private readonly IUserBL _userBL;
+        public FamilyAddressController(IUserBL userBL, IFamilyAddressBL familyAddressBL, IMapper mapper)
         {
             _familyAddressBL = familyAddressBL;
             _mapper = mapper;
+            _userBL = userBL;
         }
 
 
@@ -39,6 +41,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest("Invalid Param");
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyAddress, PermissionCode.Add,familyAddress.IDGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _familyAddressBL.Create(_mapper.Map<FamilyAddress>(familyAddress));
 
@@ -66,6 +73,11 @@ namespace GenealogyAPI.Controllers
             {
                 return BadRequest();
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyAddress, PermissionCode.Update, familyAddress.IDGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _familyAddressBL.Update(_mapper.Map<FamilyAddress>(familyAddress));
 
             return serviceResult.OnSuccess("Updated");
@@ -78,6 +90,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyAddress, PermissionCode.Delete, idGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _familyAddressBL.DeleteByID(id, idGenealogy);
 

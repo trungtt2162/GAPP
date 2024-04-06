@@ -11,5 +11,12 @@ namespace GenealogyCommon.Models
         public string RoleCode { get; set; }
         public string RoleName { get; set; }
         public int UserID { get; set; }
+
+        public int IdGenealogy { get; set; }
+    }
+
+    public class UserRoleClient: UserRole
+    {
+        public List<Permission> Permissions { get; set; } = new List<Permission>();
     }
 }

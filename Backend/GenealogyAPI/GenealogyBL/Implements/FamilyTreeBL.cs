@@ -53,7 +53,7 @@ namespace GenealogyBL.Implements
 
         public async Task<object> Create(FamilyTree familyTree)
         {
-            var check = await _userBL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), SubSystem.Genealogy, PermissionCode.Add, familyTree.IdGenealogy);
+            var check = await _userBL.CheckPermissionSubSystem( SubSystem.Genealogy, PermissionCode.Add, familyTree.IdGenealogy);
             if (!check)
             {
                 throw new ArgumentException("UnAuthorized");
@@ -63,7 +63,7 @@ namespace GenealogyBL.Implements
 
         public async Task<bool> Update(FamilyTree familyTree)
         {
-            var check = await _userBL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), SubSystem.Genealogy, PermissionCode.Edit, familyTree.IdGenealogy);
+            var check = await _userBL.CheckPermissionSubSystem( SubSystem.Genealogy, PermissionCode.Update, familyTree.IdGenealogy);
             if (!check)
             {
                 throw new ArgumentException("UnAuthorized");
@@ -73,7 +73,7 @@ namespace GenealogyBL.Implements
 
         public async Task<bool> DeleteByID(int id, int idGenealogy)
         {
-            var check = await _userBL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), SubSystem.Genealogy, PermissionCode.Delete, idGenealogy);
+            var check = await _userBL.CheckPermissionSubSystem( SubSystem.Genealogy, PermissionCode.Delete, idGenealogy);
             if (!check)
             {
                 throw new ArgumentException("UnAuthorized");

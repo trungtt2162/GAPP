@@ -1,5 +1,6 @@
 ﻿using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
+using GenealogyCommon.Models.Param;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +25,16 @@ namespace GenealogyBL.Interfaces
 
         Task<Claim[]> GetClaims(string userName);
 
-        Task<bool> CheckPermissionSubSystem(int userId, string subSystemcode, string permissionCode, int idGenealogy);
+        Task<bool> CheckPermissionSubSystem(string subSystemcode, string permissionCode, int idGenealogy);
 
         Task<bool> RegisterGenealogy(int idGenealogy);
+
+        Task<object> GetAllPermission(int? idGenealogy = null);
+        Task<object> GetRoles();
+        Task<bool> AdminDecentralization(DecentralizationParam param);
+
+        Task<bool>InsertUserRole(int userID, string roleCode, int idGenealogy);
+
+        Task<bool> DeletePermission(DecentralizationParam param);
     }
 }

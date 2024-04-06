@@ -1,5 +1,6 @@
 ﻿using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
+using GenealogyCommon.Models.Param;
 using GenealogyDL.Implements;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,14 @@ namespace GenealogyDL.Interfaces
         Task<UserRole> GetUserRole(int userID);
         Task<User> GetUserByUserName(string userName);
         Task<List<UserRole>> GetAllUserByRole(string roleCode, int idGen);
-        Task<bool> InsertUserRole(int userID, string roleCode);
+        Task<bool> InsertUserRole(int userID, string roleCode, int IdGenealogy = -1);
 
         Task<bool> CheckPermissionSubSystem(int userId, string subSystemcode, string permissionCode, int idGenealogy);
+        Task<PermissionClient> GetAllPermission(int? idGenealogy, int userID);
+        Task<object> GetRoles();
+        Task<bool> AdminDecentralization(DecentralizationParam param);
+
+        Task<bool> DeletePermission(DecentralizationParam param);
 
     }
 }

@@ -36,7 +36,7 @@ namespace GenealogyBL.Implements
 
         public async Task<object> Create(UserGenealogy userGenealogy)
         {
-            var check = await _userBL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), SubSystem.Genealogy, PermissionCode.Edit, userGenealogy.IdFamilyTree);
+            var check = await _userBL.CheckPermissionSubSystem( SubSystem.Genealogy, PermissionCode.Add, userGenealogy.IdFamilyTree);
             if (!check)
             {
                 throw new ArgumentException("UnAuthorized");
@@ -74,7 +74,19 @@ namespace GenealogyBL.Implements
 
         public async Task<object> ApproveRegister(UserGenealogy user)
         {
-            await _userGenealogyDL.Update(user);
+            var param = new Dictionary<string, object>()
+            {
+                ["p_UserID"] = user.UserId,
+                ["p_RoleCode"] = nameof(UserRoles.Account),
+                ["P_IdGenealogy"] = user.IdGenealogy,
+                ["p_ModifiedBy"] = _authService.GetFullName()
+            };
+            await _permissionDL.InsertPermission(param);
+            await _userBL.InsertUserRole(user.UserId, nameof(UserRoles.Account), user.IdGenealogy);
+            var userGen = await _userGenealogyDL.GetUserByUserID(user.UserId, user.IdGenealogy);
+            userGen.IdFamilyTree = user.IdFamilyTree;
+            userGen.InActive = false;
+            await _userGenealogyDL.Update(userGen);
             var recip = new JObject {
                                 {
                                     "Email",
@@ -106,6 +118,8 @@ namespace GenealogyBL.Implements
         {
             return await _userGenealogyDL.GetAllByUserID(userID);
         }
+
+
 
 
     }

@@ -1,8 +1,9 @@
 ﻿
-INSERT INTO user_role ( RoleCode, RoleName, UserID)
+INSERT INTO user_role ( RoleCode, RoleName, UserID, IdGenealogy)
 SELECT 
        r.RoleCode,
        r.RoleName,
-       @UserID
+       @UserID,
+       @IdGenealogy
        FROM role r
 WHERE r.RoleCode = @RoleCode;

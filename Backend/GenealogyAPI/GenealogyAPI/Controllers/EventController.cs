@@ -6,6 +6,7 @@ using GenealogyCommon.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using GenealogyDL.Implements;
 
 namespace GenealogyAPI.Controllers
 {
@@ -17,11 +18,13 @@ namespace GenealogyAPI.Controllers
         private readonly IEventBL _eventBL;
         private readonly IBaseBL<UserEvent> _baseBL;
         private readonly IMapper _mapper;
-        public EventController(IBaseBL<UserEvent> baseBL, IEventBL eventBL, IMapper mapper)
+        private readonly IUserBL _userBL;
+        public EventController(IUserBL userBL, IBaseBL<UserEvent> baseBL, IEventBL eventBL, IMapper mapper)
         {
             _eventBL = eventBL;
             _mapper = mapper;
             _baseBL = baseBL;
+            _userBL = userBL;
         }
 
         [HttpGet("")]
@@ -38,7 +41,6 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> InsertEvent(EventParam param)
         {
             var serviceResult = new ServiceResult();
@@ -46,19 +48,29 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Event, PermissionCode.Add, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _eventBL.Create(_mapper.Map<Event>(param));
 
             return serviceResult.OnSuccess("Created");
         }
 
         [HttpDelete("")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> DeleteEvent([FromQuery] int id, [FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Event, PermissionCode.Delete, idGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _eventBL.DeleteByID(id, idGenealogy);
 
@@ -83,13 +95,17 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> UpdateEvent(Event param)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Event, PermissionCode.Update, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _eventBL.Update(_mapper.Map<Event>(param));
 
@@ -110,7 +126,6 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPost("user-event")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> InsertEventUser(EventUserParam param)
         {
             var serviceResult = new ServiceResult();
@@ -118,19 +133,28 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Event, PermissionCode.Add, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _baseBL.Create(_mapper.Map<UserEvent>(param));
 
             return serviceResult.OnSuccess("Created");
         }
 
         [HttpDelete("user-event")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> DeleteEventUser([FromQuery] int id, [FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Event, PermissionCode.Delete, idGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _baseBL.DeleteByID(id, idGenealogy);
 
@@ -146,13 +170,17 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("user-event")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> UpdateEventUser(EventUserParam param)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Event, PermissionCode.Update, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _baseBL.Update(_mapper.Map<UserEvent>(param));
 

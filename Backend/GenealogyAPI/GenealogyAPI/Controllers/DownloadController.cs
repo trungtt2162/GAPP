@@ -12,6 +12,7 @@ namespace GenealogyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class DownloadController : Controller
     {
         private readonly IWebHostEnvironment _env;

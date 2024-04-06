@@ -12,15 +12,18 @@ namespace GenealogyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize]
+
     public class UserGenealogyController : ControllerBase
     {
         private readonly IUserGenealogyBL _userGenealogyBL;
         private readonly IMapper _mapper;
-        public UserGenealogyController(IUserGenealogyBL userGenealogyBL, IMapper mapper)
+        private readonly IUserBL _userBL;
+        public UserGenealogyController(IUserBL userBL, IUserGenealogyBL userGenealogyBL, IMapper mapper)
         {
             _userGenealogyBL = userGenealogyBL;
             _mapper = mapper;
+            _userBL = userBL;
         }
 
         [HttpPost("paging")]
@@ -69,6 +72,11 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Add, userGenealogyParam.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _userGenealogyBL.Create(_mapper.Map<UserGenealogy>(userGenealogyParam));
 
             return serviceResult.OnSuccess("Created");
@@ -82,6 +90,11 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Update, userGenealogyParam.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _userGenealogyBL.ApproveRegister(_mapper.Map<UserGenealogy>(userGenealogyParam));
             return serviceResult.OnSuccess("Approved");
         }
@@ -94,6 +107,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Delete, idGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _userGenealogyBL.DeleteByID(id, idGenealogy);
 

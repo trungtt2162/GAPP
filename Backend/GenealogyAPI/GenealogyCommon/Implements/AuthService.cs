@@ -27,5 +27,7 @@ namespace GenealogyCommon.Implements
             return _httpContextAccessor.HttpContext.User.FindFirstValue("FullName");
         }
 
+         
+
     }
 }

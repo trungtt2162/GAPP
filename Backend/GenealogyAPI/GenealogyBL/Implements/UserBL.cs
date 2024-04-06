@@ -4,8 +4,10 @@ using GenealogyCommon.Constant;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
+using GenealogyCommon.Models.Param;
 using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
+using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -16,7 +18,7 @@ using System.Security.Claims;
 
 namespace GenealogyBL.Implements
 {
-    internal class UserBL : BaseBL<User>, IUserBL
+    internal class UserBL : BaseBL<GenealogyCommon.Models.User>, IUserBL
     {
         private readonly IUserDL _userDL;
         private readonly IPasswordHasher _passwordHasher;
@@ -61,23 +63,27 @@ namespace GenealogyBL.Implements
             return _userDL.CheckUserExist(userName).Result;
         }
 
-        public async Task<object> Create(User user)
+        public async Task<object> Create(GenealogyCommon.Models.User user)
         {
             var lastId =  await _userDL.Create(user);
-            var param = new Dictionary<string, object>()
-            {
-                ["p_UserID"] = lastId,
-                ["p_RoleCode"] = nameof(UserRoles.Account),
-                ["P_IdGenealogy"] = -1,
-                ["p_ModifiedBy"] = "system"
-            };
-            await _permissionDL.InsertPermission(param);
-            await _userDL.InsertUserRole(lastId, nameof(UserRoles.Account));
+            //var param = new Dictionary<string, object>()
+            //{
+            //    ["p_UserID"] = lastId,
+            //    ["p_RoleCode"] = nameof(UserRoles.Account),
+            //    ["P_IdGenealogy"] = -1,
+            //    ["p_ModifiedBy"] = "system"
+            //};
+            //await _permissionDL.InsertPermission(param);
+            await InsertUserRole(lastId, nameof(UserRoles.Account), -1);
 
            
             return null;
         }
-
+        public async Task<bool> InsertUserRole(int userID, string roleCode, int idGenealogy)
+        {
+            await _userDL.InsertUserRole(userID,roleCode, idGenealogy);
+            return true;
+        }
         public async Task<bool> SaveCredential(Credential credential)
         {
             credential.Password = await _passwordHasher.HashPassword(credential.Password);
@@ -87,7 +93,7 @@ namespace GenealogyBL.Implements
         public async Task<object> GetUserInfo()
         {
             var userid = int.Parse(_authService.GetUserID());
-            var userRole = await _userDL.GetUserRole(userid);
+            var userRole = await GetAllPermission(null);
             var user = await _userDL.GetById(userid);
             var userGenealogy = await _userGenealogyDL.GetAllByUserID(userid);
             return new
@@ -151,11 +157,40 @@ namespace GenealogyBL.Implements
 
         #region Permission
 
-        public async Task<bool> CheckPermissionSubSystem(int userId, string subSystemcode, string permissionCode, int idGenealogy)
+        public async Task<bool> CheckPermissionSubSystem( string subSystemcode, string permissionCode, int idGenealogy)
         {
-            return await _userDL.CheckPermissionSubSystem( userId, subSystemcode, permissionCode, idGenealogy);
+            return await _userDL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), subSystemcode, permissionCode, idGenealogy);
         }
-        #endregion 
+
+        public async Task<object> GetAllPermission(int? idGenealogy = null)
+        {
+            var permission = await _userDL.GetAllPermission(idGenealogy, int.Parse(_authService.GetUserID()));
+            if (permission == null)
+            {
+                throw new ArgumentException("Không có quyền");
+            }
+            permission.Roles.ForEach(role =>
+            {
+                role.Permissions = permission.Permissions.Where(x => x.IdGenealogy == role.IdGenealogy).ToList();
+            });
+            return permission.Roles;
+        }
+
+        public Task<object> GetRoles()
+        {
+            return _userDL.GetRoles();
+        }
+
+        public async Task<bool> AdminDecentralization(DecentralizationParam param)
+        {
+            return await _userDL.AdminDecentralization(param);
+        }
+
+        public async Task<bool> DeletePermission(DecentralizationParam param)
+        {
+            return await _userDL.DeletePermission(param);
+        }
+        #endregion
     }
 
 }

@@ -96,5 +96,17 @@ namespace GenealogyDL.Implements
                 return await dbContext.Query<UserGenealogy>(sql, param, commandType: System.Data.CommandType.Text);
             }
         }
+
+        public async Task<UserGenealogy> GetUserByUserID(int userId, int idGenealogy)
+        {
+            var sql = "select * FROM user_genealogy ug WHERE ug.IdGenealogy = @IdGenealogy AND ug.UserId = @UserId limit 1;";
+            var param = new Dictionary<string, object>()
+            {
+                ["IdGenealogy"] = idGenealogy,
+                ["UserId"] = userId
+            };
+            var users = await this.Query<UserGenealogy>(sql, param, commandType: System.Data.CommandType.Text);
+            return users?.FirstOrDefault();
+        }
     }
 }

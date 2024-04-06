@@ -10,14 +10,17 @@ namespace GenealogyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GenealogyController : Controller
     {
         private readonly IGenealogyBL _genealogyBL;
         private readonly IMapper _mapper;
-        public GenealogyController(IGenealogyBL genealogyBL, IMapper mapper)
+        private readonly IUserBL _userBL;
+        public GenealogyController(IUserBL userBL, IGenealogyBL genealogyBL, IMapper mapper)
         {
             _genealogyBL = genealogyBL;
             _mapper = mapper;
+            _userBL = userBL;
         }
 
         [HttpPost("guest/paging")]
@@ -39,10 +42,14 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> Upadte(Genealogy param)
         {
             var serviceResult = new ServiceResult();
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Genealogy, PermissionCode.Update, param.Id);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             serviceResult.Data = await _genealogyBL.Update(param);
             return serviceResult;
         }

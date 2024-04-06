@@ -12,19 +12,21 @@ namespace GenealogyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize]
     public class FamilyHistoryController : Controller
     {
         private readonly IFamilyHistoryBL _familyHistoryBL;
         private readonly IBaseBL<FamilyHistoryDetail> _baseBL;
         private readonly IMapper _mapper;
         private readonly IGenealogyBL _genealogyBL;
-        public FamilyHistoryController(IGenealogyBL genealogyBL, IBaseBL<FamilyHistoryDetail> baseBL,IFamilyHistoryBL familyHistoryBL, IMapper mapper)
+        private readonly IUserBL _userBL;
+        public FamilyHistoryController(IUserBL userBL, IGenealogyBL genealogyBL, IBaseBL<FamilyHistoryDetail> baseBL,IFamilyHistoryBL familyHistoryBL, IMapper mapper)
         {
             _familyHistoryBL = familyHistoryBL;
             _mapper = mapper;
             _baseBL = baseBL;
             _genealogyBL = genealogyBL;
+            _userBL = userBL;
         }
 
         [HttpGet("")]
@@ -60,13 +62,17 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ActionResult<object>> UpdateFamilyHistoryDetail(FamilyHistoryParam familyHistoryParam)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return BadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyHistory, PermissionCode.Update, familyHistoryParam.IDGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _familyHistoryBL.Update(_mapper.Map<FamilyHistory>(familyHistoryParam));
 
@@ -122,7 +128,6 @@ namespace GenealogyAPI.Controllers
             return serviceResult;
         }
         [HttpPost("detail")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> InsertFamilyHistoryDetail(FamilyHistoryDetailParam param)
         {
             var serviceResult = new ServiceResult();
@@ -130,13 +135,17 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyHistory, PermissionCode.Add, param.IDGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _baseBL.Create(_mapper.Map<FamilyHistoryDetail>(param));
 
             return serviceResult.OnSuccess("Created");
         }
 
         [HttpPut("detail")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> UpdateFamilyHistoryDetail(FamilyHistoryDetailParam param)
         {
             var serviceResult = new ServiceResult();
@@ -144,19 +153,28 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest();
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyHistory, PermissionCode.Update, param.IDGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _baseBL.Update(_mapper.Map<FamilyHistoryDetail>(param));
 
             return serviceResult.OnSuccess("Updated");
         }
 
         [HttpDelete("detail")]
-        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ServiceResult> DeleteFamilyHistoryDetail([FromQuery] int id, [FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyHistory, PermissionCode.Delete, idGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _baseBL.DeleteByID(id, idGenealogy);
 

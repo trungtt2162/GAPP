@@ -33,8 +33,37 @@ namespace GenealogyAPI.Controllers
             return serviceResult;
         }
 
+        [HttpGet("permission")]
+        public async Task<ServiceResult> GetAllPermission([FromQuery]int? idGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            serviceResult.Data = await _userBL.GetAllPermission(idGenealogy);
+            return serviceResult;
+        }
+
+        [HttpGet("roles")]
+        public async Task<ServiceResult> GetRoles()
+        {
+            var serviceResult = new ServiceResult();
+            serviceResult.Data = await _userBL.GetRoles();
+            return serviceResult;
+        }
+
+        [HttpPost("decentralization")]
+        public async Task<ServiceResult> AdminDecentralization([FromBody]DecentralizationParam param)
+        {
+            var serviceResult = new ServiceResult();
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.User, PermissionCode.Add, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
+            serviceResult.Data = await _userBL.AdminDecentralization(param);
+            return serviceResult;
+        }
+
+
         [HttpPut]
-        [Authorize(Roles = UserRoles.Account)]
         public async Task<ActionResult<object>> UpdateUser(UserParam userParam)
         {
             var serviceResult = new ServiceResult();
@@ -52,21 +81,22 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Updated");
         }
 
-        [HttpPut("admin")]
-        [Authorize(Roles = UserRoles.Admin)]
-        public async Task<ServiceResult> UpdateUserByAdmin(User userParam)
-        {
-            var serviceResult = new ServiceResult();
-            if (!ModelState.IsValid)
-            {
-                return serviceResult.OnBadRequest();
-            }
-            await _userBL.Update(userParam);
-            return serviceResult.OnSuccess("Updated");
-        }
+        //[HttpPut("admin")]
+        //[Authorize(Roles = UserRoles.Admin)]
+        //public async Task<ServiceResult> UpdateUserByAdmin(User userParam)
+        //{
+        //    var serviceResult = new ServiceResult();
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return serviceResult.OnBadRequest();
+        //    }
+
+        //    await _userBL.Update(userParam);
+        //    return serviceResult.OnSuccess("Updated");
+        //}
 
         [HttpPost("register")]
-        [Authorize(Roles = UserRoles.Account)]
+
         public async Task<ServiceResult> RegisterGenealogy([FromQuery]int idGenealogy)
         {
             var serviceResult = new ServiceResult();
@@ -75,6 +105,23 @@ namespace GenealogyAPI.Controllers
                 return serviceResult.OnBadRequest("Invalid param");
             }
             await _userBL.RegisterGenealogy(idGenealogy);
+            return serviceResult.OnSuccess("Success");
+        }
+
+        [HttpDelete("permission")]
+        public async Task<ServiceResult> DeletePermission([FromBody] DecentralizationParam param)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest("Invalid param");
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.User, PermissionCode.Delete, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
+            await _userBL.DeletePermission(param);
             return serviceResult.OnSuccess("Success");
         }
 

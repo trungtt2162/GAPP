@@ -46,7 +46,7 @@ namespace GenealogyBL.Implements
 
         public async Task<bool> DeleteByID(int id, int idGenealogy)
         {
-            _ = InsertLog(LogAction.Delete, new  {ID = id, IDGenealogy = idGenealogy });
+            _ = InsertLog(LogAction.Delete, new  {ID = id, IGenealogy = idGenealogy });
             return await _baseDL.DeleteById(id , idGenealogy);
         }
 

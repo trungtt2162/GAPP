@@ -4,6 +4,7 @@ using GenealogyCommon.Models.Param;
 using GenealogyCommon.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using GenealogyCommon.Constant;
 
 namespace GenealogyAPI.Controllers
 {
@@ -16,12 +17,14 @@ namespace GenealogyAPI.Controllers
         private readonly IBaseBL<FundContributor> _contributorBL;
         private readonly IBaseBL<FundSend> _fundSendBL;
         private readonly IMapper _mapper;
-        public FundController(IBaseBL<FundContributor> contributorBL, IBaseBL<FundSend> fundSendBL, IFundBL fundBL, IMapper mapper)
+        private readonly IUserBL _userBL;
+        public FundController(IUserBL userBL, IBaseBL<FundContributor> contributorBL, IBaseBL<FundSend> fundSendBL, IFundBL fundBL, IMapper mapper)
         {
             _fundBL = fundBL;
             _mapper = mapper;
             _contributorBL = contributorBL;
             _fundSendBL = fundSendBL;
+            _userBL = userBL;
         }
 
         [HttpGet("")]
@@ -45,6 +48,11 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Add, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _fundBL.Create(_mapper.Map<Fund>(param));
 
             return serviceResult.OnSuccess("Created");
@@ -57,6 +65,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Delete, idGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _fundBL.DeleteByID(id, idGenealogy);
 
@@ -78,6 +91,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Delete, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _fundBL.Update(_mapper.Map<Fund>(param));
 
@@ -105,6 +123,11 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Update, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _contributorBL.Create(_mapper.Map<FundContributor>(param));
             await _fundBL.UpdateMoneyFund(param.IdFund, param.IdGenealogy);
 
@@ -118,6 +141,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Delete,idGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _contributorBL.DeleteByID(id, idGenealogy);
             await _fundBL.UpdateMoneyFund(id, idGenealogy);
@@ -139,6 +167,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Update, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _contributorBL.Update(_mapper.Map<FundContributor>(param));
             await _fundBL.UpdateMoneyFund(param.IdFund, param.IdGenealogy);
@@ -166,6 +199,11 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Update, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
             await _fundSendBL.Create(_mapper.Map<FundSend>(param));
             await _fundBL.UpdateMoneyFund(param.IdFund, param.IdGenealogy);
 
@@ -179,6 +217,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Delete, idGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _fundSendBL.DeleteByID(id, idGenealogy);
             await _fundBL.UpdateMoneyFund(id, idGenealogy);
@@ -200,6 +243,11 @@ namespace GenealogyAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Fund, PermissionCode.Update, param.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
             }
             await _fundSendBL.Update(_mapper.Map<FundSend>(param));
             await _fundBL.UpdateMoneyFund(param.IdFund, param.IdGenealogy);
