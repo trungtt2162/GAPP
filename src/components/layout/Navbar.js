@@ -80,7 +80,7 @@ const Navbar = () => {
                   to="/pageTree"
                   className={"link" + (url === "/pageTree" ? " active" : "")}
                 >
-                  Cây Gia Phả
+                   Gia Phả
                 </Link>
               )}
             {(isMember || !isLogin)&& (
