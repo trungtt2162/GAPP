@@ -1,9 +1,12 @@
 ﻿using GenealogyBL.Interfaces;
+using GenealogyCommon.Implements;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
+using GenealogyCommon.Models.Param;
 using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +19,12 @@ namespace GenealogyBL.Implements
     {
         private readonly IEventDL _eventDL;
         public readonly IGenealogyBL _genealogyBL;
-        public EventBL(IGenealogyBL genealogyBL, IEventDL eventDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, eventDL, logDL, authService)
+        private readonly IEmailSender _emailSender;
+        public EventBL(IEmailSender emailSender, IGenealogyBL genealogyBL, IEventDL eventDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, eventDL, logDL, authService)
         {
             _eventDL = eventDL;
             _genealogyBL = genealogyBL;
+            _emailSender = emailSender;
         }
         public async Task<object> Create(Event obj)
         {
@@ -59,6 +64,33 @@ namespace GenealogyBL.Implements
                 pagingRequest.Condition += $" and Name like '%{pagingRequest.SearchKey}%'";
             }
             return await _eventDL.GetPagingData(pagingRequest.PageSize, pagingRequest.PageNumber, pagingRequest.Condition, pagingRequest.SortOrder);
+        }
+
+        public async Task<bool> SendEmails(List<UserEvent> users)
+        {
+            if (!users.Any())
+            {
+                return false;
+            }
+            var eventInfo = await _eventDL.GetById(users[0].IdEvent);
+            var receips = new JArray();
+            foreach (var user in users)
+            {
+                var recip = new JObject {
+                                {
+                                    "Email",
+                                    user.Email
+                                }, {
+                                    "Name",
+                                   user.FirstName
+                                }
+                                };
+                receips.Add(recip);
+
+
+            }
+            await _emailSender.SendEmailAsync(receips, $"Thư mời tham gia sự kiện {eventInfo.Name}", $"Link tham giá sự kiên {eventInfo.LinkStream}", $"Link tham giá sự kiên {eventInfo.LinkStream}");
+            return true;
         }
     }
 

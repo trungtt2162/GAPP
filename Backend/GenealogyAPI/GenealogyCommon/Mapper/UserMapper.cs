@@ -36,6 +36,7 @@ namespace GenealogyCommon.Mapper
             CreateMap<FamilyTreeClient, FamilyTreeExport>();
             CreateMap<UserParam, User>();
             CreateMap<UserGenealogy, UserRegister>().ForMember(des => des.Username, act => act.MapFrom(src => src.Email));
+            CreateMap<EventRequest, Event>();
 
         }
     }

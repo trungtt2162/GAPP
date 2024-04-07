@@ -27,5 +27,16 @@ namespace GenealogyCommon.Models.Param
         public string Location { get; set; }
 
         public int UserIDHost { get; set; }
+
+        public bool IsPublic { get; set; } = false;
+
+        public bool InActive { get; set; } = false;
     }
+    
+    public class EventRequest : EventParam {
+    
+        public List<UserEvent> UserEvents { get; set; }
+
+    }
+
 }

@@ -28,6 +28,11 @@ namespace GenealogyCommon.Models
         public string Location {get; set;}
 
         public int UserIDHost { get; set; }
+        
+        public bool IsPublic { get; set;}
+
+        public bool InActive { get; set; } 
+
     }
 
     [Table("user_event")]

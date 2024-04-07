@@ -59,6 +59,32 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Created");
         }
 
+
+        [HttpPost("request-event")]
+        public async Task<ServiceResult> RequestEvent(EventRequest param)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest("Invalid Param");
+            }
+            var eventData = _mapper.Map<Event>(param);
+            eventData.InActive = true;
+            var idEvent = await _eventBL.Create(eventData);
+            if (param.UserEvents != null && param.UserEvents.Any()) {
+                List<Task> taskList = new List<Task>();
+                param.UserEvents.ForEach(e =>
+                {
+                    e.IdEvent = (int)idEvent;
+                    taskList.Add(_baseBL.Create(e));
+                });
+                await Task.WhenAll(taskList);
+            }
+
+            return serviceResult.OnSuccess("Created");
+        }
+
+
         [HttpDelete("")]
         public async Task<ServiceResult> DeleteEvent([FromQuery] int id, [FromQuery] int idGenealogy)
         {
@@ -186,5 +212,27 @@ namespace GenealogyAPI.Controllers
 
             return serviceResult.OnSuccess("Updated");
         }
+
+        [HttpGet("send-email")]
+        public async Task<ServiceResult> SendEmaint([FromQuery]int idGenealogy, [FromQuery]int idEvent)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest();
+            }
+            var pagingRequest = new PageRequest();
+            pagingRequest.PageNumber = -1;
+            pagingRequest.Condition = $" IdGenealogy = {idGenealogy} and IdEvent = {idEvent}";
+            pagingRequest.SortOrder = string.Empty;
+            pagingRequest.SearchKey = string.Empty;
+
+            var data = await _baseBL.GetPagingData(pagingRequest);
+            var userEvent = data.Data;
+            await _eventBL.SendEmails(userEvent);
+
+            return serviceResult.OnSuccess("Done");
+        }
+
     }
 }

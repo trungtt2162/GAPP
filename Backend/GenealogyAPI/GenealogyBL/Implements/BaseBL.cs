@@ -46,7 +46,7 @@ namespace GenealogyBL.Implements
 
         public async Task<bool> DeleteByID(int id, int idGenealogy)
         {
-            _ = InsertLog(LogAction.Delete, new  {ID = id, IGenealogy = idGenealogy });
+            _ = InsertLog(LogAction.Delete, new  {ID = id, IdGenealogy = idGenealogy }, idGenealogy);
             return await _baseDL.DeleteById(id , idGenealogy);
         }
 
@@ -73,20 +73,27 @@ namespace GenealogyBL.Implements
 
         }
 
-        public virtual async Task<bool> InsertLog(string action, object obj)
+        public virtual async Task<bool> InsertLog(string action, object obj, int idGen = -1)
         {
             var log = new Log();
-            int idGenealogy = -1;
             if (obj == null)
             {
                 obj = new object();
             }
-            log.RawData = JsonConvert.SerializeObject(obj);
-            PropertyInfo propertyInfo = typeof(T).GetProperty("IdGenealogy");
-            if (propertyInfo != null)
+            int idGenealogy = -1;
+            if (idGen == -1)
             {
-                idGenealogy = (int)propertyInfo.GetValue(obj);
+                PropertyInfo propertyInfo = typeof(T).GetProperty("IdGenealogy");
+                if (propertyInfo != null)
+                {
+                    idGenealogy = (int)propertyInfo.GetValue(obj);
+                }
             }
+            else
+            {
+                idGenealogy = idGen;
+            }
+            log.RawData = JsonConvert.SerializeObject(obj);
             log.Action = action;
             log.IdGenealogy = idGenealogy;
             log.Date = DateTime.Now;

@@ -103,14 +103,14 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpGet("contributor")]
-        public async Task<ActionResult<object>> GetFundContributorByID([FromQuery] int idFund)
+        public async Task<ActionResult<object>> GetFundContributorByID([FromQuery] int idContributor)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            serviceResult.Data = await _contributorBL.GetById(idFund);
+            serviceResult.Data = await _contributorBL.GetById(idContributor);
 
             return serviceResult;
         }
@@ -179,14 +179,14 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpGet("send")]
-        public async Task<ActionResult<object>> GetFundSendByID([FromQuery] int idFund)
+        public async Task<ActionResult<object>> GetFundSendByID([FromQuery] int idSend)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            serviceResult.Data = await _contributorBL.GetById(idFund);
+            serviceResult.Data = await _fundSendBL.GetById(idSend);
 
             return serviceResult;
         }
