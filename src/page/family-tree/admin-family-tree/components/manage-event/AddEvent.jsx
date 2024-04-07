@@ -25,7 +25,7 @@ import { makeStyles } from "@mui/styles";
 import AddImage from "../../../../../components/common/addImage/AddImage";
 import useAuthStore from "../../../../../zustand/authStore";
 import { eventApi } from "../../../../../api/event.api";
-import { handleError } from "../../../../../ultils/helper";
+import { handleError, uploadImageToFirebase } from "../../../../../ultils/helper";
 import { toast } from "react-toastify";
 import moment from "moment/moment";
 const useStyles = makeStyles((theme) => ({
@@ -67,15 +67,11 @@ const originData = {
     setFormData({...formData,[key]:newValue})
   }
 
-  const handleChangeFile = (event) => {
+  const handleChangeFile = async(event) => {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setFormData({...formData,Background:reader.result});
-      };
-    }
+    const url = await uploadImageToFirebase(file);
+    setFormData({...formData,Background:url});
+   
   };
   const handleUserSelection = () => {};
 

@@ -29,7 +29,7 @@ const ManageMember = () => {
           text={"Danh sách thành viên"}
           onClick={(e) => setValue(1)}
         />
-        {isSiteAdmin && (
+        {(isSiteAdmin || isPeopleAdmin)  && (
           <ButtonTab
             index={2}
             value={value}

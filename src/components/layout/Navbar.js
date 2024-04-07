@@ -166,7 +166,9 @@ const Navbar = () => {
                 color: "white",
                            }}
               onClick={() => {
-                logOutAction(true)
+                logOutAction(false)
+                
+                navigate("/login");
               }}
             >
               Đăng xuất

@@ -11,7 +11,7 @@ export const authApi = {
     return API.get("api/User");
   },
   upadteinfoAdmin: (data) => {
-    return API.put("/api/User/admin", data);
+    return API.put("/api/User", data);
   },
   upadteinfoUser: (data) => {
     return API.put("/api/User", data);

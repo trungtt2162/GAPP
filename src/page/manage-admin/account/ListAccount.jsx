@@ -50,6 +50,7 @@ function ListAccount() {
       const res = await supperAdminApi.updateAdmin({
         ...row,
         IsBlock: status === 0 ? true : false,
+        TypeRole :"string"
       });
       if (res.data.StatusCode === 200) {
         toast.success(

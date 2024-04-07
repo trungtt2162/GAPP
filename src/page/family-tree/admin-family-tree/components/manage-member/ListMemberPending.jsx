@@ -11,8 +11,17 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import useAuthStore from "../../../../../zustand/authStore";
+import { USER_ROLE } from "../../../../../constant/common";
 
 function ListMemberPending() {
+  const { isLogin, roleCode } = useAuthStore();
+
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isSiteAdmin || isPeopleAdmin;
   const users = [
     {
       name: "Nguyễn Văn A",
@@ -46,7 +55,7 @@ function ListMemberPending() {
             <TableCell>Email</TableCell>
             <TableCell>Địa Chỉ</TableCell>
             <TableCell>Giới Tính</TableCell>
-            <TableCell className='text-center' >Hành động</TableCell>
+           {isSiteAdmin &&  <TableCell className='text-center' >Hành động</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -57,7 +66,7 @@ function ListMemberPending() {
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.address}</TableCell>
               <TableCell>{user.gender}</TableCell>
-              <TableCell className='text-center'>
+            {isSiteAdmin &&   <TableCell className='text-center'>
                 <Button
                   style={{
                     marginRight: 10,
@@ -70,7 +79,7 @@ function ListMemberPending() {
                 <Button variant="contained" color="error">
                   <CloseIcon fontSize="small" />
                 </Button>
-              </TableCell>
+              </TableCell>}
             </TableRow>
           ))}
         </TableBody>

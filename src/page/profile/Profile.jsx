@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { authApi } from '../../api/auth.api';
 import AddImage from '../../components/common/addImage/AddImage';
 import { genderOptions2 } from '../../constant/common';
-import { handleError } from '../../ultils/helper';
+import { handleError, uploadImageToFirebase } from '../../ultils/helper';
 import useAuthStore from '../../zustand/authStore';
 
 function Profile() {
@@ -37,18 +37,11 @@ function Profile() {
       setLoading(false)
     }
   };
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
       const file = e.target.files[0];
-      const reader = new FileReader();
-  
-      reader.onloadend = () => {
-        const url = reader.result;
-        setFormData({...formData,Avatar:url})
-      };
-  
-      if (file) {
-        reader.readAsDataURL(file);
-      }
+      const url = await uploadImageToFirebase(file);
+      setFormData({...formData,Avatar:url})
+      
     }; 
 
   return (

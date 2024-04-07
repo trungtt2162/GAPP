@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { handleError, uploafFileBase64 } from "../../../../../ultils/helper";
-import { Button, Card, Grid, TextField } from "@mui/material";
+import { Button, Card, Grid, TextField ,Avatar} from "@mui/material";
 import { toast } from "react-toastify";
 import { historyApi } from "../../../../../api/history.api";
 
@@ -50,7 +50,7 @@ const HisoryEventItem = ({ Image, Description, setHistory, Id,setListHistory,lis
       />
       <Grid container spacing={3}>
         <Grid xs={2} item>
-          <div
+          {/* <div
             onClick={() => fileRef.current.click()}
             style={{
               width: "100%",
@@ -60,7 +60,8 @@ const HisoryEventItem = ({ Image, Description, setHistory, Id,setListHistory,lis
               cursor: "pointer",
             }}
             className="border"
-          ></div>
+          ></div> */}
+          <Avatar src={Image} sx={{width:80 ,height:80 }}></Avatar>
         </Grid>
         <Grid xs={6} item>
           {!modeEdit ? (

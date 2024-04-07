@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import AddImage from "../../../../../components/common/addImage/AddImage";
-import { handleError } from "../../../../../ultils/helper";
+import { handleError, uploadImageToFirebase } from "../../../../../ultils/helper";
 import { historyApi } from "../../../../../api/history.api";
 import { toast } from "react-toastify";
 import useAuthStore from "../../../../../zustand/authStore";
@@ -57,16 +57,11 @@ function AddHistory({ item, updateItem }) {
     }
   );
 
-  const handleChangeFile = (event) => {
+  const handleChangeFile = async(event) => {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const base64 = reader.result;
-        setFormData({ ...formData, Image: base64 });
-      };
-    }
+    const url = await uploadImageToFirebase(file);
+    setFormData({ ...formData, Image: url });
+   
   };
 
   const handleAdd = async () => {

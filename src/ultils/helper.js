@@ -1,6 +1,9 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { LOCAL_STORAGE_KEY } from "../constant/common";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "./../firebase";
+import { v4 } from "uuid";
  export function uploafFileBase64(event, setValue) {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -89,3 +92,18 @@ export const logout = (isRedirect = true) => {
   // So sánh thời gian hết hạn với thời gian hiện tại
   return expirationTime < currentTime;
 }
+
+
+
+export async function uploadImageToFirebase(file) {
+  try {
+    const imageRef = ref(storage, `images/${file.name + v4()}`);
+    await uploadBytes(imageRef, file);
+    const url = await getDownloadURL(imageRef);
+    return url;
+  } catch (error) {
+    console.error("Error uploading image to Firebase:", error);
+    return null;
+  }
+}
+
