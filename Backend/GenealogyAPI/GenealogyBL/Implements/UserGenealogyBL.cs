@@ -45,7 +45,7 @@ namespace GenealogyBL.Implements
             if (checkExist)
             {
                 throw new ArgumentException("User Exist in Tree");
-            }
+            } 
 
             var user = await _userBL.GetById(userGenealogy.UserId);
             var userSave = _mapper.Map<UserGenealogy>(user);
