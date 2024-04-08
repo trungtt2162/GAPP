@@ -5,7 +5,7 @@ export const genealogyApi = {
     return API.post("/api/UserGenealogy/paging", {
       PageSize: -1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id}`,
+      Condition: `IdGenealogy=${id} and Inactive=false`,
       SortOrder: "",
       SearchKey: "",
     });
@@ -28,4 +28,23 @@ export const genealogyApi = {
       SearchKey: "",
     });
   },
+
+  requestgele: (id) => {
+    return API.post("/api/User/register?idGenealogy=" + id);
+  },
+  getListUserRequest: (id) => {
+    return API.post("/api/UserGenealogy/paging", {
+      PageSize: 0,
+      PageNumber: -1,
+      Condition: `IdGenealogy = ${id} and Inactive = true`,
+      SortOrder: "",
+      SearchKey: "",
+    });
+  },
+  approveUser : (data) => {
+    return API.post("/api/UserGenealogy/approve",data)
+  },
+  addNewMember:(data) => {
+    return API.post("/api/UserGenealogy/newmember",data)
+  }
 };

@@ -22,7 +22,6 @@ const GeneGuest = () => {
     const [curent, setCurrent] = useState(null);
 
     const [id, setId] = useState("");
-    console.log(id)
     const [des, setDes] = useState("");
   const [listEvent, setListEvent] = useState([]);
   const [currentEvent, setCurrentEvent] = useState(null);

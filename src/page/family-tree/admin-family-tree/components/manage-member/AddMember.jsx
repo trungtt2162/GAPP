@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   TextField,
   Button,
@@ -10,23 +10,46 @@ import {
   Container,
 } from "@mui/material";
 import AddImage from "../../../../../components/common/addImage/AddImage";
+import { handleError, uploadImageToFirebase } from "../../../../../ultils/helper";
+import { genderOptions2 } from "../../../../../constant/common";
+import { familyTreeApi } from "../../../../../api/familyTree.api";
+import useAuthStore from "../../../../../zustand/authStore";
+import { toast } from "react-toastify";
+import { genealogyApi } from "../../../../../api/genealogy.api";
 
 function AddMemberForm() {
-  const [memberData, setMemberData] = useState({
-    lastName: "",
-    firstName: "",
-    email: "",
-    idNumber: "",
-    phoneNumber: "",
-    address: "",
-    gender: "",
-    dateOfBirth: "",
-    dateOfDeath: "",
-    placeOfBirth: "",
-    branch: "",
-    image:""
-  });
-  const fileRef = useRef()
+  const originData = {
+    Id: 0,
+    ModifiedBy: "string",
+    ModifiedDate: "2024-04-08T07:47:36.694Z",
+    CreatedBy: "string",
+    CreatedDate: "2024-04-08T07:47:36.694Z",
+    FirstName: "",
+    LastName: "",
+    Email: "",
+    Indentification: "",
+    Phone: "",
+    Address: "",
+    Gender: "",
+    DateOfBirth: "",
+    DateOfDeath: "",
+    Avatar: "",
+    Type: 0,
+    HomeTown: "",
+    InActive: false,
+    IsBlock: false,
+    TypeRole: "string",
+    IdFamilyTree: "",
+    IdGenealogy: "",
+    UserId: 0,
+  }
+  
+  const [memberData, setMemberData] = useState(originData);
+  const [listFamilyTree, setListFamilyTree] = useState([]);
+
+  const fileRef = useRef();
+  const { currentIdGenealogy } = useAuthStore();
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -36,22 +59,48 @@ function AddMemberForm() {
     });
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async(e) => {
     const file = e.target.files[0];
-    const url = URL.createObjectURL(file);
+    const url = await uploadImageToFirebase(file);
+
     setMemberData({
-        ...memberData,
-        image: url,
-      });
-  }
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(memberData); // Thay console.log bằng xử lý submit thực tế ở đây
+      ...memberData,
+      Avatar: url,
+    });
   };
+  
+  // Add
+  const onAdd =async() => {
+    try {
+      const res = await genealogyApi.addNewMember({...memberData,IdGenealogy:currentIdGenealogy});
+      if(res.data.StatusCode === 200){
+        setMemberData(originData)
+        toast.success("Thêm thành công");
+
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
+   // // get List Family Tree
+  const getListFamilyTree = async () => {
+    try {
+      const res = await familyTreeApi.getListFamilyTree(currentIdGenealogy);
+      if (res.data.StatusCode === 200) {
+        setListFamilyTree(res.data.Data || []);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  useEffect(() => {
+    getListFamilyTree();
+  }, [currentIdGenealogy]);
+
 
   return (
     <Container>
-      <form onSubmit={handleSubmit}>
+      <form >
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Grid container spacing={2}>
@@ -60,8 +109,8 @@ function AddMemberForm() {
                   fullWidth
                   label="Họ"
                   variant="outlined"
-                  name="lastName"
-                  value={memberData.lastName}
+                  name="FirstName"
+                  value={memberData.FirstName}
                   onChange={handleChange}
                 />
               </Grid>
@@ -71,8 +120,8 @@ function AddMemberForm() {
                   fullWidth
                   label="Tên"
                   variant="outlined"
-                  name="firstName"
-                  value={memberData.firstName}
+                  name="LastName"
+                  value={memberData.LastName}
                   onChange={handleChange}
                 />
               </Grid>
@@ -82,8 +131,8 @@ function AddMemberForm() {
                   label="Email"
                   variant="outlined"
                   type="email"
-                  name="email"
-                  value={memberData.email}
+                  name="Email"
+                  value={memberData.Email}
                   onChange={handleChange}
                 />
               </Grid>
@@ -92,8 +141,8 @@ function AddMemberForm() {
                   fullWidth
                   label="CCCD/CMND"
                   variant="outlined"
-                  name="idNumber"
-                  value={memberData.idNumber}
+                  name="Indentification"
+                  value={memberData.Indentification}
                   onChange={handleChange}
                 />
               </Grid>
@@ -102,8 +151,8 @@ function AddMemberForm() {
                   fullWidth
                   label="Số điện thoại"
                   variant="outlined"
-                  name="phoneNumber"
-                  value={memberData.phoneNumber}
+                  name="Phone"
+                  value={memberData.Phone}
                   onChange={handleChange}
                 />
               </Grid>
@@ -112,8 +161,8 @@ function AddMemberForm() {
                   fullWidth
                   label="Địa chỉ"
                   variant="outlined"
-                  name="address"
-                  value={memberData.address}
+                  name="Address"
+                  value={memberData.Address}
                   onChange={handleChange}
                 />
               </Grid>
@@ -121,33 +170,34 @@ function AddMemberForm() {
                 <FormControl fullWidth variant="outlined">
                   <InputLabel>Giới tính</InputLabel>
                   <Select
-                    name="gender"
-                    value={memberData.gender}
+                    name="Gender"
+                    value={memberData.Gender}
                     onChange={handleChange}
                     label="Giới tính"
                   >
-                    <MenuItem value="Nam">Nam</MenuItem>
-                    <MenuItem value="Nữ">Nữ</MenuItem>
+                    {genderOptions2.map((i) => (
+                      <MenuItem value={i.value}>{i.label}</MenuItem>
+                    ))}
+
+                    
                   </Select>
                 </FormControl>
               </Grid>
-
-             
             </Grid>
           </Grid>
           <Grid item xs={6}>
-           
             <input
-            ref={fileRef}
+              ref={fileRef}
               accept="image/*"
               id="contained-button-file"
               type="file"
               style={{ display: "none" }}
-                onChange={handleImageChange}
+              onChange={handleImageChange}
             />
-            <AddImage url={memberData.image} click={() =>fileRef.current.click() } />
-           
-           
+            <AddImage
+              url={memberData.Avatar}
+              click={() => fileRef.current.click()}
+            />
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={2}>
@@ -157,8 +207,8 @@ function AddMemberForm() {
                   label="Ngày sinh"
                   variant="outlined"
                   type="date"
-                  name="dateOfBirth"
-                  value={memberData.dateOfBirth}
+                  name="DateOfBirth"
+                  value={memberData.DateOfBirth}
                   onChange={handleChange}
                   InputLabelProps={{
                     shrink: true,
@@ -171,8 +221,8 @@ function AddMemberForm() {
                   label="Ngày mất"
                   variant="outlined"
                   type="date"
-                  name="dateOfDeath"
-                  value={memberData.dateOfDeath}
+                  name="DateOfDeath"
+                  value={memberData.DateOfDeath}
                   onChange={handleChange}
                   InputLabelProps={{
                     shrink: true,
@@ -184,29 +234,35 @@ function AddMemberForm() {
                   fullWidth
                   label="Nơi sinh"
                   variant="outlined"
-                  name="placeOfBirth"
-                  value={memberData.placeOfBirth}
+                  name="HomeTown"
+                  value={memberData.HomeTown}
                   onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Chi/Nhánh/Phái/Đời"
-                  variant="outlined"
-                  name="branch"
-                  value={memberData.branch}
-                  onChange={handleChange}
-                />
+              <FormControl fullWidth variant="outlined">
+                  <InputLabel>Chi/nhánh/phái/đời</InputLabel>
+                  <Select
+                    name="IdFamilyTree"
+                    value={memberData.IdFamilyTree}
+                    onChange={handleChange}
+                    label="Chi/nhánh/phái/đời"
+                  >
+                    {listFamilyTree.map((i) => (
+                      <MenuItem value={i.Id}>{i.Name}</MenuItem>
+                    ))}
+
+                    
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12}>
-           
-                <Button type="submit" variant="contained" color="primary">
-                  Thêm Thành Viên
-                </Button>
-              </Grid>
+            <Button onClick={() => onAdd()} variant="contained" color="primary">
+              Thêm Thành Viên
+            </Button>
+          </Grid>
         </Grid>
       </form>
     </Container>
