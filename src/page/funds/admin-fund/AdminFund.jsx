@@ -18,7 +18,7 @@ const ManageAdminFund = () => {
     },
     {
       key: 2,
-      name: "Quản lý donate",
+      name: "Thu và chi",
       component: DonateManage,
     },
   ];

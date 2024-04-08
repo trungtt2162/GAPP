@@ -11,25 +11,17 @@ import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
 import { genealogyApi } from "../../../../api/genealogy.api";
 import { toast } from "react-toastify";
-import moment from "moment";
 
-function AddDonateMember({ setNewList, item }) {
-  console.log(setNewList)
+function AddSpend({item,setNewList}) {
   const [listFund, setListFund] = useState([]);
   const { currentIdGenealogy } = useAuthStore();
   const originData = {
     IdFund: "",
-    IdGenealogy: 0,
-    UserID: "",
+    IdGenealogy: "",
+    Description: "",
     Money: "",
-    PaymentDate: "2024-04-08T14:14:42.758Z",
-    FirstName: "string",
-    LastName: "string",
-    Email: "string",
-    Confirmed: true,
-    Id: 0,
   };
-  const [memberDonate, setmemberDonate] = useState(item ? {...item,PaymentDate:moment(item.PaymentDate).format("YYYY-MM-DD")}: originData);
+  const [memberDonate, setmemberDonate] = useState(item || originData);
   const [listMember, setListMember] = useState([]);
 
   const handleChange = (event) => {
@@ -81,27 +73,19 @@ function AddDonateMember({ setNewList, item }) {
 
   // Add
   const onAdd = async () => {
-    const currentMem = listMember.find((i) => i.Id === memberDonate.UserID);
-    if (currentMem) {
-      memberDonate.Email = currentMem.Email;
-      memberDonate.LastName = currentMem.LastName;
-      memberDonate.FirstName = currentMem.FirstName;
-    }
+    
     try {
       const dataPost = { ...memberDonate, IdGenealogy: currentIdGenealogy };
-      const res = !item
-        ? await fundApi.addContributor(dataPost)
-        : await fundApi.updateContributor(dataPost);
+      const res =!item?   await fundApi.addSendFund(dataPost) : await fundApi.updateFundSend(dataPost);
       if (res.data.StatusCode === 200) {
-        if (!item) {
-          setmemberDonate(originData);
-          toast.success("Thêm thanh công");
-        }
-        else{
-          setNewList(memberDonate)
-          toast.success("Sửa thành công");
-          
-        }
+       if(!item){
+        setmemberDonate(originData);
+        toast.success("Thêm thanh công");
+       }
+       else{
+        setNewList(memberDonate)
+        toast.success("Sửa thanh công");
+       }
       }
     } catch (error) {
       handleError(error);
@@ -110,9 +94,7 @@ function AddDonateMember({ setNewList, item }) {
 
   return (
     <Container maxWidth="sm">
-      <h4 className="bold">
-        {!item ? "Thêm Người đóng góp" : "Cập nhật người đóng góp"}
-      </h4>
+      <h4 className="bold">{item ? "Sửa khoản chi" :"Thêm khoản chi"}</h4>
       <form onSubmit={handleSubmit}>
         <TextField
           fullWidth
@@ -127,21 +109,7 @@ function AddDonateMember({ setNewList, item }) {
             <MenuItem value={option.Id}>{option.Name}</MenuItem>
           ))}
         </TextField>
-        <TextField
-          fullWidth
-          label="Người đóng góp"
-          name="UserID"
-          value={memberDonate.UserID}
-          onChange={handleChange}
-          margin="normal"
-          select
-        >
-          {listMember.map((option) => (
-            <MenuItem value={option.Id}>
-              {option.FirstName + " " + option.LastName}
-            </MenuItem>
-          ))}
-        </TextField>
+      
         <TextField
           date
           fullWidth
@@ -154,28 +122,25 @@ function AddDonateMember({ setNewList, item }) {
           margin="normal"
           type={"number"}
         />
+        
         <TextField
-          style={{
-            marginTop: 15,
-            marginBottom: 15,
-          }}
+          date
           fullWidth
-          label="Ngày donate"
-          variant="outlined"
-          type="date"
-          name="PaymentDate"
-          value={memberDonate.PaymentDate}
+          label="Nội dung"
+          name="Description"
+          value={memberDonate.Description}
           onChange={handleChange}
-          InputLabelProps={{
-            shrink: true,
-          }}
+          multiline
+          rows={4}
+          margin="normal"
         />
+        
         <Button onClick={() => onAdd()} variant="contained" color="primary">
-          {!item ? "Thêm" : "Cập nhật"}
+          {item ? "Sửa" :"Thêm"}
         </Button>
       </form>
     </Container>
   );
 }
 
-export default AddDonateMember;
+export default AddSpend;

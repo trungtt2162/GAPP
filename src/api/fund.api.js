@@ -47,13 +47,13 @@ export const fundApi = {
   },
 
   // DELETE /api/Fund/contributor
-  deleteContributor: (id) => {
-    return API.delete(`/api/Fund/contributor?id=${id}`);
+  deleteContributor: (id,idgene) => {
+    return API.delete(`/api/Fund/contributor?id=${id}&idGenealogy=${idgene}`);
   },
 
   // PUT /api/Fund/contributor
-  updateContributor: (id, data) => {
-    return API.put(`/api/Fund/contributor?id=${id}`, data);
+  updateContributor: ( data) => {
+    return API.put(`/api/Fund/contributor`, data);
   },
 
   // POST /api/Fund/contributor/paging
@@ -67,22 +67,28 @@ export const fundApi = {
   },
 
   // POST /api/Fund/send
-  sendFund: (data) => {
+  addSendFund: (data) => {
     return API.post("/api/Fund/send", data);
   },
 
   // DELETE /api/Fund/send
-  deleteFundSend: (id) => {
-    return API.delete(`/api/Fund/send?id=${id}`);
+  deleteFundSend: (id,idgene) => {
+    return API.delete(`/api/Fund/send?id=${id}&idGenealogy=${idgene}`);
   },
 
   // PUT /api/Fund/send
-  updateFundSend: (id, data) => {
-    return API.put(`/api/Fund/send?id=${id}`, data);
+  updateFundSend: ( data) => {
+    return API.put(`/api/Fund/send`, data);
   },
 
   // POST /api/Fund/send/paging
-  getFundSendsPaging: (pageNumber, pageSize) => {
-    return API.post("/api/Fund/send/paging", { pageNumber, pageSize });
+  getListSendFund: (idGene, idFund) => {
+    return API.post("/api/Fund/send/paging", {
+      PageSize: 0,
+      PageNumber: -1,
+      Condition:  `IdGenealogy=${idGene} and IdFund=${idFund}`,
+      SortOrder: "",
+      SearchKey: "",
+    });
   },
 };
