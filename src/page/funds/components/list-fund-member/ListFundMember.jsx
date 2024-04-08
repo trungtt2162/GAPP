@@ -10,6 +10,7 @@ const ListFundMember = () => {
     const navigate = useNavigate();
   const [listFund, setListFund] = useState([]);
   const {currentIdGenealogy} = useAuthStore()
+  
 const getListFund = async() => {
 try {
   const res = await fundApi.getlistFund(currentIdGenealogy)
@@ -50,7 +51,7 @@ useEffect(() => {
               {item.EstimatedMoney} VND
             </div>
             <div className="w100">{item.SpendPurpose}</div>
-            <div  onClick={() => navigate(location.pathname + "?id="+item.id)} className="button-more">Xem thêm</div>
+            <div  onClick={() => navigate(location.pathname + "?id="+item.Id)} className="button-more">Xem thêm</div>
           </Card>
         );
       })}

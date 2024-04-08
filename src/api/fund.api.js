@@ -1,8 +1,8 @@
 import { API } from ".";
 
 export const fundApi = {
-  getFundDetail: () => {
-    return API.get("/api/Fund");
+  getFundDetail: (id) => {
+    return API.get("/api/Fund?idFund=" + id);
   },
 
   // POST /api/Fund
@@ -25,14 +25,20 @@ export const fundApi = {
     return API.post("/api/Fund/paging", {
       PageSize: 0,
       PageNumber: -1,
-      Condition: "IdGenealogy="+id,
+      Condition: "IdGenealogy=" + id,
       SortOrder: "",
       SearchKey: "",
     });
   },
   // GET /api/Fund/contributor
-  getContributors: () => {
-    return API.get("/api/Fund/contributor");
+  getListContributors: (idGene,idFund) => {
+    return API.post("/api/Fund/contributor/paging", {
+      PageSize: 0,
+      PageNumber: -1,
+      Condition:  `IdGenealogy=${idGene} and IdFund=${idFund}`,
+      SortOrder: "",
+      SearchKey: "",
+    });
   },
 
   // POST /api/Fund/contributor

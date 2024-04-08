@@ -9,12 +9,19 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./../list-fund-member/ListFund.scss";
 import PrimaryButton from "../../../../components/common/button/PrimaryButton";
+import { getQuery, handleError } from "../../../../ultils/helper";
+import { fundApi } from "../../../../api/fund.api";
+import { useLocation } from "react-router-dom";
+import useAuthStore from "../../../../zustand/authStore";
 const FundAdminDetail = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const location = useLocation();
+  const { id } = getQuery();
+  const {currentIdGenealogy} = useAuthStore()
 
   // Hàm xử lý thay đổi trang
   const handleChangePage = (event, newPage) => {
@@ -75,16 +82,34 @@ const FundAdminDetail = () => {
       },
     ],
   });
+  const [detailFund,setDetailFund] = useState({})
+  const [listSpend,setListSpend] = useState([]);
+  const [listContributor,setListContributor] = useState([]);
 
+  // getFundDetail
+  const getFundDetail = async () => {
+    try {
+      const [detailRes,fundContriRes] = await Promise.all([fundApi.getFundDetail(id),fundApi.getListContributors(currentIdGenealogy,id)])
+      setDetailFund(detailRes.data.Data)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+  useEffect(() => {
+    console.log(id)
+    if(id){
+      getFundDetail()
+    }
+  },[id,location])
   return (
     <div>
       <h4 className="bold" style={{ marginBottom: 20 }}>
-        {fundDetail.title}
+        {detailFund.Name}
       </h4>
 
       <Card className="funddetail-wrap">
         <p className="title bold">Số tiền dự tính</p>
-        <p className="content">{fundDetail.tottal} VND</p>
+        <p className="content">{detailFund.EstimatedMoney} VND</p>
       </Card>
 
       <Card className="funddetail-wrap">
@@ -98,7 +123,7 @@ const FundAdminDetail = () => {
       </Card>
       <Card className="funddetail-wrap">
         <p className="title bold">Nội dung</p>
-        <p className="content">{fundDetail.description} VND</p>
+        <p className="content">{detailFund.SpendPurpose} VND</p>
       </Card>
       <Card className="funddetail-wrap vertical">
         <p className="bold">Danh sách đã chi</p>

@@ -21,7 +21,6 @@ import { LIST_ROLE, USER_ROLE } from "../../../../../constant/common";
 function ListMember({ setValue = () => {} }) {
   const [listMember, setlistMember] = useState([]);
   const { userGenealogy, currentIdGenealogy, roleCode, user } = useAuthStore();
-  console.log(roleCode)
   const isSiteAdmin = roleCode === USER_ROLE.SiteAdmin;
 
   // get List member
