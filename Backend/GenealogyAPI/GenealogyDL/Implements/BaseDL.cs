@@ -25,6 +25,7 @@ namespace GenealogyDL.Implements
         private readonly IWebHostEnvironment _env;
         protected readonly IAuthService _authService;
         protected readonly IConfiguration _configuration;
+        protected string _customView = null;
         public BaseDL(IDBContextFactory dapperDatabaseContextFactory, IWebHostEnvironment env, IAuthService authService)
         {
             _context = dapperDatabaseContextFactory ;
@@ -168,16 +169,17 @@ namespace GenealogyDL.Implements
             if (string.IsNullOrWhiteSpace(sortOrder)){
                 sortOrder = " ModifiedDate Desc ";
             }
+            var sourceName = string.IsNullOrWhiteSpace(_customView) ? _tableName : _customView;
             using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
             {
-                string sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} LIMIT @pageSize OFFSET  @offset";
+                string sqlData = $@"SELECT * FROM {sourceName} WHERE {condition} ORDER BY {sortOrder} LIMIT @pageSize OFFSET  @offset";
 
                 // get all
                 if (pageNumber == -1)
                 {
-                    sqlData = $@"SELECT * FROM {_tableName} WHERE {condition} ORDER BY {sortOrder} ";
+                    sqlData = $@"SELECT * FROM {sourceName} WHERE {condition} ORDER BY {sortOrder} ";
                 }
-                string sqlCount = $@"SELECT COUNT(*) FROM {_tableName} WHERE {condition}";
+                string sqlCount = $@"SELECT COUNT(*) FROM {sourceName} WHERE {condition}";
                 var param = new
                 {
                     offset = (pageNumber - 1) * pageSize,

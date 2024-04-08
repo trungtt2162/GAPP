@@ -20,18 +20,20 @@ namespace GenealogyAPI.Controllers
         private readonly IUserGenealogyBL _userGenealogyBL;
         private readonly IMapper _mapper;
         private readonly IUserBL _userBL;
-        public UserGenealogyController(IUserBL userBL, IUserGenealogyBL userGenealogyBL, IMapper mapper)
+        private readonly IBaseBL<UserGenealogyView> _view;
+        public UserGenealogyController(IBaseBL<UserGenealogyView> view, IUserBL userBL, IUserGenealogyBL userGenealogyBL, IMapper mapper)
         {
             _userGenealogyBL = userGenealogyBL;
             _mapper = mapper;
             _userBL = userBL;
+            _view = view;
         }
 
         [HttpPost("paging")]
         public async Task<ServiceResult> GetPagingData(PageRequest paggingRequest)
         {
             var serviceResult = new ServiceResult();
-            serviceResult.Data = await _userGenealogyBL.GetPagingData(paggingRequest);
+            serviceResult.Data = await _view.GetPagingData(paggingRequest);
             return serviceResult;
         }
 
@@ -40,7 +42,7 @@ namespace GenealogyAPI.Controllers
         {
             var serviceResult = new ServiceResult();
 
-            serviceResult.Data = await _userGenealogyBL.GetAll(idGenealogy);
+            serviceResult.Data = await _view.GetAll(idGenealogy);
 
             return serviceResult;
         }

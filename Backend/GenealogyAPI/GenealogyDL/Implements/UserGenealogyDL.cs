@@ -6,6 +6,7 @@ using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -17,6 +18,7 @@ namespace GenealogyDL.Implements
     {
         public UserGenealogyDL(IDBContextFactory dbContextFactory, IWebHostEnvironment env, IAuthService authService) : base(dbContextFactory, env, authService)
         {
+            this._customView = "view_usergenealogy_role";
         }
 
         public async Task<bool> CheckUserExistInTree(int userId, int idGenealogy)
@@ -108,5 +110,7 @@ namespace GenealogyDL.Implements
             var users = await this.Query<UserGenealogy>(sql, param, commandType: System.Data.CommandType.Text);
             return users?.FirstOrDefault();
         }
+
+
     }
 }
