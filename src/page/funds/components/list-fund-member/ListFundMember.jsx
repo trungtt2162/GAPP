@@ -1,30 +1,31 @@
 import { Card } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ListFund.scss";
 import { useLocation, useNavigate } from "react-router-dom";
+import { handleError } from "../../../../ultils/helper";
+import { fundApi } from "../../../../api/fund.api";
+import useAuthStore from "../../../../zustand/authStore";
 const ListFundMember = () => {
     const location = useLocation();
     const navigate = useNavigate();
-  const [listFund, setListFund] = useState([
-    {
-      id: 1,
-      title: "QUỹ A",
-      description: "Mục đích chi tiết",
-      fund: 20000000,
-    },
-    {
-      id: 2,
-      title: "QUỹ B",
-      description: "Mục đích chi tiết",
-      fund: 20000000,
-    },
-    {
-      id: 3,
-      title: "QUỹ C",
-      description: "Mục đích chi tiết",
-      fund: 20000000,
-    },
-  ]);
+  const [listFund, setListFund] = useState([]);
+  const {currentIdGenealogy} = useAuthStore()
+const getListFund = async() => {
+try {
+  const res = await fundApi.getlistFund(currentIdGenealogy)
+  if(res.data.StatusCode === 200){
+    setListFund(res.data.Data.Data||[])
+  }
+} catch (error) {
+  handleError(error)
+}
+
+}
+useEffect(() => {
+  if(currentIdGenealogy){
+    getListFund()
+  }
+  },[currentIdGenealogy])
 
   return (
     <div>
@@ -38,7 +39,7 @@ const ListFundMember = () => {
               }}
               className="border-right w100"
             >
-              {item.title}
+              {item.Name}
             </div>
             <div
               style={{
@@ -46,9 +47,9 @@ const ListFundMember = () => {
               }}
               className="border-right w100"
             >
-              {item.fund} VND
+              {item.EstimatedMoney} VND
             </div>
-            <div className="w100">{item.description}</div>
+            <div className="w100">{item.SpendPurpose}</div>
             <div  onClick={() => navigate(location.pathname + "?id="+item.id)} className="button-more">Xem thêm</div>
           </Card>
         );
