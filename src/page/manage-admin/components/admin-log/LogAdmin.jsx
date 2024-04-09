@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,36 +12,29 @@ import {
 } from "@mui/material";
 import ButtonTab from "../../../../components/common/button/ButtonTab";
 import { makeStyles } from "@mui/styles";
-
-const users = [
-  {
-    time: "17-3-2014",
-    action: "Thêm",
-    admin_name: "Admin1",
-  },
-  {
-    time: "18-3-2024",
-    action: "Sửa",
-    admin_name: "Admin1",
-  },
-  {
-    time: "19-3-2024",
-    action: "Xóa",
-    admin_name: "Admin1",
-  },
-  {
-    time: "20-3-2024",
-    action: "01/01/1990",
-    admin_name: "Admin1",
-  },
-  {
-    time: "21-3-2024",
-    action: "01/01/1990",
-    admin_name: "Admin1",
-  },
-];
+import { logApi } from "../../../../api/log.api";
+import { handleError } from "../../../../ultils/helper";
+import useAuthStore from "../../../../zustand/authStore";
+import moment from "moment";
 
 function AdminLog() {
+  const [listLog, setListLog] = useState([]);
+  const {currentIdGenealogy} = useAuthStore()
+  const getListLog = async () => {
+    try {
+      const res = await logApi.getListAllLog(currentIdGenealogy);
+      if(res.data.StatusCode === 200){
+        setListLog(res.data.Data.Data || [])
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  useEffect(() => {
+    if(currentIdGenealogy){
+      getListLog();
+    }
+  }, [currentIdGenealogy]);
   const useStyles = makeStyles({
     table: {
       minWidth: 650,
@@ -87,27 +80,19 @@ function AdminLog() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className={classes.cellCenter}>
-                    {row.admin_name}
-                  </TableCell>
-                  <TableCell className={classes.cellCenter}>
-                    {row.action}
-                  </TableCell>
-                  <TableCell className={classes.cellCenter}>
-                    {row.time}
-                  </TableCell>
-                </TableRow>
-              ))}
+          {listLog.map((user, index) => (
+              <TableRow key={index}>
+                <TableCell className={classes.cellCenter}>{user.Date && moment(user.Date).format("DD-MM-YYYY hh:mm:ss")}</TableCell>
+                <TableCell className={classes.cellCenter}>{user.Description}</TableCell>
+                <TableCell className={classes.cellCenter}>{user.CreatedBy}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         component="div"
-        count={users.length}
+        count={listLog.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

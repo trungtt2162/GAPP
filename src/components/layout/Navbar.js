@@ -123,16 +123,16 @@ const Navbar = () => {
             </Link> */}
             {(isUser || isPeopleAdmin) && (
               <Link
-                to="/member-fund"
-                className={"link" + (url === "/member-fund" ? " active" : "")}
+                to="/fund"
+                className={"link" + (url === "/fund" ? " active" : "")}
               >
                Quỹ
               </Link>
             )}
             {isSiteAdmin && (
               <Link
-                to="/admin-fund"
-                className={"link" + (url === "/admin-fund" ? " active" : "")}
+                to="/fund"
+                className={"link" + (url === "/fund" ? " active" : "")}
               >
                 Quản lý quỹ
               </Link>

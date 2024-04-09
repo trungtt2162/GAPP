@@ -23,6 +23,7 @@ import useAuthStore from "../../../../zustand/authStore";
 import CustomModal from "../../../../components/common/modal/CustomModal";
 import AddDonateMember from "./AddDonatemember";
 import AddSpend from "./AddSpend";
+import { USER_ROLE } from "../../../../constant/common";
 const ListSend = () => {
   const [fundId, setFundId] = useState("");
   const [page, setPage] = React.useState(0);
@@ -31,6 +32,13 @@ const ListSend = () => {
   const { currentIdGenealogy } = useAuthStore();
   const [listFund, setListFund] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
+  const { isLogin, roleCode } = useAuthStore();
+
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isSiteAdmin || isPeopleAdmin;
   // Hàm xử lý thay đổi trang
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -78,8 +86,8 @@ const ListSend = () => {
     setCurrentItem(null);
   };
 
-  const setNewList = async(item) => {
-   await getListSends();
+  const setNewList = async (item) => {
+    await getListSends();
     onClose();
   };
   return (
@@ -124,67 +132,72 @@ const ListSend = () => {
           Tìm kiếm
         </Button>
       </Card>
-     
-        <p style={{color:"black"}} className="bold">Danh sách</p>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-              <TableCell className="text-center">Tên công việc</TableCell>
-                <TableCell className="text-center">Số tiền đã chi</TableCell>
-                <TableCell className="text-center">Thời gian</TableCell>
-                <TableCell className="text-center">Hành động</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {ListSend
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
-                  <TableRow key={row.id}>
-                     <TableCell className="text-center">
-                      {row.Description}
-                    </TableCell>
-                    <TableCell className="text-center">{row.Money}</TableCell>
 
-                    <TableCell className="text-center">
-                      {row.CreatedDate &&
-                        moment(row.CreatedDate).format("DD-MM-YYYY")}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Button
-                        onClick={() => {
-                          setCurrentItem(row);
-                        }}
-                        style={{
-                          marginRight: 10,
-                        }}
-                        variant="contained"
-                        color="success"
-                      >
-                        Sửa
-                      </Button>
-                      <Button
-                        onClick={() => handleDelete(row)}
-                        variant="contained"
-                        color="error"
-                      >
-                        Xóa
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          component="div"
-          count={ListSend.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-        />
-      
-      <CustomModal  open={currentItem} onClose={onClose}>
+      <p style={{ color: "black" }} className="bold">
+        Danh sách
+      </p>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell className="text-center">Tên công việc</TableCell>
+              <TableCell className="text-center">Số tiền đã chi</TableCell>
+              <TableCell className="text-center">Thời gian</TableCell>
+              {isSiteAdmin && (
+                <TableCell className="text-center">Hành động</TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {ListSend.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            ).map((row) => (
+              <TableRow key={row.id}>
+                <TableCell className="text-center">{row.Description}</TableCell>
+                <TableCell className="text-center">{row.Money}</TableCell>
+
+                <TableCell className="text-center">
+                  {row.CreatedDate &&
+                    moment(row.CreatedDate).format("DD-MM-YYYY")}
+                </TableCell>
+                {isSiteAdmin && (
+                  <TableCell className="text-center">
+                    <Button
+                      onClick={() => {
+                        setCurrentItem(row);
+                      }}
+                      style={{
+                        marginRight: 10,
+                      }}
+                      variant="contained"
+                      color="success"
+                    >
+                      Sửa
+                    </Button>
+                    <Button
+                      onClick={() => handleDelete(row)}
+                      variant="contained"
+                      color="error"
+                    >
+                      Xóa
+                    </Button>
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        component="div"
+        count={ListSend.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+      />
+
+      <CustomModal open={currentItem} onClose={onClose}>
         <AddSpend setNewList={setNewList} item={currentItem} />
       </CustomModal>
     </div>

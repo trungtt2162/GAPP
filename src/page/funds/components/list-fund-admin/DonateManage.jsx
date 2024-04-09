@@ -10,40 +10,48 @@ import DonateDetail from "./DonateDetail";
 import AddSpend from "./AddSpend";
 import ListContributor from "./ListContributor";
 import ListSend from "./ListSend";
+import useAuthStore from "../../../../zustand/authStore";
+import { USER_ROLE } from "../../../../constant/common";
 const DonateManage = () => {
   const [value, setValue] = useState(1);
   const location = useLocation();
   const { id } = getQuery();
+  const { isLogin, roleCode } = useAuthStore();
 
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isSiteAdmin || isPeopleAdmin;
   return (
     <div>
       <div className="flex-center">
         <ButtonTab
-          path="/admin-fund"
+          path="/fund"
           index={1}
           value={value}
           text={"Danh sách đóng góp"}
           onClick={(e) => setValue(1)}
         />
         <ButtonTab
-          path="/admin-fund"
+          path="/fund"
           index={2}
           value={value}
           text={"Danh sách đã chi"}
           onClick={(e) => setValue(2)}
         />
-        <ButtonTab
+        {isSiteAdmin && <ButtonTab
           index={3}
           value={value}
           text={"Thêm Người đóng góp"}
           onClick={(e) => setValue(3)}
-        />
-        <ButtonTab
+        />}
+        {isSiteAdmin && <ButtonTab
           index={4}
           value={value}
           text={"Thêm khoản chi"}
           onClick={(e) => setValue(4)}
-        />
+        />}
       </div>
       <div>
         <div

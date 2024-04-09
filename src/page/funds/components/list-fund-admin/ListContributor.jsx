@@ -22,7 +22,15 @@ import moment from "moment";
 import useAuthStore from "../../../../zustand/authStore";
 import CustomModal from "../../../../components/common/modal/CustomModal";
 import AddDonateMember from "./AddDonatemember";
+import { USER_ROLE } from "../../../../constant/common";
 const ListContributor = () => {
+  const { isLogin, roleCode } = useAuthStore();
+
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isSiteAdmin || isPeopleAdmin;
   const [fundId, setFundId] = useState("");
   const [page, setPage] = React.useState(0);
   const [listContributor, setListContributor] = useState([]);
@@ -133,7 +141,7 @@ const ListContributor = () => {
                 <TableCell className="text-center">Email</TableCell>
                 <TableCell className="text-center">Số tiền đóng góp</TableCell>
                 <TableCell className="text-center">Ngày đóng góp</TableCell>
-                <TableCell className="text-center">Hành động</TableCell>
+               {isSiteAdmin &&  <TableCell className="text-center">Hành động</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -151,7 +159,7 @@ const ListContributor = () => {
                       {row.CreatedDate &&
                         moment(row.CreatedDate).format("DD-MM-YYYY")}
                     </TableCell>
-                    <TableCell className="text-center">
+                  {isSiteAdmin &&   <TableCell className="text-center">
                       <Button
                         onClick={() => {
                           setCurrentItem(row);
@@ -171,7 +179,7 @@ const ListContributor = () => {
                       >
                         Xóa
                       </Button>
-                    </TableCell>
+                    </TableCell>}
                   </TableRow>
                 ))}
             </TableBody>

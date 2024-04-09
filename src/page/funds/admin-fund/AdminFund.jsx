@@ -6,15 +6,24 @@ import FeedBackFund from "../components/feedback-fund/FeedBackFund";
 import FundAdminDetail from "../components/list-fund-admin/FundAdminDetail";
 import ListFundAdmin from "../components/list-fund-admin/ListFundAdmin";
 import DonateManage from "../components/list-fund-admin/DonateManage";
+import useAuthStore from "../../../zustand/authStore";
+import { USER_ROLE } from "../../../constant/common";
 const ManageAdminFund = () => {
+  const { isLogin, roleCode } = useAuthStore();
+
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isSiteAdmin || isPeopleAdmin;
   const { id } = getQuery();
   const location = useLocation();
   const listSideBar = [
     {
       key: 1,
-      name: "Xem danh sách quỹ",
+      name: "Danh sách quỹ",
       component: id ? FundAdminDetail : ListFundAdmin,
-      path: "/admin-fund",
+      path: "/fund",
     },
     {
       key: 2,
