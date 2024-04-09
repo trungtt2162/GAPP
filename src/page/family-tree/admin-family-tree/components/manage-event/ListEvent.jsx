@@ -8,11 +8,12 @@ import { toast } from 'react-toastify';
 import CustomModal from '../../../../../components/common/modal/CustomModal';
 import AddEventForm from './AddEvent';
 
-function ListEvent() {
+function ListEvent({list,action = true}) {
    const [listEvent,setListEvent] = useState();
    const {userGenealogy } = useAuthStore();
    const geId = userGenealogy[0]?.IdGenealogy
    const [currentEvent,setCurrentEvent] = useState(null);
+   const currentList = list || listEvent
    const getListEvent = async(id) => {
     try {
            const res = await eventApi.getListEventAdmin(id);
@@ -24,7 +25,7 @@ function ListEvent() {
         }
    }
    useEffect(() => {
-   if(geId){
+   if(geId && !list){
     getListEvent(geId)
    }
    },[geId])
@@ -63,18 +64,18 @@ function ListEvent() {
             <TableCell>Tên sự kiện</TableCell>
             <TableCell>Ngày tổ chức</TableCell>
             <TableCell>Chế độ</TableCell>
-            <TableCell className='text-center'>Hành động</TableCell>
+            {action && <TableCell className='text-center'>Hành động</TableCell>}
 
             
           </TableRow>
         </TableHead>
         <TableBody>
-          {listEvent?.map((user, index) => (
+          {currentList?.map((user, index) => (
             <TableRow key={index}>
               <TableCell>{user.Name}</TableCell>
               <TableCell>{user.OrganizationDate}</TableCell>
               <TableCell>{TYPE_EVENT[user.Type]}</TableCell>
-              <TableCell className='text-center'>
+             {action &&  <TableCell className='text-center'>
                 <Button
                 onClick={() => setCurrentEvent(user)}
                   style={{
@@ -88,7 +89,7 @@ function ListEvent() {
                 <Button onClick={() =>handleDelete(user)} variant="contained" color="error">
                  Xóa
                 </Button>
-              </TableCell>
+              </TableCell>}
             </TableRow>
           ))}
         </TableBody>

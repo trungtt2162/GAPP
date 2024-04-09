@@ -8,6 +8,7 @@ import ListFundAdmin from "../components/list-fund-admin/ListFundAdmin";
 import DonateManage from "../components/list-fund-admin/DonateManage";
 import useAuthStore from "../../../zustand/authStore";
 import { USER_ROLE } from "../../../constant/common";
+import FeedBackManage from "../components/feedback-fund/FeedBackManage";
 const ManageAdminFund = () => {
   const { isLogin, roleCode } = useAuthStore();
 
@@ -29,6 +30,11 @@ const ManageAdminFund = () => {
       key: 2,
       name: "Thu và chi",
       component: DonateManage,
+    },
+    {
+      key: 3,
+      name: "Góp ý",
+      component: FeedBackManage,
     },
   ];
   return <TabContainer listSideBar={listSideBar} />;

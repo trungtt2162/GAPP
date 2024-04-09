@@ -36,7 +36,7 @@ export const genealogyApi = {
     return API.post("/api/UserGenealogy/paging", {
       PageSize: 0,
       PageNumber: -1,
-      Condition: `IdGenealogy = ${id} and Inactive = true`,
+      Condition: `IdGenealogy = ${id} and InActive = true`,
       SortOrder: "",
       SearchKey: "",
     });

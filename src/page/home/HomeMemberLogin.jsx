@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Card, Grid, TextField,Avatar } from "@mui/material";
+import { Box, Button, Card, Grid, TextField, Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
@@ -12,19 +12,22 @@ import { historyApi } from "../../api/history.api";
 import { handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { genealogyApi } from "../../api/genealogy.api";
-const MODE_SEARCH ={
-  MEMBER:0,
-  EVENT:1
-}
+import ListEvent from "../family-tree/admin-family-tree/components/manage-event/ListEvent";
+import { eventApi } from "../../api/event.api";
+const MODE_SEARCH = {
+  MEMBER: 0,
+  EVENT: 1,
+};
 const HomeMemberLogin = () => {
   const { palette } = useTheme(theme);
   const navigate = useNavigate();
   const [value, setValue] = useState(1);
   const [txtSearch, setTxtSearch] = useState("");
- const {currentIdGenealogy} = useAuthStore()
+  const { currentIdGenealogy } = useAuthStore();
   const [listHistory, setListHistory] = useState([]);
-  const [modeSearch,setModeSearch] = useState(MODE_SEARCH.MEMBER);
-  const [listSearch,setListSearch] = useState([]);
+  const [modeSearch, setModeSearch] = useState(MODE_SEARCH.MEMBER);
+  const [listSearch, setListSearch] = useState([]);
+  const [listSearchEvent, setListSearchEvent] = useState([]);
   const getListHistory = async (id) => {
     try {
       const res = await historyApi.getListAllHistoryByGenealogyId(id);
@@ -39,20 +42,27 @@ const HomeMemberLogin = () => {
     getListHistory(currentIdGenealogy);
   }, [currentIdGenealogy]);
 
-  const onSearch = async() => {
+  const onSearch = async () => {
     try {
-      const res = await genealogyApi.getListUserByEmailAndName(currentIdGenealogy,txtSearch);
-      if(res.data.StatusCode !== 200){
-        throw new Error("error")
+      const res =
+        modeSearch === MODE_SEARCH.MEMBER
+          ? await genealogyApi.getListUserByEmailAndName(
+              currentIdGenealogy,
+              txtSearch
+            )
+          : await eventApi.getListEventByName(currentIdGenealogy,txtSearch);
+      if (res.data.StatusCode !== 200) {
+        throw new Error("error");
       }
-      if(modeSearch === MODE_SEARCH.MEMBER){
-        console.log(res.data.Data.Data)
-        setListSearch(res.data.Data.Data || [])
+      if (modeSearch === MODE_SEARCH.MEMBER) {
+        setListSearch(res.data.Data.Data || []);
+      } else {
+        setListSearchEvent(res.data.Data.Data || []);
       }
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  }
+  };
   return (
     <div>
       <Box
@@ -62,9 +72,12 @@ const HomeMemberLogin = () => {
           p: "2.5rem",
         }}
       ></Box>
-      <div style={{
-        marginTop:-70
-      }} className="how-work">
+      <div
+        style={{
+          marginTop: -70,
+        }}
+        className="how-work"
+      >
         <Box
           sx={{
             display: "flex",
@@ -95,43 +108,59 @@ const HomeMemberLogin = () => {
                     onClick={(e) => setModeSearch(1)}
                   />
                 </div>
-                <div className="flex-center" style={{
-                    marginTop:30
-                }}>
+                <div
+                  className="flex-center"
+                  style={{
+                    marginTop: 30,
+                  }}
+                >
                   <TextField
                     fullWidth
                     label={`Tìm kiếm ${
                       value == 1 ? "Thành viên gia đình" : "Sự kiện"
                     }`}
                     value={txtSearch}
-                      onChange={e => setTxtSearch(e.target.value)}
+                    onChange={(e) => setTxtSearch(e.target.value)}
                   />
-                  <Button onClick={() => onSearch()} variant="contained" style={{width:200,marginLeft:20}}>
-                  Tìm kiếm
+                  <Button
+                    onClick={() => onSearch()}
+                    variant="contained"
+                    style={{ width: 200, marginLeft: 20 }}
+                  >
+                    Tìm kiếm
                   </Button>
-                 
                 </div>
               </div>
               <div
-                style={{ height: "auto",minHeight:500,marginTop:30 }}
+                style={{ height: "auto", minHeight: 500, marginTop: 30 }}
                 className="content-card card-item "
               >
-                 <h4 className="bold">Kết quả tìm kiếm</h4>
-                {modeSearch === MODE_SEARCH.MEMBER ?  <ListMember list={listSearch} />:<>
-                </>}
+                <h4 className="bold">Kết quả tìm kiếm</h4>
+                {modeSearch === MODE_SEARCH.MEMBER ? (
+                  <ListMember list={listSearch} />
+                ) : (
+                  <>
+                    <ListEvent action={false} list={listSearchEvent} />
+                  </>
+                )}
               </div>
             </Grid>
             <Grid item xs={6}>
               <div className="content-card card-item">
                 <h4 className="bold">Lịch sử gia đình</h4>
                 {listHistory.map((item, index) => (
-                  <Card style={{
-                    padding:10,
-                    marginBottom:20
-                  }} className="item-history">
+                  <Card
+                    style={{
+                      padding: 10,
+                      marginBottom: 20,
+                    }}
+                    className="item-history"
+                  >
                     <p>{item.Description}</p>
-                    <Avatar src={item.Image}  sx={{width:100,height:100}} ></Avatar>
-
+                    <Avatar
+                      src={item.Image}
+                      sx={{ width: 100, height: 100 }}
+                    ></Avatar>
                   </Card>
                 ))}
                 <PrimaryButton

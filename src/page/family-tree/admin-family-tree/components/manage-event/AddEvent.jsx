@@ -1,33 +1,23 @@
 import React, { useRef, useState } from "react";
 
-import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 import {
-  TextField,
   Button,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Grid,
   Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  TextField
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import AddImage from "../../../../../components/common/addImage/AddImage";
-import useAuthStore from "../../../../../zustand/authStore";
-import { eventApi } from "../../../../../api/event.api";
-import { handleError, uploadImageToFirebase } from "../../../../../ultils/helper";
-import { toast } from "react-toastify";
 import moment from "moment/moment";
+import { toast } from "react-toastify";
+import { eventApi } from "../../../../../api/event.api";
+import AddImage from "../../../../../components/common/addImage/AddImage";
+import { handleError, uploadImageToFirebase } from "../../../../../ultils/helper";
+import useAuthStore from "../../../../../zustand/authStore";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -42,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function AddEventForm({ item,updateItem }) {
-  console.log(item)
   const classes = useStyles();
   const fileRef = useRef();
   const { userGenealogy } = useAuthStore();
@@ -60,7 +49,7 @@ const originData = {
   IsPublic:false
 }
   const [formData, setFormData] = useState(
-    {...item,OrganizationDate:moment(item?.OrganizationDate)?.format("YYYY-MM-DD")} || originData
+   item ?  {...item,OrganizationDate:moment(item?.OrganizationDate)?.format("YYYY-MM-DD")} : originData
   );
 
   const handleChangeData = key => e => {
@@ -83,7 +72,7 @@ const originData = {
   // SAVE
   const onSave = async() =>{
     try {
-      const data = { ...formData, IDGenealogy: userGenealogy[0]?.IdGenealogy };
+      const data = { ...formData, IDGenealogy: userGenealogy[0]?.IdGenealogy,IsPublic:formData.IsPublic ==="true" ?true:false };
       const res = !item
         ? await eventApi.addEvent(data)
         : await eventApi.updateEvent(data);

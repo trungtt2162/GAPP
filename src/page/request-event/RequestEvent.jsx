@@ -1,14 +1,16 @@
-import "./RequestEvent.scss";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
 import {
-  TextField,
   Button,
+  Container,
   FormControl,
-  FormLabel,
-  RadioGroup,
-  Radio,
   FormControlLabel,
-  Checkbox,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  TextField,
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -16,52 +18,109 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Box,
-  Grid,
 } from "@mui/material";
-import { useTheme } from "@emotion/react";
-import { theme } from "../../theme";
-import Navbar from "../../components/layout/Navbar";
-import "./../history-family/History.scss";
 import { makeStyles } from "@mui/styles";
+import moment from "moment/moment";
+import { toast } from "react-toastify";
+import { eventApi } from "../../api/event.api";
+import AddImage from "../../components/common/addImage/AddImage";
+import { handleError, uploadImageToFirebase } from "../../ultils/helper";
+import useAuthStore from "../../zustand/authStore";
+import Navbar from "../../components/layout/Navbar";
+import { genealogyApi } from "../../api/genealogy.api";
+import Checkbox from "@mui/material/Checkbox";
 const useStyles = makeStyles((theme) => ({
-    form: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap:20,
-      alignItems: 'center',
-      width: '50%',
-      margin: 'auto',
-      '& > *': {
-        marginBottom: theme.spacing(2),
-      },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 15,
+    alignItems: "center",
+    width: "100%",
+    margin: "auto",
+    "& > *": {
+      marginBottom: theme.spacing(2),
     },
-  }));
-const RequestEvents = () => {
-    const classes = useStyles();
+  },
+}));
 
-  const { palette } = useTheme(theme);
-  const [eventName, setEventName] = useState("");
-  const [eventDescription, setEventDescription] = useState("");
-  const [eventDate, setEventDate] = useState("");
-  const [eventDateClose, setEventDateClose] = useState("");
-  const [userAttendMode,setUserAttendMode] = useState("");
-  const [eventType, setEventType] = useState("online");
-  const [allowRegistration, setAllowRegistration] = useState(false);
-  const [participantLimit, setParticipantLimit] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState([]);
+function RequestEvent({ item, updateItem }) {
+  const classes = useStyles();
+  const fileRef = useRef();
+  const { userGenealogy, currentIdGenealogy } = useAuthStore();
+  const [limitMeber, setLimitMember] = useState(false);
+  const [listMember, setlistMember] = useState([]);
+
+  const originData = {
+    IdGenealogy: 26,
+    Name: "",
+    Description: "",
+    LinkStream: "",
+    Type: 0,
+    Background: "",
+    OrganizationDate: "",
+    Location: "",
+    UserIDHost: 0,
+    IsPublic: true,
+    InActive: true,
+    UserEvents: [],
+  };
+  const [formData, setFormData] = useState(originData);
+
+  const handleChangeData = (key) => (e) => {
+    const newValue = e?.target?.value;
+    setFormData({ ...formData, [key]: newValue });
+  };
+
+  const handleChangeFile = async (event) => {
+    const file = event.target.files[0];
+    const url = await uploadImageToFirebase(file);
+    setFormData({ ...formData, Background: url });
+  };
   const handleUserSelection = () => {};
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Xử lý dữ liệu form tại đây
-    console.log({
-      eventName,
-      eventDescription,
-      eventDate,
-      eventType,
-      allowRegistration,
-      participantLimit,
-    });
+  };
+  // get List member
+  const getListMember = async () => {
+    try {
+      const res = await genealogyApi.getListUserFromGenealogy(
+        currentIdGenealogy
+      );
+      if (res.data.StatusCode === 200) {
+        setlistMember(res.data.Data.Data);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  useEffect(() => {
+    getListMember();
+  }, [currentIdGenealogy]);
+  // SAVE
+  const onSave = async () => {
+    try {
+      const data = {
+        ...formData,
+        IDGenealogy: currentIdGenealogy,
+        IsPublic: formData.IsPublic === "true" ? true : false,
+        UserEvents:limitMeber == "true" ? listMember.filter(i => i.checked) :listMember
+      };
+      const res = !item
+        ? await eventApi.addEvent(data)
+        : await eventApi.updateEvent(data);
+      if (res.data.StatusCode === 200) {
+        toast.success(item ? "Cập nhât thành công" : "Request thành công");
+        if (!item) {
+          setFormData(originData);
+        } else {
+          updateItem(data);
+        }
+      }
+    } catch (error) {
+      handleError(error);
+    }
   };
   return (
     <div>
@@ -73,157 +132,223 @@ const RequestEvents = () => {
           p: "2.5rem",
         }}
       ></Box>
-      <div className="how-work">
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: { md: "flex-end", xs: "center" },
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: { md: "space-between", xs: "center" },
-            p: "40px",
-            background: "#f0f0f0",
-          }}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <div className="content-card card-item">
-                <h4 className="bold">Request sự kiện</h4>
-                <form className={classes.form}  onSubmit={handleSubmit}>
-                  <TextField
-                    label="Tên sự kiện"
-                    value={eventName}
-                    onChange={(e) => setEventName(e.target.value)}
-                    fullWidth
-                    required
-                  />
-                  <TextField
-                    label="Mô tả sự kiện"
-                    value={eventDescription}
-                    onChange={(e) => setEventDescription(e.target.value)}
-                    multiline
-                    fullWidth
-                    required
-                  />
-                  <TextField
-                    label="Ngày tổ chức"
-                    type="date"
-                    value={eventDate}
-                    onChange={(e) => setEventDate(e.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                    fullWidth
-                    required
-                  />
-                   <TextField
-                    label="Ngày đóng"
-                    type="date"
-                    value={eventDateClose}
-                    onChange={(e) => setEventDateClose(e.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                    fullWidth
-                    required
-                  />
-                <div style={{
-                    width:"100%"
-                }} className="flex-start">
+      <Container maxWidth="md">
+        <h4 style={{ marginTop: 30 }} className="bold">
+          {"Request sự kiện"}
+        </h4>
+        <Grid container spacing={1}>
+          <Grid item xs={8}>
+            <form className={classes.form} onSubmit={handleSubmit}>
+              <TextField
+                label="Tên sự kiện"
+                value={formData.Name}
+                onChange={handleChangeData("Name")}
+                fullWidth
+                required
+              />
+              <TextField
+                label="Mô tả sự kiện"
+                value={formData.Description}
+                onChange={handleChangeData("Description")}
+                multiline
+                fullWidth
+                required
+              />
+              <TextField
+                label="Ngày tổ chức"
+                type="date"
+                value={formData.OrganizationDate}
+                onChange={handleChangeData("OrganizationDate")}
+                InputLabelProps={{ shrink: true }}
+                fullWidth
+                required
+              />
+              <TextField
+                label="Địa điểm"
+                type="text"
+                value={formData.Location}
+                onChange={handleChangeData("Location")}
+                fullWidth
+                required
+              />
+
+              <TextField
+                label="Link stream"
+                value={formData.LinkStream}
+                onChange={handleChangeData("LinkStream")}
+                multiline
+                fullWidth
+                required
+              />
+              <div
+                style={{
+                  width: "100%",
+                }}
+                className="flex-start"
+              >
                 <FormControl component="fieldset">
-                    <FormLabel style={{
-                        textAlign:"start"
-                    }} component="legend">Chế độ</FormLabel>
-                    <RadioGroup
-                      row
-                      value={eventType}
-                      onChange={(e) => setEventType(e.target.value)}
-                    >
-                      <FormControlLabel
-                        value="online"
-                        control={<Radio />}
-                        label="Online"
-                      />
-                      <FormControlLabel
-                        value="offline"
-                        control={<Radio />}
-                        label="Offline"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-                <div style={{
-                    width:"100%"
-                }} className="flex-start">
-                <FormControl component="fieldset">
-                    <FormLabel style={{
-                        textAlign:"start"
-                    }} component="legend">Người tham gia</FormLabel>
-                    <RadioGroup
-                      row
-                      value={userAttendMode}
-                      onChange={(e) => setUserAttendMode(e.target.value)}
-                    >
-                      <FormControlLabel
-                        value="1"
-                        control={<Radio />}
-                        label="Cho phép đăng kí tham gia"
-                      />
-                      <FormControlLabel
-                        value="2"
-                        control={<Radio />}
-                        label="Giới hạn đối tượng tham gia"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-                  
-                  {userAttendMode === "2" && (
-                    <div style={{
-                        width:"150%",
-                    }}>
-                      <TableContainer component={Paper}>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Tên</TableCell>
-                              <TableCell>Ngày sinh</TableCell>
-                              <TableCell>Email</TableCell>
-                              <TableCell>Địa chỉ</TableCell>
-                              <TableCell>Giới tính</TableCell>
-                              <TableCell>Tham gia</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {/* Dùng map để render từng user */}
-                            {Array.from({ length: 5 }, (_, index) => (
-                              <TableRow key={index}>
-                                <TableCell>User {index + 1}</TableCell>
-                                <TableCell>01/01/1990</TableCell>
-                                <TableCell>
-                                  user{index + 1}@example.com
-                                </TableCell>
-                                <TableCell>123 Street, City</TableCell>
-                                <TableCell>Male</TableCell>
-                                <TableCell>
-                                  <Checkbox
-                                    checked={selectedUsers.includes(index)}
-                                    onChange={() => handleUserSelection(index)}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </div>
-                  )}
-                  <Button type="submit" variant="contained" color="primary">
-                    Request
-                  </Button>
-                </form>
+                  <FormLabel
+                    style={{
+                      textAlign: "start",
+                    }}
+                    component="legend"
+                  >
+                    Chế độ
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    value={formData.Type}
+                    onChange={handleChangeData("Type")}
+                  >
+                    <FormControlLabel
+                      value={0}
+                      control={<Radio />}
+                      label="Online"
+                    />
+                    <FormControlLabel
+                      value={1}
+                      control={<Radio />}
+                      label="Offline"
+                    />
+                  </RadioGroup>
+                </FormControl>
               </div>
-            </Grid>
+              <div
+                style={{
+                  width: "100%",
+                }}
+                className="flex-start"
+              >
+                <FormControl component="fieldset">
+                  <FormLabel
+                    style={{
+                      textAlign: "start",
+                    }}
+                    component="legend"
+                  >
+                    Bảo mật
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    value={formData.IsPublic}
+                    onChange={handleChangeData("IsPublic")}
+                  >
+                    <FormControlLabel
+                      value={false}
+                      control={<Radio />}
+                      label="Private"
+                    />
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio />}
+                      label="Public"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                }}
+                className="flex-start"
+              >
+                <FormControl component="fieldset">
+                  <FormLabel
+                    style={{
+                      textAlign: "start",
+                    }}
+                    component="legend"
+                  >
+                    Người tham gia
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    value={limitMeber}
+                    onChange={(e) => setLimitMember(e.target.value)}
+                  >
+                    <FormControlLabel
+                      value={false}
+                      control={<Radio />}
+                      label="Cho phép tất cả tham gia"
+                    />
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio />}
+                      label="Giới hạn người tham gia"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
+              {limitMeber == "true" && (
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Chọn</TableCell>
+                        <TableCell>Tên</TableCell>
+                        <TableCell>Ngày Sinh</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Địa Chỉ</TableCell>
+                        <TableCell>Giới Tính</TableCell>
+                        {/* {isSiteAdmin && <TableCell>Quyền</TableCell>} */}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {listMember.map((user, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Checkbox
+                              onChange={(e) => {
+                                const list = [...listMember];
+                                list[index].checked = e.target.checked;
+                                setlistMember(list);
+                              }}
+                              checked={user.checked}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            {user?.FirstName + " " + user?.LastName}
+                          </TableCell>
+                          <TableCell>{user.DateOfBirth}</TableCell>
+                          <TableCell>{user.Email}</TableCell>
+                          <TableCell>{user.Address}</TableCell>
+                          <TableCell>
+                            {user.Gender === 0 ? "Name" : "Nữ"}
+                          </TableCell>
+                          {/*  */}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+              <Button
+                onClick={() => onSave()}
+                variant="contained"
+                color="primary"
+              >
+                {"Request"}
+              </Button>
+            </form>
           </Grid>
-        </Box>
-      </div>
+          <Grid item xs={4}>
+            <input
+              onChange={handleChangeFile}
+              type="file"
+              style={{
+                display: "none",
+              }}
+              ref={fileRef}
+            />
+            <AddImage
+              click={() => fileRef.current.click()}
+              url={formData.Background}
+            />
+          </Grid>
+        </Grid>
+      </Container>
     </div>
   );
-};
+}
 
-export default RequestEvents;
+export default RequestEvent;
