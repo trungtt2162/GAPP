@@ -1,7 +1,7 @@
 import { API } from ".";
 
 export const feedbackApi = {
-  getListFeedBackByGeneAndFund: (idgene,idFund) => {
+  getListFeedBackByGeneAndFund: (idgene, idFund) => {
     return API.post("/api/FeedBack/paging", {
       PageSize: 0,
       PageNumber: -1,
@@ -10,20 +10,13 @@ export const feedbackApi = {
       SearchKey: "",
     });
   },
-  updateAdress: (data) => {
-    return API.put("/api/FamilyAddress", data);
+  createFeedback: (data) => {
+    return API.post("/api/FeedBack",data);
   },
-  deleteAddress: (id, idGenealogy) => {
-    return API.delete(`/api/FamilyAddress?id=${id}&idGenealogy=${idGenealogy}`);
+  updateFeedBack: (data) => {
+    return API.put("/api/FeedBack", data);
   },
-
-  getListAddress: (id) => {
-    return API.post("/api/FamilyAddress/paging", {
-      PageSize: 1,
-      PageNumber: -1,
-      Condition: `IdGenealogy=${id}`,
-      SortOrder: "",
-      SearchKey: "",
-    });
+  deleteFeedBack: (id, idGenealogy) => {
+    return API.delete(`/api/FeedBack?id=${id}&idGenealogy=${idGenealogy}`);
   },
 };

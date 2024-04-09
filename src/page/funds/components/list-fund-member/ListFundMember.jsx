@@ -33,7 +33,7 @@ useEffect(() => {
       <h4 className="bold">Danh sách quỹ</h4>
       {listFund.map((item, index) => {
         return (
-          <Card className="fund-wrap">
+          <div className="fund-wrap card-bg">
             <div
               style={{
                 paddingRight: 10,
@@ -51,8 +51,8 @@ useEffect(() => {
               {item.EstimatedMoney} VND
             </div>
             <div className="w100">{item.SpendPurpose}</div>
-            <div  onClick={() => navigate(location.pathname + "?id="+item.Id)} className="button-more">Xem thêm</div>
-          </Card>
+            <div style={{color:"white"}}  onClick={() => navigate(location.pathname + "?id="+item.Id)} className="button-more">Xem thêm</div>
+          </div>
         );
       })}
     </div>

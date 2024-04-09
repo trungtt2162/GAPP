@@ -85,7 +85,7 @@ const FundAdminDetail = () => {
         <p className="title bold">Nội dung</p>
         <p className="content">{detailFund.SpendPurpose}</p>
       </Card>
-      <Card className="funddetail-wrap vertical">
+      <div className="funddetail-wrap vertical">
         <p className="bold">Danh sách đã chi</p>
         <TableContainer component={Paper}>
           <Table>
@@ -122,8 +122,8 @@ const FundAdminDetail = () => {
           page={page}
           onPageChange={handleChangePage}
         />
-      </Card>
-      <Card className="funddetail-wrap vertical">
+      </div>
+      <div className="funddetail-wrap vertical">
         <p className="bold">Danh sách người góp quỹ</p>
         <TableContainer component={Paper}>
           <Table>
@@ -162,7 +162,7 @@ const FundAdminDetail = () => {
           page={page}
           onPageChange={handleChangePage}
         />
-      </Card>
+      </div>
      
     </div>
   );

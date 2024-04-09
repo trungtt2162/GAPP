@@ -14,6 +14,7 @@ import {
   MenuItem,
   Select,
   Button,
+  Grid
 } from "@mui/material";
 import { toast } from "react-toastify";
 import moment from "moment";
@@ -24,6 +25,8 @@ import { handleError } from "../../../../ultils/helper";
 import CustomModal from "../../../../components/common/modal/CustomModal";
 import AddSpend from "../list-fund-admin/AddSpend";
 import { feedbackApi } from "../../../../api/feedback.api";
+import FeedBackItem from "./FeedBackItem";
+import FeedBackFund from "./FeedBackFund";
 const ListFeedback = () => {
   const [fundId, setFundId] = useState("");
   const [page, setPage] = React.useState(0);
@@ -92,6 +95,12 @@ const ListFeedback = () => {
     await getListFeedBack();
     onClose();
   };
+
+  //
+  const refreshList = async() => {
+    await getListFeedBack()
+  }
+
   return (
     <div>
       <h4>Danh sách người góp ý</h4>
@@ -135,72 +144,23 @@ const ListFeedback = () => {
         </Button>
       </div>
 
-      <p style={{ color: "black" }} className="bold">
+   {ListFeed.length > 0? <div>
+    <p style={{ color: "black" }} className="bold">
         Danh sách
       </p>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className="text-center">Tên công việc</TableCell>
-              <TableCell className="text-center">Số tiền đã chi</TableCell>
-              <TableCell className="text-center">Thời gian</TableCell>
-              {isSiteAdmin && (
-                <TableCell className="text-center">Hành động</TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {ListSend.slice(
-              page * rowsPerPage,
-              page * rowsPerPage + rowsPerPage
-            ).map((row) => (
-              <TableRow key={row.id}>
-                <TableCell className="text-center">{row.Description}</TableCell>
-                <TableCell className="text-center">{row.Money}</TableCell>
 
-                <TableCell className="text-center">
-                  {row.CreatedDate &&
-                    moment(row.CreatedDate).format("DD-MM-YYYY")}
-                </TableCell>
-                {isSiteAdmin && (
-                  <TableCell className="text-center">
-                    <Button
-                      onClick={() => {
-                        setCurrentItem(row);
-                      }}
-                      style={{
-                        marginRight: 10,
-                      }}
-                      variant="contained"
-                      color="success"
-                    >
-                      Sửa
-                    </Button>
-                    <Button
-                      onClick={() => handleDelete(row)}
-                      variant="contained"
-                      color="error"
-                    >
-                      Xóa
-                    </Button>
-                  </TableCell>
-                )}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        component="div"
-        count={ListSend.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-      />
-
+      <Grid  container spacing={2}>
+         {ListFeed.map(item => <Grid item xs={6}>
+           <FeedBackItem setCurr = {() => setCurrentItem(item)} refreshList={refreshList} {...item} />
+         </Grid>)}
+      </Grid>
+    </div>:<p>Danh sách trống</p>}
+      
       <CustomModal open={currentItem} onClose={onClose}>
-        <AddSpend setNewList={setNewList} item={currentItem} />
+        <FeedBackFund setNewList={async() =>{
+         await refreshList()
+          onClose()
+        }} item={currentItem} />
       </CustomModal>
     </div>
   );

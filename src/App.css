@@ -256,3 +256,8 @@ h1,h2,h3,h4,h5,p{
   padding:20px;
   
 }
+.card-bg{
+  background:#263544;
+  color:#fff;
+  border-radius: 5px;
+}

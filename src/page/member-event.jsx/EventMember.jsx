@@ -121,7 +121,8 @@ const EventMember = () => {
               >
                 <h4 className="bold">Danh sách các sự kiện cũ và sắp tới</h4>
                 {listEvent.map((item, index) => (
-                  <Card
+                  <div 
+                  className="card-bg"
                     onClick={() => {
                       setCurrentEvent(item);
                     }}
@@ -130,7 +131,7 @@ const EventMember = () => {
                       cursor: "pointer",
 
                       border:
-                        item.Id === currentEvent.Id ? "1px solid gray" : "",
+                        item.Id === currentEvent.Id ? "1px solid white" : "",
                       minHeight: 100,
                       padding: 10,
                     }}
@@ -151,7 +152,7 @@ const EventMember = () => {
                         src={item.Background}
                       />
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             </Grid>

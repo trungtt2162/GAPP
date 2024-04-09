@@ -88,7 +88,7 @@ const HistoryFamily = () => {
               <div className="content-card card-item">
                 <h4 className="bold">Các mốc sự kiện lịch sử</h4>
                 {listHistory.map((item, index) => (
-                  <Card className="item-history-wrap">
+                  <div style={{cursor:"pointer"}} onClick={() => setCurrent(item)} className="item-history-wrap card-bg">
                     <div className="item-history">
                       <p
                         className="display-3-line "
@@ -102,12 +102,8 @@ const HistoryFamily = () => {
                       <Avatar src={item.Image}  sx={{width:100,height:100}} ></Avatar>
                     
                     </div>
-                    <div style={{ textAlign: "start" }}>
-                      <Button onClick={() => setCurrent(item)} variant="contained" style={{}}>
-                        Xem chi tiết
-                      </Button>
-                    </div>
-                  </Card>
+                    
+                  </div>
                 ))}
               </div>
             </Grid>

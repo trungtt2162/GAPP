@@ -35,6 +35,7 @@ function AddEventForm({ item,updateItem }) {
   const classes = useStyles();
   const fileRef = useRef();
   const { userGenealogy } = useAuthStore();
+  
 
 const originData = {
   IdGenealogy: 0,
