@@ -12,7 +12,7 @@
 
         public Task StartAsync(CancellationToken stoppingToken)
         {
-            _timer = new Timer(DoWork!, null, TimeSpan.Zero, TimeSpan.FromMinutes(24 * 60));
+            _timer = new Timer(DoWork!, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
             return Task.CompletedTask;
         }
 
