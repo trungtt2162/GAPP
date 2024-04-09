@@ -18,10 +18,11 @@ import { genealogyApi } from "../../../../../api/genealogy.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { LIST_ROLE, USER_ROLE } from "../../../../../constant/common";
 
-function ListMember({ setValue = () => {} }) {
+function ListMember({list }) {
   const [listMember, setlistMember] = useState([]);
   const { userGenealogy, currentIdGenealogy, roleCode, user } = useAuthStore();
   const isSiteAdmin = roleCode === USER_ROLE.SiteAdmin;
+  const curremtList = list || listMember
 
   // get List member
   const getListMember = async () => {
@@ -38,7 +39,9 @@ function ListMember({ setValue = () => {} }) {
   };
 
   useEffect(() => {
-    getListMember();
+    if(!list){
+      getListMember();
+    }
   }, [currentIdGenealogy]);
 
   return (
@@ -62,7 +65,7 @@ function ListMember({ setValue = () => {} }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listMember.map((user, index) => (
+            {curremtList.map((user, index) => (
               <TableRow key={index}>
                 <TableCell>{user?.FirstName + " " + user?.LastName}</TableCell>
                 <TableCell>{user.DateOfBirth}</TableCell>

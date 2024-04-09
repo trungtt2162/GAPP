@@ -57,6 +57,7 @@ const originData = {
   OrganizationDate: "",
   Location: "",
   UserIDHost: 0,
+  IsPublic:false
 }
   const [formData, setFormData] = useState(
     {...item,OrganizationDate:moment(item?.OrganizationDate)?.format("YYYY-MM-DD")} || originData
@@ -183,6 +184,39 @@ const originData = {
                     value={1}
                     control={<Radio />}
                     label="Offline"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <div
+              style={{
+                width: "100%",
+              }}
+              className="flex-start"
+            >
+              <FormControl component="fieldset">
+                <FormLabel
+                  style={{
+                    textAlign: "start",
+                  }}
+                  component="legend"
+                >
+                  Bảo mật
+                </FormLabel>
+                <RadioGroup
+                  row
+                  value={formData.IsPublic}
+                  onChange={handleChangeData("IsPublic")}
+                >
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Private"
+                  />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="Public"
                   />
                 </RadioGroup>
               </FormControl>

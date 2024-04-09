@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Button, Card, Grid, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Card, Grid, TextField,Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
@@ -8,34 +8,51 @@ import PrimaryButton from "../../components/common/button/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import ButtonTab from "../../components/common/button/ButtonTab";
 import ListMember from "../family-tree/admin-family-tree/components/manage-member/ListMember";
+import { historyApi } from "../../api/history.api";
+import { handleError } from "../../ultils/helper";
+import useAuthStore from "../../zustand/authStore";
+import { genealogyApi } from "../../api/genealogy.api";
+const MODE_SEARCH ={
+  MEMBER:0,
+  EVENT:1
+}
 const HomeMemberLogin = () => {
   const { palette } = useTheme(theme);
   const navigate = useNavigate();
   const [value, setValue] = useState(1);
   const [txtSearch, setTxtSearch] = useState("");
+ const {currentIdGenealogy} = useAuthStore()
+  const [listHistory, setListHistory] = useState([]);
+  const [modeSearch,setModeSearch] = useState(MODE_SEARCH.MEMBER);
+  const [listSearch,setListSearch] = useState([]);
+  const getListHistory = async (id) => {
+    try {
+      const res = await historyApi.getListAllHistoryByGenealogyId(id);
+      if (res.data.StatusCode === 200) {
+        setListHistory(res.data.Data.Data || []);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  useEffect(() => {
+    getListHistory(currentIdGenealogy);
+  }, [currentIdGenealogy]);
 
-  const [listHistory, setListHistory] = useState([
-    {
-      content: "A va B cưới",
-      image:
-        "https://tonywedding.vn/wp-content/uploads/2022/09/z3734234968634_dd7394041c1d896cef94a62260f808e0.jpg",
-    },
-    {
-      content: "A va B cưới",
-      image:
-        "https://tonywedding.vn/wp-content/uploads/2022/09/z3734234968634_dd7394041c1d896cef94a62260f808e0.jpg",
-    },
-    {
-      content: "A va B cưới",
-      image:
-        "https://tonywedding.vn/wp-content/uploads/2022/09/z3734234968634_dd7394041c1d896cef94a62260f808e0.jpg",
-    },
-    {
-      content: "A va B cưới",
-      image:
-        "https://tonywedding.vn/wp-content/uploads/2022/09/z3734234968634_dd7394041c1d896cef94a62260f808e0.jpg",
-    },
-  ]);
+  const onSearch = async() => {
+    try {
+      const res = await genealogyApi.getListUserByEmailAndName(currentIdGenealogy,txtSearch);
+      if(res.data.StatusCode !== 200){
+        throw new Error("error")
+      }
+      if(modeSearch === MODE_SEARCH.MEMBER){
+        console.log(res.data.Data.Data)
+        setListSearch(res.data.Data.Data || [])
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
   return (
     <div>
       <Box
@@ -66,16 +83,16 @@ const HomeMemberLogin = () => {
               >
                 <div className="flex-center">
                   <ButtonTab
-                    index={1}
-                    value={value}
+                    index={0}
+                    value={modeSearch}
                     text={"Thành viên gia đình"}
-                    onClick={(e) => setValue(1)}
+                    onClick={(e) => setModeSearch(0)}
                   />
                   <ButtonTab
-                    index={2}
-                    value={value}
+                    index={1}
+                    value={modeSearch}
                     text={"Sự kiện"}
-                    onClick={(e) => setValue(2)}
+                    onClick={(e) => setModeSearch(1)}
                   />
                 </div>
                 <div className="flex-center" style={{
@@ -87,9 +104,9 @@ const HomeMemberLogin = () => {
                       value == 1 ? "Thành viên gia đình" : "Sự kiện"
                     }`}
                     value={txtSearch}
-                    //   onChange={handleChange}
+                      onChange={e => setTxtSearch(e.target.value)}
                   />
-                  <Button variant="contained" style={{width:200,marginLeft:20}}>
+                  <Button onClick={() => onSearch()} variant="contained" style={{width:200,marginLeft:20}}>
                   Tìm kiếm
                   </Button>
                  
@@ -100,16 +117,21 @@ const HomeMemberLogin = () => {
                 className="content-card card-item "
               >
                  <h4 className="bold">Kết quả tìm kiếm</h4>
-                 <ListMember />
+                {modeSearch === MODE_SEARCH.MEMBER ?  <ListMember list={listSearch} />:<>
+                </>}
               </div>
             </Grid>
             <Grid item xs={6}>
               <div className="content-card card-item">
                 <h4 className="bold">Lịch sử gia đình</h4>
                 {listHistory.map((item, index) => (
-                  <Card className="item-history">
-                    <p>{item.content}</p>
-                    <img src={item.image} />
+                  <Card style={{
+                    padding:10,
+                    marginBottom:20
+                  }} className="item-history">
+                    <p>{item.Description}</p>
+                    <Avatar src={item.Image}  sx={{width:100,height:100}} ></Avatar>
+
                   </Card>
                 ))}
                 <PrimaryButton

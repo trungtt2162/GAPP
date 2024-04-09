@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Card, Grid } from "@mui/material";
+import { Box, Button, Card, Grid,Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
@@ -99,7 +99,8 @@ const HistoryFamily = () => {
                       >
                         {item.Description}
                       </p>
-                      <img src={item.Image} />
+                      <Avatar src={item.Image}  sx={{width:100,height:100}} ></Avatar>
+                    
                     </div>
                     <div style={{ textAlign: "start" }}>
                       <Button onClick={() => setCurrent(item)} variant="contained" style={{}}>

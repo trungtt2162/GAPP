@@ -47,4 +47,14 @@ export const genealogyApi = {
   addNewMember:(data) => {
     return API.post("/api/UserGenealogy/newmember",data)
   }
+  ,
+  getListUserByEmailAndName: (id,txt) => {
+    return API.post("/api/UserGenealogy/paging", {
+      PageSize: -1,
+      PageNumber: -1,
+      Condition: `IdGenealogy=${id} and Inactive=false and ( FirstName LIKE '%${txt}%' OR LastName LIKE '%${txt}%')`,
+      SortOrder: "",
+      SearchKey: "",
+    });
+  },
 };
