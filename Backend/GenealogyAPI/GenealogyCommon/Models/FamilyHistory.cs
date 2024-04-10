@@ -26,6 +26,8 @@ namespace GenealogyCommon.Models
         public int IDFamilyHistory {get; set;}
 
         public int Type { get; set; }
-        
+
+        public string Title { get; set; }
+
     }
 }
