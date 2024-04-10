@@ -55,14 +55,14 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("")]
-        public async Task<ServiceResult> UpdateFeedback(FeedBackParam param)
+        public async Task<ServiceResult> UpdateFeedback(FeedBack param)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
             {
                 return serviceResult.OnBadRequest();
             }
-            await _feedBackBL.Update(_mapper.Map<FeedBack>(param));
+            await _feedBackBL.Update(param);
             return serviceResult.OnSuccess("Updated");
         }
     }
