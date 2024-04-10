@@ -42,7 +42,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpPut("")]
-        public async Task<ServiceResult> Upadte(Genealogy param)
+        public async Task<ServiceResult> Update(Genealogy param)
         {
             var serviceResult = new ServiceResult();
             var check = await _userBL.CheckPermissionSubSystem(SubSystem.Genealogy, PermissionCode.Update, param.Id);
