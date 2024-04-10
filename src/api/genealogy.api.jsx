@@ -41,14 +41,13 @@ export const genealogyApi = {
       SearchKey: "",
     });
   },
-  approveUser : (data) => {
-    return API.post("/api/UserGenealogy/approve",data)
+  approveUser: (data) => {
+    return API.post("/api/UserGenealogy/approve", data);
   },
-  addNewMember:(data) => {
-    return API.post("/api/UserGenealogy/newmember",data)
-  }
-  ,
-  getListUserByEmailAndName: (id,txt) => {
+  addNewMember: (data) => {
+    return API.post("/api/UserGenealogy/newmember", data);
+  },
+  getListUserByEmailAndName: (id, txt) => {
     return API.post("/api/UserGenealogy/paging", {
       PageSize: -1,
       PageNumber: -1,
@@ -56,5 +55,20 @@ export const genealogyApi = {
       SortOrder: "",
       SearchKey: "",
     });
+  },
+  changeRoleUser: (body) => {
+    return API.post("/api/User/decentralization", body);
+  },
+  getCurrentGene: (id) => {
+    return API.post("/api/Genealogy/paging", {
+      PageSize: 0,
+      PageNumber: -1,
+      Condition: "Id="+id,
+      SortOrder: "",
+      SearchKey: "",
+    });
+  },
+  updateCurrentGene:(data) => {
+    return API.put("/api/Genealogy", data);
   },
 };

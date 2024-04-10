@@ -148,25 +148,24 @@ const HomeMemberLogin = () => {
             <Grid item xs={6}>
               <div className="content-card card-item">
                 <h4 className="bold">Lịch sử gia đình</h4>
-                {listHistory.map((item, index) => (
-                  <Card
+               
+                <div style={{textAlign:"start",color:"black",marginBttom:15,cursor:"pointer"}} onClick={() => navigate("/history")}>Xem thêm</div>
+                {listHistory?.slice(0,4).map((item, index) => (
+                  <div
                     style={{
                       padding: 10,
                       marginBottom: 20,
                     }}
-                    className="item-history"
+                    className="item-history card-bg"
                   >
                     <p>{item.Description}</p>
                     <Avatar
                       src={item.Image}
                       sx={{ width: 100, height: 100 }}
                     ></Avatar>
-                  </Card>
+                  </div>
                 ))}
-                <PrimaryButton
-                  event={() => navigate("/history")}
-                  title={"Xem thêm"}
-                />
+               
               </div>
             </Grid>
           </Grid>

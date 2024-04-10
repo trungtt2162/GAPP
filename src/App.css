@@ -258,6 +258,8 @@ h1,h2,h3,h4,h5,p{
 }
 .card-bg{
   background:#263544;
+  background: linear-gradient(45deg, #54616d 0%,#263544 100%);
+
   color:#fff;
   border-radius: 5px;
 }

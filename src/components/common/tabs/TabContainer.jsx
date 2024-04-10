@@ -5,18 +5,19 @@ import React, { useState } from "react";
 import TabPenal from "../../../components/common/tabs/TabPenal";
 import TabSidebar from "../../../components/common/tabs/TabSidebar";
 import { theme } from "../../../theme";
-const TabContainer = ({listSideBar}) => {
+const TabContainer = ({ listSideBar }) => {
   const { palette } = useTheme(theme);
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(
+    Math.min(...listSideBar.map((i) => i.key))
+  );
   return (
     <div>
       <Box
         width="100%"
-       
         sx={{
           backgroundColor: "white",
           p: "2.5rem",
-          color:"black"
+          color: "black",
         }}
       ></Box>
       <div className="how-work">
@@ -29,28 +30,34 @@ const TabContainer = ({listSideBar}) => {
             // p: "15px 40px",
           }}
         >
-          <Grid container >
+          <Grid container>
             <Grid item xs={12} md={2}>
-            <TabSidebar value={value} event={setValue} listSideBar={listSideBar} />
+              <TabSidebar
+                value={value}
+                event={setValue}
+                listSideBar={listSideBar}
+              />
             </Grid>
-            <Grid  item xs={12} md={10}>
-               <div className="shadown bg-default" style={{
-                height:"calc(100vh - 80px)",
+            <Grid item xs={12} md={10}>
+              <div
+                className="shadown bg-default"
+                style={{
+                  height: "calc(100vh - 80px)",
 
-                overflow:"auto",
-                padding:40,
-                paddingBottom:30,
-                // background:"#f2f7fb"
-               }}>
-               {listSideBar.map(i => (
-                       <TabPenal value={value} index={i.key}>
-                      <div className="card-item">
+                  overflow: "auto",
+                  padding: 40,
+                  paddingBottom: 30,
+                  // background:"#f2f7fb"
+                }}
+              >
+                {listSideBar.map((i) => (
+                  <TabPenal value={value} index={i.key}>
+                    <div className="card-item">
                       <i.component />
-                      </div>
-                     </TabPenal>
+                    </div>
+                  </TabPenal>
                 ))}
-               </div>
-            
+              </div>
             </Grid>
           </Grid>
         </Box>

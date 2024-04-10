@@ -4,6 +4,7 @@ import { LOCAL_STORAGE_KEY } from "../constant/common";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./../firebase";
 import { v4 } from "uuid";
+import moment from "moment";
  export function uploafFileBase64(event, setValue) {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -106,4 +107,7 @@ export async function uploadImageToFirebase(file) {
     return null;
   }
 }
+
+// 
+export const dateFormat = (date) =>  date ? moment(date).format("DD-MM-YYYY"):"";
 

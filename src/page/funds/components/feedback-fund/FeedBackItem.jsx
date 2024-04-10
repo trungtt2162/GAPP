@@ -41,15 +41,16 @@ const FeedBackItem = ({
     }
   };
   return (
-    <Card
+    <div
       style={{
         width: "100%",
         minHeight: 150,
         padding: 10,
-        background: "#263544",
+       
         color: "#fff",
         position: "relative",
       }}
+      className="card-bg"
     >
       <div
         style={{
@@ -105,7 +106,7 @@ const FeedBackItem = ({
           />
         </div>
       )}
-    </Card>
+    </div>
   );
 };
 

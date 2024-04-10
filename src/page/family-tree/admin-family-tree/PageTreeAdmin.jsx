@@ -8,6 +8,7 @@ import ManageHistory from "./components/manage-history/ManageHistory";
 import FamilyTree from "./components/family-tree/FamilyTree";
 import useAuthStore from "../../../zustand/authStore";
 import { USER_ROLE } from "../../../constant/common";
+import SettingGene from "./components/settting-gene/SettingGene";
 const PageTreeAdmin = () => {
   const { isLogin, roleCode } = useAuthStore();
 
@@ -18,6 +19,12 @@ const PageTreeAdmin = () => {
   const isMember = isUser || isSiteAdmin || isPeopleAdmin;
 
   const listSideBar = [
+    {
+      key: 0,
+      name: "Cài đặt gia phả",
+      component:SettingGene,
+      show:isSiteAdmin
+    },
     {
       key: 1,
       name: "Cây gia phả",
