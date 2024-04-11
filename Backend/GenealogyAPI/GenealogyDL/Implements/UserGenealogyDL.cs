@@ -18,7 +18,6 @@ namespace GenealogyDL.Implements
     {
         public UserGenealogyDL(IDBContextFactory dbContextFactory, IWebHostEnvironment env, IAuthService authService) : base(dbContextFactory, env, authService)
         {
-            this._customView = "view_usergenealogy_role";
         }
 
         public async Task<bool> CheckUserExistInTree(int userId, int idGenealogy)
@@ -60,7 +59,7 @@ namespace GenealogyDL.Implements
 
         public async Task<IEnumerable<UserGenealogy>> GetAll(object idGenealogy)
         {
-            string sql = $"SELECT * FROM {_tableName} WHERE  IdGenealogy = @IdGenealogy and IdFamilyTree is not null;";
+            string sql = $"SELECT * FROM {_tableName} WHERE  IdGenealogy = @IdGenealogy and IdFamilyTree is not null and (InActive = false or InActive is null);";
             var param = new Dictionary<string, object>()
             {
                 ["@IdGenealogy"] = idGenealogy
@@ -109,6 +108,19 @@ namespace GenealogyDL.Implements
             };
             var users = await this.Query<UserGenealogy>(sql, param, commandType: System.Data.CommandType.Text);
             return users?.FirstOrDefault();
+        }
+
+        public async Task<bool> DeleteById(object id, object idGenealogy)
+        {
+
+            var param = new Dictionary<string, object>()
+            {
+                ["p_Id"] = id,
+                ["p_IDGenealogy"] = idGenealogy
+            };
+            var proc = "Proc_user_genealogy_Delete";
+            await this.QueryFirstOrDefaultAsync<int>(proc, param);
+            return true;
         }
 
 

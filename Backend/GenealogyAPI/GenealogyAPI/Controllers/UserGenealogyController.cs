@@ -119,6 +119,23 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Approved");
         }
 
+        [HttpGet("member-request")]
+        public async Task<ServiceResult> GetMemeberRequest([FromQuery]int idGenealogy)
+        {
+            
+            PageRequest paggingRequest = new PageRequest()
+            {
+                PageNumber = -1,
+                PageSize = -1,
+                SearchKey = "",
+                SortOrder = "",
+                Condition = $" IdGenealogy = {idGenealogy} and InActive = true "
+            };
+            var serviceResult = new ServiceResult();
+            serviceResult.Data = await _userGenealogyBL.GetPagingData(paggingRequest);
+            return serviceResult;
+         }
+
         [HttpPost("newmember")]
         public async Task<ServiceResult> AddNewMember(UserGenealogy userGenealogyParam)
         {
