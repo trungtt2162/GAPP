@@ -102,6 +102,23 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Approved");
         }
 
+        [HttpPut("")]
+        public async Task<ServiceResult> UpdateGenealogy(UserGenealogy userGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest("Invalid Param");
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Update, userGenealogy.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
+            await _userGenealogyBL.Update(userGenealogy);
+            return serviceResult.OnSuccess("Approved");
+        }
+
         [HttpPost("newmember")]
         public async Task<ServiceResult> AddNewMember(UserGenealogy userGenealogyParam)
         {
