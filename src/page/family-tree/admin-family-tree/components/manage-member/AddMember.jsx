@@ -41,7 +41,7 @@ function AddMemberForm({ item, refreshData }) {
     HomeTown: "",
     InActive: false,
     IsBlock: false,
-    TypeRole: "string",
+    TypeRole: 0,
     IdFamilyTree: "",
     IdGenealogy: "",
     UserId: 0,
@@ -74,6 +74,13 @@ function AddMemberForm({ item, refreshData }) {
   // Add
   const onAdd = async () => {
     try {
+      const itemTree = listFamilyTree.find(i => i.Id == memberData.IdFamilyTree);
+      if(itemTree){
+        if(itemTree?.Users?.length >=2){
+          toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
+          return;
+        }
+      }
       const res = !item
         ? await genealogyApi.addNewMember({
             ...memberData,
@@ -82,6 +89,7 @@ function AddMemberForm({ item, refreshData }) {
         : await genealogyApi.updateCurrentGene({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
+            Name:"sss"
           });
       if (res.data.StatusCode === 200) {
         if(!item){
@@ -92,6 +100,7 @@ function AddMemberForm({ item, refreshData }) {
           await refreshData();
           toast.success("Sửa thành công");
         }
+        getListFamilyTree()
       }
     } catch (error) {
       handleError(error);

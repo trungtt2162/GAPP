@@ -78,16 +78,17 @@ function ListMemberPending() {
           return;
         }
       }
-      // const res = await genealogyApi.approveUser({
-      //   UserID: user.UserId,
-      //   IdFamilyTree: user.IdFamilyTree,
-      //   IdGenealogy: currentIdGenealogy,
-      // });
-      // if (res.data.StatusCode === 200) {
-      //   await getListUserPending();
-      //   onClose();
-      //   toast.success("Đã xác nhận");
-      // }
+      const res = await genealogyApi.approveUser({
+        UserID: currentUser.UserId,
+        IdFamilyTree: idTree,
+        IdGenealogy: currentIdGenealogy,
+      });
+      if (res.data.StatusCode === 200) {
+        await getListUserPending();
+        onClose();
+        toast.success("Đã xác nhận");
+        getListFamilyTree()
+      }
     } catch (error) {
       handleError(error);
     }

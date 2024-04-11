@@ -100,7 +100,6 @@ const orgChartJson = {
 };
 
 const useCenteredTree = (defaultTranslate = { x: 0, y: 0 }) => {
-
   const [translate, setTranslate] = useState(defaultTranslate);
   const [dimensions, setDimensions] = useState();
   const containerRef = useCallback((containerElem) => {
@@ -120,13 +119,8 @@ const containerStyles = {
 
 const renderRectSvgNode = ({ nodeDatum, toggleNode }) => (
   <g>
-    <foreignObject
-      width="200"
-      height="300"
-      x="-30"
-      y="-40"
-    >
-      <div style={{position:"relative"}}>
+    <foreignObject width="200" height="300" x="-30" y="-40">
+      <div style={{ position: "relative" }}>
         {nodeDatum.attributes?.img && (
           <img
             style={{
@@ -134,40 +128,53 @@ const renderRectSvgNode = ({ nodeDatum, toggleNode }) => (
               height: 40,
               borderRadius: 20,
               border: "2px solid gray",
-              marginLeft:-140
+              marginLeft: -140,
             }}
             src={nodeDatum.attributes?.img}
           />
         )}
-        <div style={{
-          position:"absolute",
-          top:-5,
-          right:110
-        }}>
-        <div>Abc</div>
-        <div>Abc</div>
+        <div
+          style={{
+            position: "absolute",
+            top: -5,
+            right: 110,
+          }}
+        >
+          <div>Abc</div>
+          <div>Abc</div>
         </div>
       </div>
     </foreignObject>
   </g>
-  
 );
 
-export default function Tree1({isGuest}) {
-  
+export default function Tree1({ isGuest }) {
   const [dimensions, translate, containerRef] = useCenteredTree();
-  const {currentIdGenealogy} = useAuthStore()
-  
-// DOWNLOAD
-const handleDownloadExcel  =async() => {
-  try {
-    const res = await genealogyApi.exportExcel(currentIdGenealogy)
-  } catch (error) {
-    handleError(error)
-  }
-}
+  const { currentIdGenealogy } = useAuthStore();
+
+  // DOWNLOAD
+  const handleDownloadExcel = async () => {
+    try {
+      const res = await genealogyApi.exportExcel(currentIdGenealogy);
+      console.log(res);
+      if (res.data.StatusCode === 200) {
+        const fileName = res.data.Data;
+        const fileRes = await genealogyApi.downloadExcel(fileName);
+        const blob = fileRes.data;
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName); 
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
   return (
-    <div style={{...containerStyles}} ref={containerRef}>
+    <div style={{ ...containerStyles }} ref={containerRef}>
       <Tree
         data={orgChartJson}
         dimensions={dimensions}
@@ -176,28 +183,46 @@ const handleDownloadExcel  =async() => {
         orientation="vertical"
         pathFunc={"step"}
       />
-      <div style={{
-        position:"fixed",
-        height:"50px",
-        width:"calc(100vw  - 320px)",
-        marginLeft:320,
-        right:0,
-        bottom:50,
-        
-        display:"flex",
-        justifyContent:"flex-end",
-        alignItems:"center",
-        marginRight:20,
-        // borderTop:"1px solid lightgray"
+      <div
+        style={{
+          position: "fixed",
+          height: "50px",
+          width: "calc(100vw  - 320px)",
+          marginLeft: 320,
+          right: 0,
+          bottom: 50,
 
-      }}>
-     {!isGuest &&   <div style={{
-        marginTop:20
-       }}> <PrimaryButton title={"Export PNG "} /></div>}
-      {!isGuest &&  <div  style={{
-        marginTop:20,
-        marginLeft:15
-       }}> <PrimaryButton event={() => handleDownloadExcel()}  title={"Export EXCEL "} /></div>}
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginRight: 20,
+          // borderTop:"1px solid lightgray"
+        }}
+      >
+        {!isGuest && (
+          <div
+            style={{
+              marginTop: 20,
+            }}
+          >
+            {" "}
+            <PrimaryButton title={"Export PNG "} />
+          </div>
+        )}
+        {!isGuest && (
+          <div
+            style={{
+              marginTop: 20,
+              marginLeft: 15,
+            }}
+          >
+            {" "}
+            <PrimaryButton
+              event={() => handleDownloadExcel()}
+              title={"Export EXCEL "}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

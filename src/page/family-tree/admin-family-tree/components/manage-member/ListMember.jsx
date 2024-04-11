@@ -117,7 +117,7 @@ function ListMember({ list,action=true }) {
                 <TableCell>{user?.FirstName + " " + user?.LastName}</TableCell>
                 <TableCell>{dateFormat(user.DateOfBirth)}</TableCell>
                 <TableCell>{user.Email}</TableCell>
-                <TableCell>{user.Gender === 0 ? "Nam" : "Nữ"}</TableCell>
+                <TableCell >{user.Gender === 0 ? "Nam" : "Nữ"}</TableCell>
                 {(isSiteAdmin && user.RoleCode !== USER_ROLE.SiteAdmin && action) ? (
                   <>
                     <FormControl
@@ -125,7 +125,7 @@ function ListMember({ list,action=true }) {
                         marginTop: 10,
                         marginBottom: 10,
                         marginRight: 10,
-                        width: 140,
+                        width: 120,
                       }}
                     >
                       <InputLabel id="demo-simple-select-label">
@@ -134,6 +134,7 @@ function ListMember({ list,action=true }) {
                       <Select
                         style={{
                           padding: 0,
+                          height:40
                         }}
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
@@ -143,7 +144,7 @@ function ListMember({ list,action=true }) {
                       >
                         {LIST_ROLE.map((item) => (
                           <MenuItem value={item.RoleCode}>
-                            {item.RoleCode}
+                            {item.RoleCode === "Account" ? "User":item.RoleCode}
                           </MenuItem>
                         ))}
                       </Select>

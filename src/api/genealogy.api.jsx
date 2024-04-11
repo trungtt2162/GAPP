@@ -51,7 +51,7 @@ export const genealogyApi = {
     return API.post("/api/User/register?idGenealogy=" + id);
   },
   getListUserRequest: (id) => {
-    return API.post("/api/UserGenealogy/paging", {
+    return API.get("/api/UserGenealogy/member-request?idGenealogy="+id, {
       PageSize: 0,
       PageNumber: -1,
       Condition: `IdGenealogy = ${id} and InActive = true`,
@@ -87,7 +87,7 @@ export const genealogyApi = {
     });
   },
   updateCurrentGene:(data) => {
-    return API.put("/api/Genealogy", data);
+    return API.put("/api/UserGenealogy", data);
   },
   deleteUserGene:(idgene,iduser) => {
   return API.delete(`/api/UserGenealogy?id=${iduser}&idGenealogy=${idgene}`)
@@ -96,7 +96,10 @@ export const genealogyApi = {
     return API.put("/api/User", data);
   },
   exportExcel:(id) => {
-    return API.get("/api/FamilyTree/export?dGenealogy="+id,{
+    return API.get("/api/FamilyTree/export?dGenealogy="+id)
+  },
+  downloadExcel:(fileName) => {
+    return API.get("/api/Download?fileName="+fileName,{
       responseType:"blob"
     })
   }
