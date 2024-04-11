@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card, Grid } from "@mui/material";
+import { Box, Card, Grid,TextField,Button } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
 import "./../history-family/History.scss";
-import { handleError } from "../../ultils/helper";
+import { dateFormat, handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { eventApi } from "../../api/event.api";
 const EventMember = () => {
   const { palette } = useTheme(theme);
   const { currentIdGenealogy } = useAuthStore();
-
+  const [startDate,setStartDate] = useState("");
+  const [endDate,setEndDate]  = useState("")
   const [listEvent, setListEvent] = useState([]);
   const [currentEvent, setCurrentEvent] = useState(null);
   const getListEvent = async (id) => {
     try {
-      const res = await eventApi.getListEventAdmin(id);
+      let query = "";
+      if(startDate ){
+        query += ` and OrganizationDate>='${startDate}' `
+      }
+      if(endDate){
+        query += ` and OrganizationDate<='${endDate}' `
+      }
+      const res = await eventApi.getListEventAdmin(id,query);
       if (res.data.StatusCode === 200) {
         setListEvent(res.data.Data.Data);
         if (res.data.Data.Data.length > 0) {
@@ -120,6 +128,40 @@ const EventMember = () => {
                 className="content-card card-item"
               >
                 <h4 className="bold">Danh sách các sự kiện cũ và sắp tới</h4>
+                <Grid style={{marginTop:20}} container spacing={2} alignItems="center">
+                  <Grid item>
+                    <TextField
+                      sx={{ "& input": { height: "12px" } }}
+                      type="date"
+                      label="Từ ngày"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      sx={{ "& input": { height: "12px" } }}
+                      type="date"
+                      label="Đến ngày"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button onClick={() => getListEvent(currentIdGenealogy)} variant="contained" color="primary">
+                      Lọc
+                    </Button>
+                  </Grid>
+                  <Grid item flex={1}>
+                    <div style={{textAlign:"end"}}>Có {listEvent.length} sự kiện</div>
+                  </Grid>
+                </Grid>
                 {listEvent.map((item, index) => (
                   <div 
                   className="card-bg"
@@ -142,7 +184,13 @@ const EventMember = () => {
                       }}
                       className="item-history"
                     >
-                      <p>{item.Name}</p>
+                      <div style={{textAlign:"start"}}>
+                      <div style={{
+                        fontSize:20,
+                        fontWeight:"bold"
+                      }}>{item.Name}</div>
+                      <div>{dateFormat(item.OrganizationDate)}</div>
+                      </div>
                       <img
                         style={{
                           width: 70,

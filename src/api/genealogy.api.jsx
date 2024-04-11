@@ -5,7 +5,7 @@ export const genealogyApi = {
     return API.post("/api/UserGenealogy/paging", {
       PageSize: -1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and Inactive=false`,
+      Condition: `IdGenealogy=${id} and (Inactive=false or Inactive is null)`,
       SortOrder: "",
       SearchKey: "",
     });
@@ -23,7 +23,25 @@ export const genealogyApi = {
     return API.post("/api/Genealogy/guest/paging", {
       PageSize: 0,
       PageNumber: -1,
-      Condition: "isPublic = true",
+      Condition: "IsPublic = true",
+      SortOrder: "",
+      SearchKey: "",
+    });
+  },
+  getListGegePublicByName: (name) => {
+    return API.post("/api/Genealogy/guest/paging", {
+      PageSize: 0,
+      PageNumber: -1,
+      Condition: `IsPublic = true and Name like '%${name}%'`,
+      SortOrder: "",
+      SearchKey: "",
+    });
+  },
+  getListGegePublicById: (id) => {
+    return API.post("/api/Genealogy/guest/paging", {
+      PageSize: 0,
+      PageNumber: -1,
+      Condition: `IsPublic = true and Id like '%${id}%'`,
       SortOrder: "",
       SearchKey: "",
     });
@@ -71,4 +89,15 @@ export const genealogyApi = {
   updateCurrentGene:(data) => {
     return API.put("/api/Genealogy", data);
   },
+  deleteUserGene:(idgene,iduser) => {
+  return API.delete(`/api/UserGenealogy?id=${iduser}&idGenealogy=${idgene}`)
+  },
+  updateUsergene:(data) => {
+    return API.put("/api/User", data);
+  },
+  exportExcel:(id) => {
+    return API.get("/api/FamilyTree/export?dGenealogy="+id,{
+      responseType:"blob"
+    })
+  }
 };

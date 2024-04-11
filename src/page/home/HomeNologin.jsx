@@ -10,12 +10,12 @@ import {
 } from "@mui/material";
 import Hero from "../../components/Page/ui/Hero";
 import { theme } from "../../theme";
-import React from "react"
+import React from "react";
 import PriceForm from "../../components/Page/ui/PriceForm";
 // import Reviews from "./ui/Reviews";
 import PrimaryButton from "../../components/common/button/PrimaryButton";
 import HomeMemberLogin from "./HomeMemberLogin";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ButtonTab from "../../components/common/button/ButtonTab";
 import ListMember from "../family-tree/admin-family-tree/components/manage-member/ListMember";
@@ -29,6 +29,8 @@ import {
   Paper,
   TablePagination,
 } from "@mui/material";
+import { genealogyApi } from "../../api/genealogy.api";
+import { handleError } from "../../ultils/helper";
 //import MobileReviews from "./Navbar/MobileReviews";
 
 const HomeNoLogin = () => {
@@ -38,7 +40,7 @@ const HomeNoLogin = () => {
   const [value, setValue] = useState(1);
   const [txtSearch, setTxtSearch] = useState("");
   const [page, setPage] = React.useState(0);
-
+  const [listSearch, setListSearch] = useState([]);
   // Dữ liệu mẫu
   const rows = [
     {
@@ -97,6 +99,19 @@ const HomeNoLogin = () => {
   // Hàm xử lý thay đổi trang
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+  const handleSearch = async () => {
+    try {
+      const res =
+        value == 1
+          ? await genealogyApi.getListGegePublicByName(txtSearch)
+          : await genealogyApi.getListGegePublicById(txtSearch);
+          if(res.data.StatusCode === 200){
+            setListSearch(res.data.Data.Data || [])
+          }
+    } catch (error) {
+      handleError(error);
+    }
   };
   return (
     <div className="home">
@@ -168,9 +183,12 @@ const HomeNoLogin = () => {
                               value == 1 ? "Tìm theo tên" : "Tìm theo mã"
                             }`}
                             value={txtSearch}
-                            //   onChange={handleChange}
+                            onChange={(e) => setTxtSearch(e.target.value)}
                           />
                           <Button
+                            onClick={() => {
+                              handleSearch();
+                            }}
                             variant="contained"
                             style={{ width: 200, marginLeft: 20 }}
                           >
@@ -188,35 +206,40 @@ const HomeNoLogin = () => {
                         <Table>
                           <TableHead>
                             <TableRow>
-                            <TableCell className="text-center">Mã</TableCell>
-                              <TableCell className="text-center">Tên Admin</TableCell>
+                              <TableCell className="text-center">Mã</TableCell>
+                              <TableCell className="text-center">Tên gia phả</TableCell>
+                              <TableCell className="text-center">
+                                 Admin
+                              </TableCell>
                               <TableCell className="text-center">
                                 Link gia phả
                               </TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {rows
+                            {listSearch
                               .slice(
                                 page * rowsPerPage,
                                 page * rowsPerPage + rowsPerPage
                               )
                               .map((row) => (
-                                <TableRow key={row.id}>
-                                     <TableCell className="text-center">
-                                    001
+                                <TableRow key={row.Id}>
+                                  <TableCell className="text-center">
+                                    {row.Id}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    {row.name}
+                                    {row.Name}
                                   </TableCell>
                                   <TableCell className="text-center">
-                                    <a
-                                      href={row.familyTreeLink}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
+                                    {row.ModifiedBy}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    <Link
+                                      to={`tree/${row.Id}`}
+                                      
                                     >
                                       Xem gia phả
-                                    </a>
+                                    </Link>
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -230,7 +253,6 @@ const HomeNoLogin = () => {
                         page={page}
                         onPageChange={handleChangePage}
                       />
-                    
                     </div>
                   </Grid>
                 </Grid>

@@ -14,7 +14,16 @@ function ListEvent({list,action = true}) {
    const geId = userGenealogy[0]?.IdGenealogy
    const [currentEvent,setCurrentEvent] = useState(null);
    const currentList = list || listEvent
+   const [startDate,setStartDate] = useState("");
+   const [endDate,setEndDate]  = useState("")
    const getListEvent = async(id) => {
+    let query = "";
+    if(startDate ){
+      query += ` and Date>=${startDate} `
+    }
+    if(endDate){
+      query += ` and Date<=${endDate} `
+    }
     try {
            const res = await eventApi.getListEventAdmin(id);
            if(res.data.StatusCode === 200){

@@ -8,11 +8,11 @@ export const eventApi = {
     return API.put("/api/FamilyAddress", data);
   },
 
-  getListEventAdmin: (id) => {
+  getListEventAdmin: (id,query) => {
     return API.post("/api/Event/paging", {
       PageSize: 1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and Inactive=false `,
+      Condition: `IdGenealogy=${id} and Inactive=false ` + (query ? query :""),
       SortOrder: "",
       SearchKey: "",
     });

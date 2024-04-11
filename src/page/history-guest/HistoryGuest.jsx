@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card } from "@mui/material";
+import { Box, Card,TextField,Button } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import "./../history-family/History.scss";
 import { eventApi } from "../../api/event.api";
 import { theme } from "../../theme";
-import { handleError } from "../../ultils/helper";
+import { dateFormat, handleError } from "../../ultils/helper";
 import Navbar from "../../components/layout/Navbar";
 import {
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-  Button,
   Grid,
+  Avatar,
 } from "@mui/material";
 import { genealogyApi } from "../../api/genealogy.api";
 import { historyApi } from "../../api/history.api";
 import CustomModal from "../../components/common/modal/CustomModal";
 const HistoryGuest = () => {
-    const [curent, setCurrent] = useState(null);
-
-    const [id, setId] = useState("");
-    console.log(id)
-    const [des, setDes] = useState("");
+  const [curent, setCurrent] = useState(null);
+  const [startDate,setStartDate] = useState("");
+  const [endDate,setEndDate]  = useState("")
+  const [id, setId] = useState("");
+  const [des, setDes] = useState("");
   const [listEvent, setListEvent] = useState([]);
   const [currentEvent, setCurrentEvent] = useState(null);
   const [listGene, setListGene] = useState([]);
@@ -34,7 +34,7 @@ const HistoryGuest = () => {
     );
     return modifiedValue;
   };
- 
+
   const getListEvent = async () => {
     try {
       const res = await eventApi.getListEventGuest(id);
@@ -75,8 +75,15 @@ const HistoryGuest = () => {
     }
   };
   const getListHistory = async () => {
+    let query = "";
+    if(startDate ){
+      query += ` and Date>='${startDate}' `
+    }
+    if(endDate){
+      query += ` and Date<='${endDate}' `
+    }
     try {
-      const res = await historyApi.getListHistoryGuest(id);
+      const res = await historyApi.getListHistoryGuest(id,query);
       if (res.data.StatusCode === 200) {
         setListHistory(res.data.Data.Data || []);
       }
@@ -128,7 +135,7 @@ const HistoryGuest = () => {
                     labelId="select-label"
                     id="select"
                     value={id}
-                    onChange={e => setId(e.target.value)}
+                    onChange={(e) => setId(e.target.value)}
                     label="Gia phả"
                   >
                     {listGene.map((i) => (
@@ -136,83 +143,158 @@ const HistoryGuest = () => {
                     ))}
                   </Select>
                 </FormControl>
-                <Button variant="contained" onClick={async () =>{
-                    if(id){
-                        await getDes()
-                        await  getListHistory()
+                <Button
+                  variant="contained"
+                  onClick={async () => {
+                    if (id) {
+                      await getDes();
+                      await getListHistory();
                     }
-                }}>
+                  }}
+                >
                   Tìm kiếm
                 </Button>
               </div>
             </Grid>
             <Grid item xs={6}>
               <div className="content-card card-item">
-              <Grid item xs={6}>
-              <div className="content-card card-item">
-            <h4 style={{
-                textAlign:"center"
-             }} className="bold">Giới thiệu lịch sử</h4>
-                <p style={{ textAlign: "start" }}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: modifyInitialValue(des),
-                    }}
-                  />
-                </p>
-              </div>
-            </Grid>
+                <Grid item xs={6}>
+                  <div className="content-card card-item">
+                    <h4
+                      style={{
+                        textAlign: "center",
+                      }}
+                      className="bold"
+                    >
+                      Giới thiệu lịch sử
+                    </h4>
+                    <p style={{ textAlign: "start" }}>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: modifyInitialValue(des),
+                        }}
+                      />
+                    </p>
+                  </div>
+                </Grid>
               </div>
             </Grid>
             <Grid item xs={6}>
               <div className="content-card card-item">
                 <h4 className="bold">Các mốc sự kiện lịch sử</h4>
+                <Grid style={{marginTop:20}} container spacing={2} alignItems="center">
+                  <Grid item>
+                    <TextField
+                      sx={{ "& input": { height: "12px" } }}
+                      type="date"
+                      label="Từ ngày"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      sx={{ "& input": { height: "12px" } }}
+                      type="date"
+                      label="Đến ngày"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button onClick={() => getListHistory()} variant="contained" color="primary">
+                      Lọc
+                    </Button>
+                  </Grid>
+                  <Grid item flex={1}>
+                    <div style={{textAlign:"end"}}>Có {listHistory.length} sự kiện</div>
+                  </Grid>
+                </Grid>
                 {listHistory?.map((item, index) => (
-                  <Card className="item-history-wrap">
+                  <div
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setCurrent(item)}
+                    className="item-history-wrap card-bg"
+                  >
                     <div className="item-history">
-                      <p
-                        className="display-3-line "
-                        style={{
-                          width: "calc(100% - 80px)",
-                          textAlign: "start",
-                        }}
-                      >
-                        {item.Description}
-                      </p>
-                      <img src={item.Image} />
+                      <div style={{ width: "100%" }}>
+                        <div
+                          className="display-3-line "
+                          style={{
+                            width: "calc(100% - 80px)",
+                            textAlign: "start",
+                            fontSize: 20,
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {item.Title}
+                        </div>
+                        <div
+                          className="display-3-line "
+                          style={{
+                            textAlign: "start",
+                          }}
+                        >
+                          {dateFormat(item.Date)}
+                        </div>
+                      </div>
+                      <Avatar
+                        src={item.Image}
+                        sx={{ width: 100, height: 100 }}
+                      ></Avatar>
                     </div>
-                    <div style={{ textAlign: "start" }}>
-                      <Button onClick={() => setCurrent(item)} variant="contained" style={{}}>
-                        Xem chi tiết
-                      </Button>
-                    </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             </Grid>
           </Grid>
         </Box>
       </div>
-      <CustomModal minHeight={600} open={curent} onClose={() => setCurrent(null)}>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <img
-              src={curent?.Image}
-              style={{
-                width: "100%",
-                height: "auto",
-              }}
-            />
-          </Grid>
-          <Grid item xs={8}>
-            <p
+      <CustomModal
+        minHeight={600}
+        open={curent}
+        onClose={() => setCurrent(null)}
+      >
+        <Grid container spacing={2}></Grid>
+        <Grid item xs={24}>
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: 24,
+              fontWeight: "bold",
+            }}
+          >
+            {curent?.Title}
+          </div>
+          <div>
+            <span className="bold">Ngày diễn ra : </span>
+            <span>{dateFormat(curent?.Date)}</span>
+          </div>
+          <div>
+            <span className="bold">Nội dung: </span>
+            <span
               style={{
                 textAlign: "start",
               }}
             >
               {curent?.Description}
-            </p>
-          </Grid>
+            </span>{" "}
+          </div>
+        </Grid>
+        <Grid item xs={24}>
+          <img
+            src={curent?.Image}
+            style={{
+              width: "100%",
+              height: "auto",
+            }}
+          />
         </Grid>
       </CustomModal>
     </div>

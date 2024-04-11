@@ -23,7 +23,10 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import AddImage from "../../../../../components/common/addImage/AddImage";
-import { handleError, uploadImageToFirebase } from "../../../../../ultils/helper";
+import {
+  handleError,
+  uploadImageToFirebase,
+} from "../../../../../ultils/helper";
 import { historyApi } from "../../../../../api/history.api";
 import { toast } from "react-toastify";
 import useAuthStore from "../../../../../zustand/authStore";
@@ -51,17 +54,17 @@ function AddHistory({ item, updateItem }) {
       Image: "",
       Description: "",
       Id: 0,
-      Date: "2024-04-04T15:12:22.832Z",
+      Date: "",
       IdFamilyHistory: 0,
       Type: 0,
+      Title: "",
     }
   );
 
-  const handleChangeFile = async(event) => {
+  const handleChangeFile = async (event) => {
     const file = event.target.files[0];
     const url = await uploadImageToFirebase(file);
     setFormData({ ...formData, Image: url });
-   
   };
 
   const handleAdd = async () => {
@@ -78,9 +81,10 @@ function AddHistory({ item, updateItem }) {
             Image: "",
             Description: "",
             Id: 0,
-            Date: "2024-04-04T15:12:22.832Z",
+            Date: "",
             IdFamilyHistory: 0,
             Type: 0,
+            Title: "",
           });
         } else {
           updateItem(data);
@@ -104,6 +108,26 @@ function AddHistory({ item, updateItem }) {
       >
         <Grid item xs={8}>
           <form className={classes.form}>
+          <TextField
+              multiline
+              rows={1}
+              label="Tiêu đề"
+              value={formData.Title}
+              onChange={(e) =>
+                setFormData({ ...formData, Title: e.target.value })
+              }
+              fullWidth
+              required
+            />
+            <TextField
+              label="Ngày diễn ra"
+              type="date"
+              value={formData.Date}
+              onChange={e =>setFormData({ ...formData, Date: e.target.value })}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              required
+            />
             <TextField
               multiline
               rows={4}

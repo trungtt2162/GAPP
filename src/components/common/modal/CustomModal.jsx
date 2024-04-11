@@ -19,6 +19,7 @@ function CustomModal({ open, onClose, title, children,width=800,minHeight }) {
         bgcolor: 'background.paper',
         boxShadow: 24,
         overflow:"auto",
+        maxHeight:"90vh",
         p: 4,
       }}>
         <Typography variant="h5" id="modal-modal-title" sx={{ marginBottom: 2 }}>

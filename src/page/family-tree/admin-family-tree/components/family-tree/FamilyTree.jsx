@@ -2,6 +2,9 @@ import React from "react";
 import Tree from "react-d3-tree";
 import { useCallback, useState } from "react";
 import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
+import { handleError } from "../../../../../ultils/helper";
+import { genealogyApi } from "../../../../../api/genealogy.api";
+import useAuthStore from "../../../../../zustand/authStore";
 // import "./styles.css";
 
 const orgChartJson = {
@@ -97,6 +100,7 @@ const orgChartJson = {
 };
 
 const useCenteredTree = (defaultTranslate = { x: 0, y: 0 }) => {
+
   const [translate, setTranslate] = useState(defaultTranslate);
   const [dimensions, setDimensions] = useState();
   const containerRef = useCallback((containerElem) => {
@@ -114,8 +118,6 @@ const containerStyles = {
   height: "100vh",
 };
 
-// Here we're using `renderCustomNodeElement` to represent each node
-// as an SVG `rect` instead of the default `circle`.
 const renderRectSvgNode = ({ nodeDatum, toggleNode }) => (
   <g>
     <foreignObject
@@ -152,7 +154,18 @@ const renderRectSvgNode = ({ nodeDatum, toggleNode }) => (
 );
 
 export default function Tree1({isGuest}) {
+  
   const [dimensions, translate, containerRef] = useCenteredTree();
+  const {currentIdGenealogy} = useAuthStore()
+  
+// DOWNLOAD
+const handleDownloadExcel  =async() => {
+  try {
+    const res = await genealogyApi.exportExcel(currentIdGenealogy)
+  } catch (error) {
+    handleError(error)
+  }
+}
   return (
     <div style={{...containerStyles}} ref={containerRef}>
       <Tree
@@ -172,10 +185,10 @@ export default function Tree1({isGuest}) {
         bottom:50,
         
         display:"flex",
-        justifyContent:"flex-start",
+        justifyContent:"flex-end",
         alignItems:"center",
-        paddingLeft:50,
-        borderTop:"1px solid lightgray"
+        marginRight:20,
+        // borderTop:"1px solid lightgray"
 
       }}>
      {!isGuest &&   <div style={{
@@ -184,7 +197,7 @@ export default function Tree1({isGuest}) {
       {!isGuest &&  <div  style={{
         marginTop:20,
         marginLeft:15
-       }}> <PrimaryButton title={"Export EXCEL "} /></div>}
+       }}> <PrimaryButton event={() => handleDownloadExcel()}  title={"Export EXCEL "} /></div>}
       </div>
     </div>
   );

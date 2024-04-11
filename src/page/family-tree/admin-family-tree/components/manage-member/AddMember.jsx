@@ -10,14 +10,17 @@ import {
   Container,
 } from "@mui/material";
 import AddImage from "../../../../../components/common/addImage/AddImage";
-import { handleError, uploadImageToFirebase } from "../../../../../ultils/helper";
+import {
+  handleError,
+  uploadImageToFirebase,
+} from "../../../../../ultils/helper";
 import { genderOptions2 } from "../../../../../constant/common";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { toast } from "react-toastify";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 
-function AddMemberForm() {
+function AddMemberForm({ item, refreshData }) {
   const originData = {
     Id: 0,
     ModifiedBy: "string",
@@ -42,14 +45,13 @@ function AddMemberForm() {
     IdFamilyTree: "",
     IdGenealogy: "",
     UserId: 0,
-  }
-  
-  const [memberData, setMemberData] = useState(originData);
+  };
+
+  const [memberData, setMemberData] = useState(item || originData);
   const [listFamilyTree, setListFamilyTree] = useState([]);
 
   const fileRef = useRef();
   const { currentIdGenealogy } = useAuthStore();
-
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -59,7 +61,7 @@ function AddMemberForm() {
     });
   };
 
-  const handleImageChange = async(e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     const url = await uploadImageToFirebase(file);
 
@@ -68,21 +70,34 @@ function AddMemberForm() {
       Avatar: url,
     });
   };
-  
-  // Add
-  const onAdd =async() => {
-    try {
-      const res = await genealogyApi.addNewMember({...memberData,IdGenealogy:currentIdGenealogy});
-      if(res.data.StatusCode === 200){
-        setMemberData(originData)
-        toast.success("Thêm thành công");
 
+  // Add
+  const onAdd = async () => {
+    try {
+      const res = !item
+        ? await genealogyApi.addNewMember({
+            ...memberData,
+            IdGenealogy: currentIdGenealogy,
+          })
+        : await genealogyApi.updateCurrentGene({
+            ...memberData,
+            IdGenealogy: currentIdGenealogy,
+          });
+      if (res.data.StatusCode === 200) {
+        if(!item){
+          setMemberData(originData);
+        toast.success("Thêm thành công");
+        }
+        else{
+          await refreshData();
+          toast.success("Sửa thành công");
+        }
       }
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  }
-   // // get List Family Tree
+  };
+  // // get List Family Tree
   const getListFamilyTree = async () => {
     try {
       const res = await familyTreeApi.getListFamilyTree(currentIdGenealogy);
@@ -97,10 +112,9 @@ function AddMemberForm() {
     getListFamilyTree();
   }, [currentIdGenealogy]);
 
-
   return (
     <Container>
-      <form >
+      <form>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Grid container spacing={2}>
@@ -178,8 +192,6 @@ function AddMemberForm() {
                     {genderOptions2.map((i) => (
                       <MenuItem value={i.value}>{i.label}</MenuItem>
                     ))}
-
-                    
                   </Select>
                 </FormControl>
               </Grid>
@@ -240,7 +252,7 @@ function AddMemberForm() {
                 />
               </Grid>
               <Grid item xs={6}>
-              <FormControl fullWidth variant="outlined">
+                <FormControl fullWidth variant="outlined">
                   <InputLabel>Chi/nhánh/phái/đời</InputLabel>
                   <Select
                     name="IdFamilyTree"
@@ -251,8 +263,6 @@ function AddMemberForm() {
                     {listFamilyTree.map((i) => (
                       <MenuItem value={i.Id}>{i.Name}</MenuItem>
                     ))}
-
-                    
                   </Select>
                 </FormControl>
               </Grid>
@@ -260,7 +270,7 @@ function AddMemberForm() {
           </Grid>
           <Grid item xs={12}>
             <Button onClick={() => onAdd()} variant="contained" color="primary">
-              Thêm Thành Viên
+              {!item ? " Thêm Thành Viên" : "Cập nhật"}
             </Button>
           </Grid>
         </Grid>

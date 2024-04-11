@@ -11,20 +11,28 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Button,
 } from "@mui/material";
 import { toast } from "react-toastify";
 
 import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
-import { dateFormat, handleError } from "../../../../../ultils/helper";
+import {
+  dateFormat,
+  dateFormat2,
+  handleError,
+} from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { LIST_ROLE, USER_ROLE } from "../../../../../constant/common";
+import CustomModal from "../../../../../components/common/modal/CustomModal";
+import AddMemberForm from "./AddMember";
 
-function ListMember({ list }) {
+function ListMember({ list,action=true }) {
   const [listMember, setlistMember] = useState([]);
   const { userGenealogy, currentIdGenealogy, roleCode, user } = useAuthStore();
   const isSiteAdmin = roleCode === USER_ROLE.SiteAdmin;
   const curremtList = list || listMember;
+  const [currentMember, setCurrentMember] = useState(null);
 
   // get List member
   const getListMember = async () => {
@@ -54,16 +62,34 @@ function ListMember({ list }) {
         UserID: user.UserId,
         RoleCode: newRole,
       });
-      if(res.data.StatusCode === 200){
-        toast.success("Đã sửa")
+      if (res.data.StatusCode === 200) {
+        toast.success("Đã sửa");
         const list = [...listMember];
         list[index].RoleCode = newRole;
-        setlistMember(list)
+        setlistMember(list);
       }
     } catch (error) {
       handleError(error);
     }
   };
+  const handleDelete = async (user) => {
+    try {
+      const res = await genealogyApi.deleteUserGene(
+        currentIdGenealogy,
+        user.Id
+      );
+      if (res.data.StatusCode === 200) {
+        await getListMember();
+        toast.success("Đã xóa");
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  const refreshData = async () => {
+    await getListMember();
+    setCurrentMember(null)
+  }
   return (
     <div>
       <div
@@ -79,11 +105,10 @@ function ListMember({ list }) {
               <TableCell>Tên</TableCell>
               <TableCell>Ngày Sinh</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Địa Chỉ</TableCell>
               <TableCell>Giới Tính</TableCell>
               <TableCell>Quyền</TableCell>
 
-              {/* {isSiteAdmin && <TableCell>Quyền</TableCell>} */}
+              {(isSiteAdmin && action) && <TableCell>Hành động</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -92,18 +117,24 @@ function ListMember({ list }) {
                 <TableCell>{user?.FirstName + " " + user?.LastName}</TableCell>
                 <TableCell>{dateFormat(user.DateOfBirth)}</TableCell>
                 <TableCell>{user.Email}</TableCell>
-                <TableCell>{user.Address}</TableCell>
                 <TableCell>{user.Gender === 0 ? "Nam" : "Nữ"}</TableCell>
-                {isSiteAdmin && user.RoleCode !== USER_ROLE.SiteAdmin ? (
+                {(isSiteAdmin && user.RoleCode !== USER_ROLE.SiteAdmin && action) ? (
                   <>
-                    <FormControl style={{marginTop:10,marginBottom:10,marginRight:10}} fullWidth>
+                    <FormControl
+                      style={{
+                        marginTop: 10,
+                        marginBottom: 10,
+                        marginRight: 10,
+                        width: 140,
+                      }}
+                    >
                       <InputLabel id="demo-simple-select-label">
                         Quyền
                       </InputLabel>
                       <Select
-                      style={{
-                        padding:0
-                      }}
+                        style={{
+                          padding: 0,
+                        }}
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={user.RoleCode}
@@ -121,12 +152,47 @@ function ListMember({ list }) {
                 ) : (
                   <TableCell>{user.RoleCode}</TableCell>
                 )}
+                {(isSiteAdmin && user.RoleCode !== USER_ROLE.SiteAdmin && action) && (
+                  <TableCell>
+                    <Button
+                      onClick={() => setCurrentMember(user)}
+                      style={{
+                        marginRight: 10,
+                      }}
+                      variant="contained"
+                      color="success"
+                    >
+                      Sửa
+                    </Button>
+                    <Button
+                      onClick={() => handleDelete(user)}
+                      variant="contained"
+                      color="error"
+                    >
+                      Xóa
+                    </Button>
+                  </TableCell>
+                )}
                 {/*  */}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <CustomModal open={currentMember} onClose={() => setCurrentMember(null)}>
+        <AddMemberForm
+        refreshData={refreshData}
+          item={
+            currentMember
+              ? {
+                  ...currentMember,
+                  DateOfBirth: dateFormat2(currentMember.DateOfBirth),
+                  DateOfDeath: dateFormat2(currentMember.DateOfDeath),
+                }
+              : null
+          }
+        />
+      </CustomModal>
     </div>
   );
 }

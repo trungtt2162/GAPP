@@ -21,6 +21,7 @@ import Login from "./../components/Auth/Login";
 import Register from "./../components/Auth/Register";
 import HistoryGuest from "../page/history-guest/HistoryGuest";
 import GeneGuest from "../page/gene-guest/GeneGuest";
+import PublicTree from "../page/public-tree/PubLicTreeFamily";
 const NotFound = () => {
   return (
     <div className="container mt-3 alert alert-danger" role="alert">
@@ -33,7 +34,6 @@ const NotFound = () => {
 const ConfigRoutes = (props) => {
   
 const { isLogin, roleCode } = useAuthStore();
-console.log(roleCode,isLogin)
 const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USER_ROLE.PeopleAdmin);
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
   const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
@@ -50,6 +50,7 @@ const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USE
             {!isLogin && (
               <Route path="/home-nologin" element={<HomeNoLogin />} />
             )}
+            <Route path="/tree/:id" element={<PublicTree />} />
           
             {(isAdmin||isUser || !isLogin) && <Route path="/pageTree" element={isLogin ? <PageTreeAdmin /> :<GeneGuest />}></Route>}
            {isSupperAdmin &&  <Route path="/admin" element={<ManageAdmin />} />}

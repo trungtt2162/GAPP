@@ -1,10 +1,26 @@
 import { useEffect, useRef, useState } from "react";
-import { handleError, uploafFileBase64 } from "../../../../../ultils/helper";
-import { Button, Card, Grid, TextField ,Avatar} from "@mui/material";
+import {
+  dateFormat,
+  handleError,
+  uploafFileBase64,
+} from "../../../../../ultils/helper";
+import { Button, Card, Grid, TextField, Avatar } from "@mui/material";
 import { toast } from "react-toastify";
 import { historyApi } from "../../../../../api/history.api";
 
-const HisoryEventItem = ({ Image, Description, setHistory, Id,setListHistory,listHistory,IDGenealogy,curr,setCurrentItem }) => {
+const HisoryEventItem = ({
+  Image,
+  Description,
+  setHistory,
+  Id,
+  setListHistory,
+  listHistory,
+  IDGenealogy,
+  curr,
+  setCurrentItem,
+  Date,
+  Title,
+}) => {
   const [txtDes, setTxtDes] = useState(Description);
   const [imageUrl, setImageUrl] = useState(Image);
   const [modeEdit, setModeEdit] = useState(false);
@@ -19,20 +35,17 @@ const HisoryEventItem = ({ Image, Description, setHistory, Id,setListHistory,lis
     });
   }, [imageUrl, setImageUrl]);
 
-  const deleteHistory = async( ) => {
+  const deleteHistory = async () => {
     try {
-       const res = await historyApi.deleteHistory(Id,IDGenealogy);
-       if(res.data.StatusCode === 200){
+      const res = await historyApi.deleteHistory(Id, IDGenealogy);
+      if (res.data.StatusCode === 200) {
         toast.success("Xóa thành công");
-
-        console.log(Id)
-        console.log(listHistory)
-      setListHistory(listHistory.filter(i => i.Id != Id))
-       }
+        setListHistory(listHistory.filter((i) => i.Id != Id));
+      }
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  }
+  };
   return (
     <Card
       style={{
@@ -50,29 +63,28 @@ const HisoryEventItem = ({ Image, Description, setHistory, Id,setListHistory,lis
       />
       <Grid container spacing={3}>
         <Grid xs={2} item>
-          {/* <div
-            onClick={() => fileRef.current.click()}
-            style={{
-              width: "100%",
-              height: 100,
-              background: `url(${Image})`,
-              backgroundSize: "contain",
-              cursor: "pointer",
-            }}
-            className="border"
-          ></div> */}
-          <Avatar src={Image} sx={{width:80 ,height:80 }}></Avatar>
+          <Avatar src={Image} sx={{ width: 80, height: 80 }}></Avatar>
         </Grid>
         <Grid xs={6} item>
           {!modeEdit ? (
-            <p
-              style={{
-                textAlign: "start",
-              }}
-              className="flex-start"
-            >
-              {Description}
-            </p>
+            <div>
+              <div
+                style={{
+                  textAlign: "start",
+                  fontSize: 20,
+                }}
+                className="flex-start bold"
+              >
+                {Title}
+              </div>
+              <div
+                style={{
+                  textAlign: "start",
+                }}
+              >
+                {dateFormat(Date)}
+              </div>
+            </div>
           ) : (
             <div className="flex-start">
               <TextField
@@ -115,7 +127,7 @@ const HisoryEventItem = ({ Image, Description, setHistory, Id,setListHistory,lis
             </Button>
           )}
           <Button
-          onClick={() => deleteHistory()}
+            onClick={() => deleteHistory()}
             style={{
               marginRight: 10,
               marginTop: 30,

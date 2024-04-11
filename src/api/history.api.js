@@ -1,11 +1,11 @@
 import { API } from ".";
 
 export const historyApi = {
-  getListAllHistoryByGenealogyId: (id) => {
+  getListAllHistoryByGenealogyId: (id,query) => {
     return API.post("/api/FamilyHistory/detail/paging", {
       PageSize: -1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id}`,
+      Condition: `IdGenealogy=${id}`+(query?query:""),
       SortOrder: "",
       SearchKey: "",
     });
@@ -30,11 +30,11 @@ export const historyApi = {
   getDescriptionHistoryGuest: (id) => {
     return API.get("/api/FamilyHistory/guest?idGenealogy=" + id);
   },
-  getListHistoryGuest: (id) => {
+  getListHistoryGuest: (id,query) => {
     return API.post("/api/FamilyHistory/detail/guest/paging?idGenealogy=" + id, {
       PageSize: 0,
       PageNumber: -1,
-      Condition: "IDGenealogy ="+id,
+      Condition: "IDGenealogy ="+id + (query || ""),
       SortOrder: "",
       SearchKey: "",
     });

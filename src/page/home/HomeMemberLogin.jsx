@@ -137,7 +137,7 @@ const HomeMemberLogin = () => {
               >
                 <h4 className="bold">Kết quả tìm kiếm</h4>
                 {modeSearch === MODE_SEARCH.MEMBER ? (
-                  <ListMember list={listSearch} />
+                  <ListMember action={false} list={listSearch} />
                 ) : (
                   <>
                     <ListEvent action={false} list={listSearchEvent} />

@@ -37,9 +37,7 @@ function ListMemberPending() {
   const { currentIdGenealogy } = useAuthStore();
   const getListUserPending = async () => {
     try {
-      const res = await genealogyApi.getListUserRequest(
-        currentIdGenealogy
-      );
+      const res = await genealogyApi.getListUserRequest(currentIdGenealogy);
       if (res.data.StatusCode === 200) {
         setUser(res.data.Data.Data || []);
       }
@@ -53,42 +51,61 @@ function ListMemberPending() {
     }
   }, [currentIdGenealogy]);
 
-  // // get List Family Tree
-  // const getListFamilyTree = async () => {
-  //   try {
-  //     const res = await familyTreeApi.getListFamilyTree(currentIdGenealogy);
-  //     if (res.data.StatusCode === 200) {
-  //       setListFamilyTree(res.data.Data || []);
-  //     }
-  //   } catch (error) {
-  //     handleError(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getListFamilyTree();
-  // }, [currentIdGenealogy]);
-
-  const onClose = () => {
-    setCurrentUser(null);
-  };
-  const onApprove = async (user) => {
+  const handleReject = async (user) => {
     try {
-      const res = await genealogyApi.approveUser({
-        UserID: user.UserId,
-        IdFamilyTree: user.IdFamilyTree,
-        IdGenealogy: currentIdGenealogy,
-      });
-      if(res.data.StatusCode === 200){
-        await getListUserPending()
-        onClose();
-        toast.success("Đã xác nhận");
-
+      const res = await genealogyApi.deleteUserGene(
+        currentIdGenealogy,
+        user.Id
+      );
+      if (res.data.StatusCode === 200) {
+        await getListUserPending();
+        toast.success("Đã từ chôi");
       }
     } catch (error) {
       handleError(error);
     }
   };
-
+  const onClose = () => {
+    setCurrentUser(null);
+  };
+  const onApprove = async (user) => {
+    try {
+      const item = listFamilyTree.find(i => i.Id === idTree);
+      if(item){
+        console.log(item.users)
+        if(item?.Users?.length >=2){
+          toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
+          return;
+        }
+      }
+      // const res = await genealogyApi.approveUser({
+      //   UserID: user.UserId,
+      //   IdFamilyTree: user.IdFamilyTree,
+      //   IdGenealogy: currentIdGenealogy,
+      // });
+      // if (res.data.StatusCode === 200) {
+      //   await getListUserPending();
+      //   onClose();
+      //   toast.success("Đã xác nhận");
+      // }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  // // get List Family Tree
+  const getListFamilyTree = async () => {
+    try {
+      const res = await familyTreeApi.getListFamilyTree(currentIdGenealogy);
+      if (res.data.StatusCode === 200) {
+        setListFamilyTree(res.data.Data || []);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  useEffect(() => {
+    getListFamilyTree();
+  }, [currentIdGenealogy]);
   return (
     <>
       <TableContainer component={Paper}>
@@ -116,7 +133,7 @@ function ListMemberPending() {
                 {isSiteAdmin && (
                   <TableCell className="text-center">
                     <Button
-                      onClick={() => onApprove(user)}
+                      onClick={() => setCurrentUser(user)}
                       style={{
                         marginRight: 10,
                       }}
@@ -125,7 +142,11 @@ function ListMemberPending() {
                     >
                       <CheckIcon fontSize="small" />
                     </Button>
-                    <Button variant="contained" color="error">
+                    <Button
+                      onClick={() => handleReject(user)}
+                      variant="contained"
+                      color="error"
+                    >
                       <CloseIcon fontSize="small" />
                     </Button>
                   </TableCell>
@@ -135,7 +156,7 @@ function ListMemberPending() {
           </TableBody>
         </Table>
       </TableContainer>
-      {/* <CustomModal open={currentUser} onClose={onClose}>
+      <CustomModal open={currentUser} onClose={onClose}>
         <h4 style={{ marginBottom: 15 }}>Chọn chi/nhánh/phái/đời</h4>
         <FormControl>
           <InputLabel id="select-label">Chi/nhánh/phái/đời</InputLabel>
@@ -157,13 +178,16 @@ function ListMemberPending() {
         </FormControl>
         <Button
           onClick={() => {
-            onApprove();
+            if(idTree){
+              onApprove();
+            }
+           
           }}
           variant="contained"
         >
           Xác nhận
         </Button>
-      </CustomModal> */}
+      </CustomModal>
     </>
   );
 }
