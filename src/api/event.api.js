@@ -47,11 +47,15 @@ export const eventApi = {
     });
   },
   addEvent: (data) => {
-    return API.post("/api/Event/request-event", data);
+    return API.post("/api/Event", data);
   },
   updateEvent: (data) => {
     return API.put("/api/Event", data);
   },
+  resquestEvent: (data) => {
+    return API.post("/api/Event/request-event", data);
+  },
+
   deleteEvent: (id, idGenealogy) => {
     return API.delete(`/api/Event?id=${id}&idGenealogy=${idGenealogy}`);
   },

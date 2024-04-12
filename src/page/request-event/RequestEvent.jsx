@@ -108,7 +108,7 @@ function RequestEvent({ item, updateItem }) {
         UserEvents:limitMeber == "true" ? listMember.filter(i => i.checked) :listMember
       };
       const res = !item
-        ? await eventApi.addEvent(data)
+        ? await eventApi.resquestEvent(data)
         : await eventApi.updateEvent(data);
       if (res.data.StatusCode === 200) {
         toast.success(item ? "Cập nhât thành công" : "Request thành công");
