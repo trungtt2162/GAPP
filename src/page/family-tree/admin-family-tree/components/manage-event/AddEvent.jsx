@@ -64,7 +64,6 @@ const originData = {
     setFormData({...formData,Background:url});
    
   };
-  const handleUserSelection = () => {};
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -128,23 +127,7 @@ const originData = {
               fullWidth
               required
             />
-            {/* <TextField
-              label="Ngày đóng"
-              type="date"
-              value={eventDateClose}
-              onChange={(e) => setEventDateClose(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-              required
-            /> */}
-            <TextField
-              label="Link stream"
-              value={formData.LinkStream}
-              onChange={handleChangeData("LinkStream")}
-              multiline
-              fullWidth
-              required
-            />
+        
             <div
               style={{
                 width: "100%",
@@ -178,6 +161,15 @@ const originData = {
                 </RadioGroup>
               </FormControl>
             </div>
+                
+           {formData.Type ==0 &&  <TextField
+              label="Link stream"
+              value={formData.LinkStream}
+              onChange={handleChangeData("LinkStream")}
+              multiline
+              fullWidth
+              required
+            />}
             <div
               style={{
                 width: "100%",
@@ -211,79 +203,7 @@ const originData = {
                 </RadioGroup>
               </FormControl>
             </div>
-            {/* <div
-              style={{
-                width: "100%",
-              }}
-              className="flex-start"
-            >
-              <FormControl component="fieldset">
-                <FormLabel
-                  style={{
-                    textAlign: "start",
-                  }}
-                  component="legend"
-                >
-                  Chế độ
-                </FormLabel>
-                <RadioGroup
-                  row
-                  value={eventType}
-                  onChange={(e) => setPrivateOrpublic(e.target.value)}
-                >
-                  <FormControlLabel
-                    value="1"
-                    control={<Radio />}
-                    label="Private"
-                  />
-                  <FormControlLabel
-                    value="2"
-                    control={<Radio />}
-                    label="Public"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </div> */}
-            {/* <div
-              style={{
-                width: "150%",
-                display: "flex",
-                justifyContent: "center",
-                marginLeft: "50%",
-              }}
-            >
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Tên</TableCell>
-                      <TableCell>Ngày sinh</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Địa chỉ</TableCell>
-                      <TableCell>Giới tính</TableCell>
-                      <TableCell>Tham gia</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {Array.from({ length: 5 }, (_, index) => (
-                      <TableRow key={index}>
-                        <TableCell>User {index + 1}</TableCell>
-                        <TableCell>01/01/1990</TableCell>
-                        <TableCell>user{index + 1}@example.com</TableCell>
-                        <TableCell>123 Street, City</TableCell>
-                        <TableCell>Male</TableCell>
-                        <TableCell>
-                          <Checkbox
-                            checked={selectedUsers.includes(index)}
-                            onChange={() => handleUserSelection(index)}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div> */}
+           
 
             <Button onClick={() => onSave()} variant="contained" color="primary">
               {item ?"Cập nhật":"Tạo"}

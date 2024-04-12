@@ -105,7 +105,10 @@ function RequestEvent({ item, updateItem }) {
         ...formData,
         IDGenealogy: currentIdGenealogy,
         IsPublic: formData.IsPublic === "true" ? true : false,
-        UserEvents:limitMeber == "true" ? listMember.filter(i => i.checked) :listMember
+        UserEvents:
+          limitMeber == "true"
+            ? listMember.filter((i) => i.checked)
+            : listMember,
       };
       const res = !item
         ? await eventApi.resquestEvent(data)
@@ -172,14 +175,6 @@ function RequestEvent({ item, updateItem }) {
                 required
               />
 
-              <TextField
-                label="Link stream"
-                value={formData.LinkStream}
-                onChange={handleChangeData("LinkStream")}
-                multiline
-                fullWidth
-                required
-              />
               <div
                 style={{
                   width: "100%",
@@ -213,6 +208,16 @@ function RequestEvent({ item, updateItem }) {
                   </RadioGroup>
                 </FormControl>
               </div>
+              {formData.Type == 0 && (
+                <TextField
+                  label="Link stream"
+                  value={formData.LinkStream}
+                  onChange={handleChangeData("LinkStream")}
+                  multiline
+                  fullWidth
+                  required
+                />
+              )}
               <div
                 style={{
                   width: "100%",
@@ -274,7 +279,7 @@ function RequestEvent({ item, updateItem }) {
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
-                      label="Giới hạn người tham gia"
+                      label="Thêm người tham gia"
                     />
                   </RadioGroup>
                 </FormControl>

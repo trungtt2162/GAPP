@@ -107,7 +107,7 @@ const Navbar = () => {
                 Sự kiện
               </Link>
             )}
-            {(isLogin && !isSiteAdmin) && (
+            {(isLogin && !isSiteAdmin && !isSupperAdmin) && (
               <Link
                 to="/request-event"
                 className={"link" + (url === "/request-event" ? " active" : "")}

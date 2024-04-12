@@ -47,6 +47,8 @@ function ListEventPending({ list, action = true }) {
             setListEvent(listEvent.filter((i) => i.Id !== row.Id));
             toast.success("Đã duyệt")
             
+            await eventApi.sendEmailEvent(row.IdGenealogy,row.Id)
+            
          }
     } catch (error) {
         handleError(error)

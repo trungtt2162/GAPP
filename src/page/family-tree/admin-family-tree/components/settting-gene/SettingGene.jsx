@@ -17,7 +17,7 @@ function SettingGene() {
     const { name, value, type, checked } = event.target;
     setFormData({
       ...formData,
-      [name]: type === 'radio' ? checked.toString() : value,
+      [name]: value,
     });
   };
 
@@ -48,7 +48,7 @@ function SettingGene() {
   const onsave = async()=>{
     try {
         const res = await genealogyApi.updateCurrentGene({...formData,IsPublic:formData.IsPublic === "true" ? true :false});
-        if(res.data.Status === 200){
+        if(res.data.StatusCode === 200){
          toast.success("Đã cập nhật")
         }
     } catch (error) {
@@ -85,8 +85,8 @@ function SettingGene() {
             textAlign:"start"
         }} component="legend">Trạng thái</FormLabel>
         <RadioGroup row name="IsPublic" value={formData.IsPublic} onChange={handleChange}>
-          <FormControlLabel value="true" control={<Radio />} label="Public" />
-          <FormControlLabel value="false" control={<Radio />} label="Private" />
+          <FormControlLabel value={true} control={<Radio />} label="Public" />
+          <FormControlLabel value={false} control={<Radio />} label="Private" />
         </RadioGroup>
       </FormControl>
       </div>

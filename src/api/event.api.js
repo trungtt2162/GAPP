@@ -64,4 +64,7 @@ export const eventApi = {
       data,
     });
   },
+  sendEmailEvent:(idgene,IdEvent)=>{
+return API.get(`/api/Event/send-email?idGenealogy=${idgene}&idEvent=${IdEvent}`)
+  }
 };

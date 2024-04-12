@@ -73,6 +73,15 @@ const EventMember = () => {
                         marginTop: 10,
                       }}
                     >
+                      <span className="bold">Chế độ : </span>
+                      <span>{currentEvent?.Type =="0" ? "Online" :"Offline"}</span>
+                    </div>
+                {currentEvent?.Type =="0" &&     <div
+                      style={{
+                        textAlign: "start",
+                        marginTop: 10,
+                      }}
+                    >
                       <span className="bold">Link sự kiện : </span>
                       <a
                         style={{
@@ -82,7 +91,7 @@ const EventMember = () => {
                       >
                         {currentEvent?.LinkStream}
                       </a>
-                    </div>
+                    </div>}
                     <div
                       style={{
                         textAlign: "start",

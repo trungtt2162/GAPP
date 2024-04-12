@@ -58,7 +58,7 @@ const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USE
             {isLogin && <Route path="/fund" element={<ManageAdminFund />} />}
             {isLogin && <Route path="/profile" element={<ProfileManager />} />}
             {(isUser || isAdmin | !isLogin) && <Route path="/event" element={isLogin ?<EventMember />:<EventGuest />} />}
-            {(isLogin && !isSiteAdmin) && <Route path="/request-event" element={<RequestEvents />} />}
+            {(isLogin && !isSiteAdmin && !isSupperAdmin) && <Route path="/request-event" element={<RequestEvents />} />}
            {(isUser || isAdmin | !isLogin) &&  <Route path="/history" element={isLogin?<HistoryFamily />:<HistoryGuest />} />}
           </Route>
           { <Route path="/login" element={<Login />} />}
