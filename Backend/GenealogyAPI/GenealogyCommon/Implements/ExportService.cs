@@ -51,7 +51,7 @@ namespace GenealogyCommon.Implements
                         wCol = wLast;
                     }
                     worksheet.Cells[row, colStart, row, colStart + wCol - 1].Merge = true;
-                    worksheet.Cells[row, colStart].Value = $"{root.Users[i].FirstName}" ;
+                    worksheet.Cells[row, colStart].Value = $"{root.Users[i].FirstName} {root.Users[i].LastName}" ;
                     worksheet.Cells[row, colStart, row, colStart + wCol - 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                     using (var range = worksheet.Cells[row, colStart, row, colStart + wCol - 1])
                     {
