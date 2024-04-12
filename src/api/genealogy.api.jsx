@@ -96,7 +96,7 @@ export const genealogyApi = {
     return API.put("/api/User", data);
   },
   exportExcel:(id) => {
-    return API.get("/api/FamilyTree/export?dGenealogy="+id)
+    return API.get("/api/FamilyTree/export?idGenealogy="+id)
   },
   downloadExcel:(fileName) => {
     return API.get("/api/Download?fileName="+fileName,{

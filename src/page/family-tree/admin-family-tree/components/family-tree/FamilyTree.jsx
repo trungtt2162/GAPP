@@ -160,6 +160,7 @@ export default function Tree1({ isGuest }) {
       if (res.data.StatusCode === 200) {
         const fileName = res.data.Data;
         const url = `http://localhost:7291/api/Download?fileName=${fileName}`
+        console.log(url)
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", fileName); 
