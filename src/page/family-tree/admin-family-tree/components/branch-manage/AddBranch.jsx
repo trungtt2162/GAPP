@@ -24,7 +24,7 @@ const AddBranch = () => {
     name: "",
     description: "",
     parentId: "",
-  }
+  };
   const [formData, setFormData] = useState(originData);
 
   // Xử lí sự kiện thay đổi giá trị của các trường input
@@ -54,11 +54,15 @@ const AddBranch = () => {
   }, [currentIdGenealogy]);
   const handleAdd = async () => {
     try {
-      const res = await familyTreeApi.addTree({...formData,IdGenealogy:currentIdGenealogy});
+      const res = await familyTreeApi.addTree({
+        ...formData,
+        IdGenealogy: currentIdGenealogy,
+        parentId: formData.parentId === "000" ? null : formData.parentId
+      });
       if (res.data.StatusCode === 200) {
-        setFormData(originData)
-       toast.success("Thêm thành công");
-       getListFamilyTree()
+        setFormData(originData);
+        toast.success("Thêm thành công");
+        getListFamilyTree();
       }
     } catch (error) {
       handleError(error);
@@ -106,7 +110,7 @@ const AddBranch = () => {
           </FormControl>
         </div>
         <Button
-        onClick={() => handleAdd()}
+          onClick={() => handleAdd()}
           style={{ marginTop: 20 }}
           variant="contained"
           color="primary"
