@@ -21,5 +21,7 @@ namespace GenealogyCommon.Models
         public string Description { get; set; }
 
         public int IdInstance { get; set; }
+
+        public string Image { get; set; }
     }
 }
