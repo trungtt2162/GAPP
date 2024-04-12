@@ -37,11 +37,11 @@ export const eventApi = {
       SearchKey: "",
     });
   },
-  getListEventGuest: (id) => {
+  getListEventGuest: (id,query) => {
     return API.post("api/Event/guest/paging?idGenealogy=" + id, {
       PageSize: 1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and Inactive=false`,
+      Condition: `IdGenealogy=${id} and Inactive=false` + (query ||""),
       SortOrder: "",
       SearchKey: "",
     });

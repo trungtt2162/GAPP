@@ -6,6 +6,7 @@ import { eventApi } from "../../api/event.api";
 import { theme } from "../../theme";
 import { handleError } from "../../ultils/helper";
 import Navbar from "../../components/layout/Navbar";
+
 import {
   FormControl,
   InputLabel,
@@ -13,18 +14,27 @@ import {
   Select,
   Button,
   Grid,
+  TextField,
+  
 } from "@mui/material";
 import { genealogyApi } from "../../api/genealogy.api";
 const EventGuest = () => {
   const [listEvent, setListEvent] = useState([]);
   const [currentEvent, setCurrentEvent] = useState(null);
   const [listGene, setListGene] = useState([]);
-
+  const [startDate,setStartDate] = useState("");
+  const [endDate,setEndDate]  = useState("")
   const [id, setId] = useState("");
-  console.log(id)
   const getListEvent = async () => {
+    let query = "";
+      if(startDate ){
+        query += ` and OrganizationDate>='${startDate}' `
+      }
+      if(endDate){
+        query += ` and OrganizationDate<='${endDate}' `
+      }
     try {
-      const res = await eventApi.getListEventGuest(id);
+      const res = await eventApi.getListEventGuest(id,query);
       if (res.data.StatusCode === 200) {
         setListEvent(res.data.Data.Data);
         if (res.data?.Data?.Data?.length > 0) {
@@ -37,6 +47,7 @@ const EventGuest = () => {
   };
 
   const getListPublicgene = async () => {
+    
     try {
       const res = await genealogyApi.getListGegePublic();
       if (res.data.StatusCode === 200) {
@@ -177,9 +188,43 @@ const EventGuest = () => {
                 className="content-card card-item"
               >
                 <h4 className="bold">Danh sách các sự kiện cũ và sắp tới</h4>
+                <Grid style={{marginTop:20}} container spacing={2} alignItems="center">
+                  <Grid item>
+                    <TextField
+                      sx={{ "& input": { height: "12px" } }}
+                      type="date"
+                      label="Từ ngày"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      sx={{ "& input": { height: "12px" } }}
+                      type="date"
+                      label="Đến ngày"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button disabled={!id} onClick={() => getListEvent(id)} variant="contained" color="primary">
+                      Lọc
+                    </Button>
+                  </Grid>
+                  <Grid item flex={1}>
+                    <div style={{textAlign:"end"}}>Có {listEvent.length} sự kiện</div>
+                  </Grid>
+                </Grid>
                 {listEvent?.length > 0 ? (
                   listEvent?.map((item, index) => (
-                    <Card
+                    <div
                       onClick={() => {
                         setCurrentEvent(item);
                       }}
@@ -192,6 +237,7 @@ const EventGuest = () => {
                         minHeight: 100,
                         padding: 10,
                       }}
+                      className="card-bg"
                     >
                       <div
                         style={{
@@ -209,7 +255,7 @@ const EventGuest = () => {
                           src={item.Background}
                         />
                       </div>
-                    </Card>
+                    </div>
                   ))
                 ) : (
                   <p style={{ marginTop: 30 }}>Không có dữ liệu</p>

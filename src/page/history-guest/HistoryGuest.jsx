@@ -144,6 +144,7 @@ const HistoryGuest = () => {
                   </Select>
                 </FormControl>
                 <Button
+
                   variant="contained"
                   onClick={async () => {
                     if (id) {
@@ -208,7 +209,7 @@ const HistoryGuest = () => {
                     />
                   </Grid>
                   <Grid item>
-                    <Button onClick={() => getListHistory()} variant="contained" color="primary">
+                    <Button  disabled={!id} onClick={() => getListHistory()} variant="contained" color="primary">
                       Lọc
                     </Button>
                   </Grid>
