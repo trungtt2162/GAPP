@@ -47,7 +47,7 @@ export const eventApi = {
     });
   },
   addEvent: (data) => {
-    return API.post("/api/Event", data);
+    return API.post("/api/Event/request-event", data);
   },
   updateEvent: (data) => {
     return API.put("/api/Event", data);

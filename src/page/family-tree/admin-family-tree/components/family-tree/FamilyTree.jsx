@@ -159,9 +159,7 @@ export default function Tree1({ isGuest }) {
       console.log(res);
       if (res.data.StatusCode === 200) {
         const fileName = res.data.Data;
-        const fileRes = await genealogyApi.downloadExcel(fileName);
-        const blob = fileRes.data;
-        const url = window.URL.createObjectURL(new Blob([blob]));
+        const url = `http://localhost:7291/api/Download?fileName=${fileName}`
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", fileName); 
