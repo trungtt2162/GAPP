@@ -22,11 +22,11 @@ const ManageAdmin = () => {
       name: "Quản lý log",
       component:AdminLog,
     },
-    {
-      key: 4,
-      name: "Danh sách chờ phản hồi",
-      component:ListFeedBack,
-    },
+    // {
+    //   key: 4,
+    //   name: "Danh sách chờ phản hồi",
+    //   component:ListFeedBack,
+    // },
     
     // {
     //   key: 5,

@@ -34,7 +34,8 @@ function RequestGele() {
         toast.success("Request thành công");
       }
     } catch (error) {
-      handleError(error);
+      toast.error("Bạn đã ở trong gia phả này hoặc đã request từ trước");
+      // handleError(error);
     }
   };
   const getListPublicgene = async () => {

@@ -9,6 +9,7 @@ import FamilyTree from "./components/family-tree/FamilyTree";
 import useAuthStore from "../../../zustand/authStore";
 import { USER_ROLE } from "../../../constant/common";
 import SettingGene from "./components/settting-gene/SettingGene";
+import BranchManage from "./components/branch-manage/BranchManage";
 const PageTreeAdmin = () => {
   const { isLogin, roleCode } = useAuthStore();
 
@@ -23,6 +24,12 @@ const PageTreeAdmin = () => {
       key: 0,
       name: "Cài đặt gia phả",
       component:SettingGene,
+      show:isSiteAdmin
+    },
+    {
+      key: 0.5,
+      name: "Quản lý nhánh",
+      component:BranchManage,
       show:isSiteAdmin
     },
     {
