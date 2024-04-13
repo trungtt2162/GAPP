@@ -9,6 +9,6 @@ namespace GenealogyCommon.Interfaces
 {
     public interface IExportService
     {
-        public string ExportTreeFamily(FamilyTreeExport root);
+        public string ExportTreeFamily(FamilyTreeExport root, Genealogy gen);
     }
 }

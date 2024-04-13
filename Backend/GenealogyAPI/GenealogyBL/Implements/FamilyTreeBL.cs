@@ -24,7 +24,8 @@ namespace GenealogyBL.Implements
         private readonly IMapper _mapper;
         private readonly IExportService _exportService;
         private readonly IEmailSender _emailSender;
-        public FamilyTreeBL(IEmailSender emailSender, IExportService exportService, IMapper mapper, IUserGenealogyDL userGenealogyDL,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, familyTreeDL, logDL, authService)
+        private readonly IGenealogyDL _genealogyDL;
+        public FamilyTreeBL(IGenealogyDL genealogyDL, IEmailSender emailSender, IExportService exportService, IMapper mapper, IUserGenealogyDL userGenealogyDL,IUserBL userBL,IFamilyTreeDL familyTreeDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, familyTreeDL, logDL, authService)
         {
             _familyTreeDL = familyTreeDL;
             _userBL = userBL;
@@ -32,6 +33,7 @@ namespace GenealogyBL.Implements
             _mapper = mapper;
             _exportService = exportService;
             _emailSender = emailSender;
+            _genealogyDL = genealogyDL;
         }
 
         public async Task<List<FamilyTreeClient>> GetTrees(object idGenealogy)
@@ -86,7 +88,8 @@ namespace GenealogyBL.Implements
         {
             var treeClient = await GetTrees(idGenealogy);
             var root = BuildTree(_mapper.Map<List<FamilyTreeExport>>(treeClient));
-            return _exportService.ExportTreeFamily(root);
+            var gen = await _genealogyDL.GetById(idGenealogy);
+            return _exportService.ExportTreeFamily(root, gen);
         }
 
         private FamilyTreeExport BuildTree(List<FamilyTreeExport> trees)

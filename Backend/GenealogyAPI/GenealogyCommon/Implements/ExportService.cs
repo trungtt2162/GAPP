@@ -6,7 +6,9 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace GenealogyCommon.Implements
             _env = webHostEnvironmen;
         }
 
-        public string ExportTreeFamily(FamilyTreeExport root)
+        public string ExportTreeFamily(FamilyTreeExport root, Genealogy gen)
         {
             var file = Utilities.GetFile("familyTree.xlsx", _env);
             string fileName = $"FamilyTree_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
@@ -27,7 +29,10 @@ namespace GenealogyCommon.Implements
             using (ExcelPackage package = new ExcelPackage(file))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets["Sheet1"];
-                RenderTree(worksheet, root, 1, 1);
+                worksheet.Cells[1, 1, 1, root.Weight].Merge = true;
+                worksheet.Cells[1, 1].Value = gen.Name;
+                worksheet.Cells[1, 1, 1, root.Weight].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                RenderTree(worksheet, root, 3, 1);
                 package.SaveAs(new FileInfo($"{Utilities.GetPathUpload(_env)}\\{fileName}"));
             }
             return fileName;
@@ -44,6 +49,8 @@ namespace GenealogyCommon.Implements
                 int wCol = root.Weight / root.Users.Count;
                 int wLast = root.Weight - ( root.Users.Count - 1) *  wCol;
                 int colStart = colUser;
+                Random random = new Random();
+                Color randomColor = Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
                 for (int i = 0; i < root.Users.Count; i++)
                 {
                     if (i == root.Users.Count - 1)
@@ -53,6 +60,7 @@ namespace GenealogyCommon.Implements
                     worksheet.Cells[row, colStart, row, colStart + wCol - 1].Merge = true;
                     worksheet.Cells[row, colStart].Value = $"{root.Users[i].FirstName} {root.Users[i].LastName}" ;
                     worksheet.Cells[row, colStart, row, colStart + wCol - 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[row, colStart].Style.Fill.BackgroundColor.SetColor(randomColor);
                     using (var range = worksheet.Cells[row, colStart, row, colStart + wCol - 1])
                     {
                         range.Style.Border.Top.Style = ExcelBorderStyle.Thin;

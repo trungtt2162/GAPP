@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
+using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyDL.Interfaces;
+using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +18,13 @@ namespace GenealogyAPI.Controllers
         private readonly IGenealogyBL _genealogyBL;
         private readonly IMapper _mapper;
         private readonly IUserBL _userBL;
-        public GenealogyController(IUserBL userBL, IGenealogyBL genealogyBL, IMapper mapper)
+        private readonly IAuthService _authService;
+        public GenealogyController(IUserBL userBL, IGenealogyBL genealogyBL, IMapper mapper, IAuthService authService)
         {
             _genealogyBL = genealogyBL;
             _mapper = mapper;
             _userBL = userBL;
+            _authService = authService;
         }
 
         [HttpPost("guest/paging")]
@@ -51,6 +55,16 @@ namespace GenealogyAPI.Controllers
                 return serviceResult.OnUnauthorized("Không có quyền");
             }
             serviceResult.Data = await _genealogyBL.Update(param);
+            return serviceResult;
+        }
+
+        [HttpPost]
+        public async Task<ServiceResult> CreateGen(Genealogy param)
+        {
+            var serviceResult = new ServiceResult();
+            param.UserId = int.Parse(_authService.GetUserID());
+            int genealogy = (int)await _genealogyBL.Create(param);
+            await _userBL.InsertUserRole(param.UserId, nameof(UserRoles.Admin), genealogy);
             return serviceResult;
         }
     }
