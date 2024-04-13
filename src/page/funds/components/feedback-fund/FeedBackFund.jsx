@@ -28,14 +28,14 @@ function FeedBackFund({ setNewList, item }) {
     Title: "",
     Description: "",
     IdInstance: 0,
-    Image
+    Image:""
   };
   const [formData, setFormData] = useState(item || originData);
   const handleImageChange = async (event) => {
     // Lấy ảnh từ sự kiện và lưu vào state
     const file = event.target.files[0];
     const url = await uploadImageToFirebase(file);
-    setFormData({ ...formData, Title: url });
+    setFormData({ ...formData, Title: Image });
   };
 
   //
