@@ -5,7 +5,9 @@ import { useCallback, useState } from "react";
 import useAuthStore from "../../../../../zustand/authStore";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
 import { buildTree } from "../../../../../ultils/helper";
-
+import {
+    Avatar
+  } from "@mui/material";
 const orgChartJson = {
   name: "CEO",
 
@@ -125,6 +127,7 @@ const renderRectSvgNode = ({ nodeDatum, toggleNode }) => {
             alignItems: "center",
           }}
         >
+           
           <span style={{ color: "white" }}>{nodeDatum?.Name}</span>
         </div>
       </foreignObject>

@@ -99,7 +99,7 @@ function AddMemberForm({ item, refreshData }) {
             ...memberData,
             IdGenealogy: currentIdGenealogy,
           })
-        : await genealogyApi.updateCurrentGene({
+        : await genealogyApi.updateUsergene({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
             Name:"sss"

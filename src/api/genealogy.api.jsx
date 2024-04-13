@@ -93,7 +93,7 @@ export const genealogyApi = {
   return API.delete(`/api/UserGenealogy?id=${iduser}&idGenealogy=${idgene}`)
   },
   updateUsergene:(data) => {
-    return API.put("/api/User", data);
+    return API.put("/api/UserGenealogy", data);
   },
   exportExcel:(id) => {
     return API.get("/api/FamilyTree/export?idGenealogy="+id)

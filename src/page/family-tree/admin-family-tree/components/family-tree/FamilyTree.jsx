@@ -6,7 +6,8 @@ import { buildTree, handleError } from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
-import "./Tree.scss"
+import { Avatar } from "@mui/material";
+import "./Tree.scss";
 // import "./styles.css";
 
 const orgChartJson = {
@@ -119,46 +120,73 @@ const containerStyles = {
   height: "100vh",
 };
 
-const renderRectSvgNode = ({ nodeDatum, toggleNode }) =>{
-  console.log(nodeDatum.Users)
-  return  (
-  <g>
-     <g>
-      <foreignObject style={{
-        // background:"red"
-      }} width="200" height="100" x="-30" y="-40">
-       <div style={{
-        display:"flex",
-        gap:10,
-        width:"100%",
-        
-        
-       }}>
-       {nodeDatum.Users.map((item,index) =>  <div
-       className={index === 0 &&nodeDatum.Users.length>=2 && "user-line"}
-          style={{
-            
-            position: "relative",
-            border: "1px solid gray",
-            background: item.Gender == "0" ?"blue":"red",
-            height: 60,
-            width:60,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius:30,
-            fontSize:10,
-            fontWeight:"bold"
-          }}
+const renderRectSvgNode = ({ nodeDatum, toggleNode }) => {
+  console.log(nodeDatum.Users);
+  return (
+    <g>
+      <g>
+        <foreignObject
+          style={
+            {
+              // background:"red"
+            }
+          }
+          width="200"
+          height="100"
+          x={nodeDatum.Users.length >= 2 ?"-60":"-30"}
+          y="-40"
         >
-          <span style={{ color: "white" }}>{item?.FirstName + " " +item?.LastName}</span>
-        </div> )}
-       </div>
-      
-      </foreignObject>
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              width: "100%",
+              background:"white",
+              marrginLeft:200
+            }}
+          >
+            {nodeDatum.Users.map((item, index) => (
+              <div
+                className={
+                  index === 0 && nodeDatum.Users.length >= 2 && "user-line"
+                }
+                style={{
+                  position: "relative",
+                  // border: "1px solid gray",
+                  // background: item.Gender == "0" ?"blue":"red",
+                  // height: 60,
+                  // width:60,
+                  // display: "flex",
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  // borderRadius:30,
+                  // fontSize:10,
+                  // fontWeight:"bold"
+                  background: "white",
+                  marginLeft: 10,
+                }}
+              >
+                <Avatar
+                  style={{
+                    borderWidth: "3px",
+                    borderStyle: "solid",
+                    borderColor: item.Gender == 0 ? "blue" : "red",
+                  }}
+                  src={item?.Avatar}
+                />
+                <span
+                  style={{ color: "black", fontSize: 12, fontWeight: "bold" }}
+                >
+                  {item?.FirstName + " " + item?.LastName}
+                </span>
+              </div>
+            ))}
+          </div>
+        </foreignObject>
+      </g>
     </g>
-  </g>
-)};
+  );
+};
 
 export default function Tree1({ isGuest }) {
   const [dimensions, translate, containerRef] = useCenteredTree();
@@ -184,11 +212,11 @@ export default function Tree1({ isGuest }) {
       console.log(res);
       if (res.data.StatusCode === 200) {
         const fileName = res.data.Data;
-        const url = `http://localhost:7291/api/Download?fileName=${fileName}`
-        console.log(url)
+        const url = `http://localhost:7291/api/Download?fileName=${fileName}`;
+        console.log(url);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", fileName); 
+        link.setAttribute("download", fileName);
         document.body.appendChild(link);
         link.click();
         window.URL.revokeObjectURL(url);
@@ -197,10 +225,10 @@ export default function Tree1({ isGuest }) {
       handleError(error);
     }
   };
-  const listFilter = listNode.filter(i => i.Users.length > 0)
+  const listFilter = listNode.filter((i) => i.Users.length > 0);
   return (
     <div style={{ ...containerStyles }} ref={containerRef}>
-       {listFilter.length > 0 && (
+      {listFilter.length > 0 && (
         <Tree
           data={buildTree(listFilter)}
           dimensions={dimensions}
