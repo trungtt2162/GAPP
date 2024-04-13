@@ -18,5 +18,7 @@ namespace GenealogyCommon.Models
     public class UserRoleClient: UserRole
     {
         public List<Permission> Permissions { get; set; } = new List<Permission>();
+
+        public string? GenealogyName { get; set; }
     }
 }
