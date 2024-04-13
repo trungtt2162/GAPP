@@ -1,0 +1,13 @@
+.user-line{
+    // display: none;
+    position: relative;
+    &::after{
+       
+        // content: '';
+        // width: 20px;
+        // height: 2px;
+        // background-color: black;
+        // right:100%;
+        // top: 0;
+    }
+}

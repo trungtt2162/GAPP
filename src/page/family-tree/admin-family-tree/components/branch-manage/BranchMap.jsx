@@ -1,27 +1,18 @@
 import React, { useEffect } from "react";
+import Tree1 from "../family-tree/FamilyTree";
 import Tree from "react-d3-tree";
 import { useCallback, useState } from "react";
-import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
-import { buildTree, handleError } from "../../../../../ultils/helper";
-import { genealogyApi } from "../../../../../api/genealogy.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
-import "./Tree.scss"
-// import "./styles.css";
+import { buildTree } from "../../../../../ultils/helper";
 
 const orgChartJson = {
   name: "CEO",
-  attributes: {
-    department: "Fabrication",
-    img: "https://th.bing.com/th?id=OIF.39WTFN0HfwDIU0jGi%2bKrGw&rs=1&pid=ImgDetMain",
-  },
+
   children: [
     {
       name: "Manager",
-      attributes: {
-        department: "Production",
-        img: "https://th.bing.com/th?id=OIF.39WTFN0HfwDIU0jGi%2bKrGw&rs=1&pid=ImgDetMain",
-      },
+
       children: [
         {
           name: "Foreman",
@@ -100,7 +91,6 @@ const orgChartJson = {
     },
   ],
 };
-
 const useCenteredTree = (defaultTranslate = { x: 0, y: 0 }) => {
   const [translate, setTranslate] = useState(defaultTranslate);
   const [dimensions, setDimensions] = useState();
@@ -118,49 +108,31 @@ const containerStyles = {
   width: "100vw",
   height: "100vh",
 };
+const renderRectSvgNode = ({ nodeDatum, toggleNode }) => {
+  console.log(nodeDatum);
 
-const renderRectSvgNode = ({ nodeDatum, toggleNode }) =>{
-  console.log(nodeDatum.Users)
-  return  (
-  <g>
-     <g>
-      <foreignObject style={{
-        // background:"red"
-      }} width="200" height="100" x="-30" y="-40">
-       <div style={{
-        display:"flex",
-        gap:10,
-        width:"100%",
-        
-        
-       }}>
-       {nodeDatum.Users.map((item,index) =>  <div
-       className={index === 0 &&nodeDatum.Users.length>=2 && "user-line"}
+  return (
+    <g>
+      <foreignObject width="100" height="100" x="-50" y="0">
+        <div
           style={{
-            
             position: "relative",
             border: "1px solid gray",
-            background: item.Gender == "0" ?"blue":"red",
-            height: 60,
-            width:60,
+            background: "black",
+            height: 40,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            borderRadius:30,
-            fontSize:10,
-            fontWeight:"bold"
           }}
         >
-          <span style={{ color: "white" }}>{item?.FirstName + " " +item?.LastName}</span>
-        </div> )}
-       </div>
-      
+          <span style={{ color: "white" }}>{nodeDatum?.Name}</span>
+        </div>
       </foreignObject>
     </g>
-  </g>
-)};
+  );
+};
 
-export default function Tree1({ isGuest }) {
+const BranchMap = () => {
   const [dimensions, translate, containerRef] = useCenteredTree();
   const { currentIdGenealogy } = useAuthStore();
   const [listNode, setListNode] = useState([]);
@@ -176,33 +148,15 @@ export default function Tree1({ isGuest }) {
       getListAllNode();
     }
   }, [currentIdGenealogy]);
+  console.log(listNode);
 
-  // DOWNLOAD
-  const handleDownloadExcel = async () => {
-    try {
-      const res = await genealogyApi.exportExcel(currentIdGenealogy);
-      console.log(res);
-      if (res.data.StatusCode === 200) {
-        const fileName = res.data.Data;
-        const url = `http://localhost:7291/api/Download?fileName=${fileName}`
-        console.log(url)
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", fileName); 
-        document.body.appendChild(link);
-        link.click();
-        window.URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      handleError(error);
-    }
-  };
-  const listFilter = listNode.filter(i => i.Users.length > 0)
+  
+
   return (
     <div style={{ ...containerStyles }} ref={containerRef}>
-       {listFilter.length > 0 && (
+      {listNode.length > 0 && (
         <Tree
-          data={buildTree(listFilter)}
+          data={buildTree(listNode)}
           dimensions={dimensions}
           translate={translate}
           renderCustomNodeElement={renderRectSvgNode}
@@ -210,47 +164,8 @@ export default function Tree1({ isGuest }) {
           pathFunc={"step"}
         />
       )}
-      <div
-        style={{
-          position: "fixed",
-          height: "50px",
-          width: "calc(100vw  - 320px)",
-          marginLeft: 320,
-          right: 0,
-          bottom: 50,
-
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginRight: 20,
-          // borderTop:"1px solid lightgray"
-        }}
-      >
-        {!isGuest && (
-          <div
-            style={{
-              marginTop: 20,
-            }}
-          >
-            {" "}
-            <PrimaryButton title={"Export PNG "} />
-          </div>
-        )}
-        {!isGuest && (
-          <div
-            style={{
-              marginTop: 20,
-              marginLeft: 15,
-            }}
-          >
-            {" "}
-            <PrimaryButton
-              event={() => handleDownloadExcel()}
-              title={"Export EXCEL "}
-            />
-          </div>
-        )}
-      </div>
     </div>
   );
-}
+};
+
+export default BranchMap;

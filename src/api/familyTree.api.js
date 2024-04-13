@@ -6,5 +6,8 @@ export const familyTreeApi = {
   },
  addTree:(data)=>{
   return API.post("/api/FamilyTree",data);
+ },
+ getListAllNode :(id) => {
+  return API.get(`/api/FamilyTree?idGenealogy=${id}`)
  }
 };
