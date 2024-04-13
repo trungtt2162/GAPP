@@ -15,6 +15,7 @@ const useAuthStore = create(
       roleName: null,
       userGenealogy: [],
       currentIdGenealogy: null,
+      listRole:[],
       isCreateGene: false,
       setUser: (user) => {
         set({
@@ -32,6 +33,16 @@ const useAuthStore = create(
           isLogin: false,
           listRole: [],
           isCreateGene: "",
+        });
+      },
+      selectGeneAction: (currentId,currentRole) => {
+        const list = useAuthStore.getState().listRole
+        const current  = list.find(i => i.IdGenealogy == currentId)
+        set({
+         
+          currentIdGenealogy: currentId,
+          roleCode:current?.RoleCode
+         
         });
       },
       login: async ({ userName, password }) => {

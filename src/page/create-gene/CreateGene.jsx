@@ -51,7 +51,12 @@ function AddGene() {
     try {
         const res = await genealogyApi.createGene({...formData,IsPublic:formData.IsPublic === "true" ? true :false});
         if(res.data.StatusCode === 200){
-         toast.success("Đã cập nhật")
+         toast.success("Đã tạo",{
+            autoClose:200,
+            onClose:() => {
+                window.location.href = '/';
+            }
+         })
         }
     } catch (error) {
         handleError(error)
@@ -68,7 +73,7 @@ function AddGene() {
         }}
       ></Box>
      <Container style={{marginTop:40}} maxWidth="md">
-    <h4 className="bold">Cài đặt gia phả</h4>
+    <h4 className="bold">Tạo gia phả</h4>
       <form onSubmit={handleSubmit}>
       <TextField
         label="Name"

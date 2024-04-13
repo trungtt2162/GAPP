@@ -72,8 +72,11 @@ const Register = (props) => {
         
       });
       if(res.data.StatusCode ===200){
-        toast.success("Đăng ký thành công");
-        navigate("/login")
+        toast.success("Đăng ký thành công",{
+          onClose:() => navigate("/login"),
+          autoClose:500
+        });
+        
       }
     } catch (error) {
       handleError(error);

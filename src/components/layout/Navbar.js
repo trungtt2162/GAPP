@@ -5,11 +5,25 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  
+} from "react-router-dom";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import { Menu, Close } from "@mui/icons-material";
 import PrimaryButton from "../common/button/PrimaryButton";
+import {
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Grid,
+  Container,
+} from "@mui/material";
 //import { default as logo } from "../../assets/logo.svg";
 import { theme } from "../../theme";
 import { USER_ROLE } from "../../constant/common";
@@ -24,9 +38,12 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
 
   const isNotMobile = useMediaQuery("(min-width: 1200px)");
-  const { isLogin, roleCode,user ,logOutAction,isCreateGene} = useAuthStore();
+  const { isLogin, roleCode, user, logOutAction, isCreateGene ,currentIdGenealogy,listRole,selectGeneAction} =
+    useAuthStore();
 
-  const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USER_ROLE.PeopleAdmin);
+  const isAdmin =
+    isLogin &&
+    (roleCode === USER_ROLE.SiteAdmin || roleCode === USER_ROLE.PeopleAdmin);
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
   const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
   const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
@@ -38,6 +55,11 @@ const Navbar = () => {
 
   const isNotHome =
     location.pathname !== "/" && !location.pathname.includes("home");
+
+    const handleChange = (e) => {
+      selectGeneAction(e.target.value)
+
+    }
   return (
     <Box
       position="absolute"
@@ -53,13 +75,13 @@ const Navbar = () => {
       }}
     >
       <span
-      onClick = {() => {
-        navigate("/")
-      }}
+        onClick={() => {
+          navigate("/");
+        }}
         style={{
           fontSize: 30,
           fontWeight: "bold",
-          cursor:"pointer"
+          cursor: "pointer",
         }}
       >
         GAPP
@@ -67,23 +89,25 @@ const Navbar = () => {
       {/* DESKTOP NAVBAR */}
       {isNotMobile && (
         <>
-          <Box>
-          {/* <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
+          <Box >
+            {/* <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
               Event Guest
             </Link> */}
             {/* EMPTY FAKE LINKS */}
-          {isLogin &&   <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
-              Home
-            </Link>}
-            {(isMember ||!isLogin)&& (
-                <Link
-                  to="/pageTree"
-                  className={"link" + (url === "/pageTree" ? " active" : "")}
-                >
-                   Gia Phả
-                </Link>
-              )}
-            {(isMember || !isLogin)&& (
+            {isLogin && (
+              <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
+                Home
+              </Link>
+            )}
+            {(isMember || !isLogin) && (
+              <Link
+                to="/pageTree"
+                className={"link" + (url === "/pageTree" ? " active" : "")}
+              >
+                Gia Phả
+              </Link>
+            )}
+            {(isMember || !isLogin) && (
               <Link
                 to="/history"
                 className={"link" + (url === "/history" ? " active" : "")}
@@ -107,7 +131,7 @@ const Navbar = () => {
                 Sự kiện
               </Link>
             )}
-            {(isLogin && !isSiteAdmin && !isSupperAdmin) && (
+            {isLogin && !isSiteAdmin && !isSupperAdmin && (
               <Link
                 to="/request-event"
                 className={"link" + (url === "/request-event" ? " active" : "")}
@@ -126,7 +150,7 @@ const Navbar = () => {
                 to="/fund"
                 className={"link" + (url === "/fund" ? " active" : "")}
               >
-               Quỹ
+                Quỹ
               </Link>
             )}
             {isSiteAdmin && (
@@ -137,7 +161,7 @@ const Navbar = () => {
                 Quản lý quỹ
               </Link>
             )}
-             {(isLogin && isCreateGene) && (
+            {isLogin && isCreateGene && (
               <Link
                 to="/create-gene"
                 className={"link" + (url === "/create-gene" ? " active" : "")}
@@ -145,7 +169,7 @@ const Navbar = () => {
                 Tạo gia phả
               </Link>
             )}
-            
+
             {/* <Link
               to="/#"
               className={"link" + (url === "/support" ? " active" : "")}
@@ -153,66 +177,96 @@ const Navbar = () => {
               Support
             </Link> */}
           </Box>
-          <Box display="flex" gap="1.5rem">
-           {
-            user &&  <div onClick={() => navigate("/profile")} style={{
-              cursor:"pointer",
-              display:"flex",
-              justifyContent:'center',
-              alignItems:'center',
-              gap:10
-            }}>
-            <Avatar sx={{ width: 25,height:25}} src={user?.Avatar}></Avatar>
-            <span>{user?.FirstName + " " + user?.LastName}</span>
-            </div>
-           }
-           {isLogin &&  <Button
+          <Box sx={{
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            // width:400
+          }} display="flex" gap="1.5rem">
+            {user && (
+              <div
+                onClick={() => navigate("/profile")}
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <Avatar
+                  sx={{ width: 25, height: 25 }}
+                  src={user?.Avatar}
+                ></Avatar>
+                <span>{user?.FirstName + " " + user?.LastName}</span>
+              </div>
+            )}
+            {!isSupperAdmin && listRole.length > 0 && <FormControl  variant="outlined">
+              <InputLabel>Gia phả</InputLabel>
+              <Select
+              style={{width:150,height:45}}
+                name="Gender"
+                value={currentIdGenealogy}
+                onChange={handleChange}
+                label="Gia phả"
+              >
+                {listRole.map((i) => (
+                      <MenuItem value={i.IdGenealogy}>{i.GenealogyName+" - " + i.RoleCode}</MenuItem>
+                    ))}
+              </Select>
+            </FormControl>}
+            {isLogin && (
+              <Button
+                variant="contained"
+                sx={{
+                  p: ".5rem 1.5rem",
+                  color: "white",
+                }}
+                onClick={() => {
+                  logOutAction(false);
 
-              variant="contained"
-              sx={{
-                p: ".5rem 1.5rem",
-                color: "white",
-                           }}
-              onClick={() => {
-                logOutAction(false)
-                
-                navigate("/login");
-              }}
-            >
-              Đăng xuất
-            </Button>}
-           {!isLogin &&  <Button
-             variant="text"
-             sx={{
-               p: ".5rem 1.5rem",
-               backgroundColor: palette.primary.main,
-               color: "#ffffff",
-               borderRadius: 2,
-               boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-               "&:hover": { color: palette.primary.main },
-             }}
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              Đăng nhập
-            </Button>}
-           {!isLogin &&  <Button
-              variant="text"
-              sx={{
-                p: ".5rem 1.5rem",
-                backgroundColor: palette.primary.main,
-                color: "#ffffff",
-                borderRadius: 2,
-                boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-                "&:hover": { color: palette.primary.main },
-              }}
-              onClick={() => {
-                navigate("/register");
-              }}
-            >
-              Đăng kí
-            </Button>}
+                  navigate("/login");
+                }}
+              >
+                Đăng xuất
+              </Button>
+            )}
+            {!isLogin && (
+              <Button
+                variant="text"
+                sx={{
+                  p: ".5rem 1.5rem",
+                  backgroundColor: palette.primary.main,
+                  color: "#ffffff",
+                  borderRadius: 2,
+                  boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
+                  "&:hover": { color: palette.primary.main },
+                }}
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Đăng nhập
+              </Button>
+            )}
+            {!isLogin && (
+              <Button
+                variant="text"
+                sx={{
+                  p: ".5rem 1.5rem",
+                  backgroundColor: palette.primary.main,
+                  color: "#ffffff",
+                  borderRadius: 2,
+                  boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
+                  "&:hover": { color: palette.primary.main },
+                }}
+                onClick={() => {
+                  navigate("/register");
+                }}
+              >
+                Đăng kí
+              </Button>
+            )}
           </Box>
         </>
       )}

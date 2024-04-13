@@ -33,7 +33,7 @@ const ProfileManager = () => {
       key: 3,
       name: "Request vào gia phả",
       component:RequestGele,
-      show:    (isUser || isPeopleAdmin) 
+      show:    (isUser || isPeopleAdmin || isSiteAdmin) 
     },
     
     
