@@ -162,7 +162,7 @@ const renderRectSvgNode = ({ nodeDatum, toggleNode }) => {
                   // borderRadius:30,
                   // fontSize:10,
                   // fontWeight:"bold"
-                  background: "white",
+                  // background: "red",
                   marginLeft: 10,
                 }}
               >
@@ -175,7 +175,7 @@ const renderRectSvgNode = ({ nodeDatum, toggleNode }) => {
                   src={item?.Avatar}
                 />
                 <span
-                  style={{ color: "black", fontSize: 12, fontWeight: "bold" }}
+                  style={{ color: "black", fontSize: 11, fontWeight: "bold",display:"inline-block",width:40 }}
                 >
                   {item?.FirstName + " " + item?.LastName}
                 </span>
