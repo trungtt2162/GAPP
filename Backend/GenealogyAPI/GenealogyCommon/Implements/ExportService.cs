@@ -60,6 +60,7 @@ namespace GenealogyCommon.Implements
                     worksheet.Cells[row, colStart, row, colStart + wCol - 1].Merge = true;
                     worksheet.Cells[row, colStart].Value = $"{root.Users[i].FirstName} {root.Users[i].LastName}" ;
                     worksheet.Cells[row, colStart, row, colStart + wCol - 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[row, colStart].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                     worksheet.Cells[row, colStart].Style.Fill.BackgroundColor.SetColor(randomColor);
                     using (var range = worksheet.Cells[row, colStart, row, colStart + wCol - 1])
                     {
