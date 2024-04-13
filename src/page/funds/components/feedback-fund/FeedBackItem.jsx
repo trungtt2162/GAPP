@@ -20,7 +20,7 @@ import { feedbackApi } from "../../../../api/feedback.api";
 
 const FeedBackItem = ({
   Name,
-  Title: Image,
+   Image,
   CreatedBy,
   ModifiedDate,
   Description,

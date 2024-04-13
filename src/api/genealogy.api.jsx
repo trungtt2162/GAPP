@@ -87,7 +87,7 @@ export const genealogyApi = {
     });
   },
   updateCurrentGene:(data) => {
-    return API.put("/api/Genealogy", data);
+    return API.put("/api/UserGenealogy", data);
   },
   deleteUserGene:(idgene,iduser) => {
   return API.delete(`/api/UserGenealogy?id=${iduser}&idGenealogy=${idgene}`)

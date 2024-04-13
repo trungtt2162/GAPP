@@ -28,6 +28,7 @@ function FeedBackFund({ setNewList, item }) {
     Title: "",
     Description: "",
     IdInstance: 0,
+    Image
   };
   const [formData, setFormData] = useState(item || originData);
   const handleImageChange = async (event) => {
@@ -135,7 +136,7 @@ function FeedBackFund({ setNewList, item }) {
           }}
         />
         <div className="flex-start">
-          {formData.Title && (
+          {formData.Image && (
             <img
               style={{
                 width: 100,
@@ -143,7 +144,7 @@ function FeedBackFund({ setNewList, item }) {
                 objectFit: "contain",
                 marginBottom: 10,
               }}
-              src={formData.Title}
+              src={formData.Image}
             />
           )}
         </div>
