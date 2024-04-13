@@ -22,6 +22,7 @@ import Register from "./../components/Auth/Register";
 import HistoryGuest from "../page/history-guest/HistoryGuest";
 import GeneGuest from "../page/gene-guest/GeneGuest";
 import PublicTree from "../page/public-tree/PubLicTreeFamily";
+import AddGene from "../page/create-gene/CreateGene";
 const NotFound = () => {
   return (
     <div className="container mt-3 alert alert-danger" role="alert">
@@ -49,6 +50,9 @@ const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USE
             <Route path="/" element={!isLogin ?<HomeNoLogin />: <Home />} />
             {!isLogin && (
               <Route path="/home-nologin" element={<HomeNoLogin />} />
+            )}
+             {isLogin && (
+              <Route path="/create-gene" element={<AddGene />} />
             )}
             <Route path="/tree/:id" element={<PublicTree />} />
           

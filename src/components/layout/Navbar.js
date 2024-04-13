@@ -24,7 +24,7 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
 
   const isNotMobile = useMediaQuery("(min-width: 1200px)");
-  const { isLogin, roleCode,user ,logOutAction} = useAuthStore();
+  const { isLogin, roleCode,user ,logOutAction,isCreateGene} = useAuthStore();
 
   const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USER_ROLE.PeopleAdmin);
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
@@ -135,6 +135,14 @@ const Navbar = () => {
                 className={"link" + (url === "/fund" ? " active" : "")}
               >
                 Quản lý quỹ
+              </Link>
+            )}
+             {(isLogin && isCreateGene) && (
+              <Link
+                to="/create-gene"
+                className={"link" + (url === "/create-gene" ? " active" : "")}
+              >
+                Tạo gia phả
               </Link>
             )}
             
