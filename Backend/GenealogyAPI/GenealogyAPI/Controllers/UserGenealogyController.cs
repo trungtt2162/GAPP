@@ -161,7 +161,7 @@ namespace GenealogyAPI.Controllers
             var iduser = await _userBL.Create(_mapper.Map<User>(userRegister));
             userGenealogyParam.UserId = (int)iduser;
             await _userGenealogyBL.Create(userGenealogyParam);
-            await _userGenealogyBL.ApproveRegister(userGenealogyParam);
+            await _userGenealogyBL.ApproveNewMember(userGenealogyParam, userRegister);
             return serviceResult.OnSuccess("Created");
         }
 

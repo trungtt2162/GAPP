@@ -99,6 +99,36 @@ namespace GenealogyBL.Implements
             await _emailSender.SendEmailAsync(new JArray() { recip}, "Đã phê duyệt", "Bạn đã được phê duyệt vào cây gia phả", "Bạn đã được phê duyệt vào cây gia phả");
             return null;
         }
+
+        public async Task<object> ApproveNewMember(UserGenealogy user, UserRegister userRegister)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                ["p_UserID"] = user.UserId,
+                ["p_RoleCode"] = nameof(UserRoles.Account),
+                ["P_IdGenealogy"] = user.IdGenealogy,
+                ["p_ModifiedBy"] = _authService.GetFullName()
+            };
+            await _permissionDL.InsertPermission(param);
+            await _userBL.InsertUserRole(user.UserId, nameof(UserRoles.Account), user.IdGenealogy);
+            var userGen = await _userGenealogyDL.GetUserByUserID(user.UserId, user.IdGenealogy);
+            userGen.IdFamilyTree = user.IdFamilyTree;
+            userGen.InActive = false;
+            await _userGenealogyDL.Update(userGen);
+            var recip = new JObject {
+                                {
+                                    "Email",
+                                    user.Email
+                                }, {
+                                    "Name",
+                                   user.FirstName
+                                }
+                                };
+            await _emailSender.SendEmailAsync(new JArray() { recip }, 
+                "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>",
+                $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>");
+            return null;
+        }
         override
         public void GetCustomParamPaging(PageRequest pagingRequest)
         {

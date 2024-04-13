@@ -22,5 +22,7 @@ namespace GenealogyCommon.Models.Param
 
         [Required]
         public int IdInstance { get; set; }
+
+        public string? Image { get; set; }
     }
 }
