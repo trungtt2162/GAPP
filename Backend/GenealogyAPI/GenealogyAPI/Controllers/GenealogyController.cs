@@ -3,6 +3,7 @@ using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
+using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
 using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Authorization;
@@ -19,12 +20,18 @@ namespace GenealogyAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IUserBL _userBL;
         private readonly IAuthService _authService;
-        public GenealogyController(IUserBL userBL, IGenealogyBL genealogyBL, IMapper mapper, IAuthService authService)
+        private readonly IUserGenealogyBL _userGenealogyBL;
+        private readonly IFamilyHistoryBL _familyHistoryBL;
+        private readonly IPermissionDL _permissionDL;
+        public GenealogyController(IPermissionDL permissionDL, IFamilyHistoryBL familyHistoryBL, IUserGenealogyBL userGenealogyBL, IUserBL userBL, IGenealogyBL genealogyBL, IMapper mapper, IAuthService authService)
         {
             _genealogyBL = genealogyBL;
             _mapper = mapper;
             _userBL = userBL;
             _authService = authService;
+            _userGenealogyBL = userGenealogyBL;
+            _familyHistoryBL = familyHistoryBL; 
+            _permissionDL = permissionDL;
         }
 
         [HttpPost("guest/paging")]
@@ -63,8 +70,31 @@ namespace GenealogyAPI.Controllers
         {
             var serviceResult = new ServiceResult();
             param.UserId = int.Parse(_authService.GetUserID());
-            int genealogy = (int)await _genealogyBL.Create(param);
-            await _userBL.InsertUserRole(param.UserId, nameof(UserRoles.Admin), genealogy);
+            int idGen = (int)await _genealogyBL.Create(param);
+            var user = await _userBL.GetById(param.UserId);
+            await _userBL.InsertUserRole(param.UserId, nameof(UserRoles.Admin), idGen);
+            var userGenology = _mapper.Map<UserGenealogy>(user);
+            userGenology.IdGenealogy = idGen;
+            userGenology.UserId = param.UserId;
+            userGenology.InActive = false;
+            userGenology.IsBlock = false;
+            var idUserGenealogy = await _userGenealogyBL.Create(userGenology);
+            var historyFamily = new FamilyHistory()
+            {
+
+                IDGenealogy = idGen,
+                Image = "",
+                Description = ""
+            };
+            await _familyHistoryBL.Create(historyFamily);
+            var param1 = new Dictionary<string, object>()
+            {
+                ["p_UserID"] = param.UserId,
+                ["p_RoleCode"] = nameof(UserRoles.Admin),
+                ["P_IdGenealogy"] = idGen,
+                ["p_ModifiedBy"] = _authService.GetFullName()
+            };
+            await _permissionDL.InsertPermission(param1);
             return serviceResult;
         }
     }
