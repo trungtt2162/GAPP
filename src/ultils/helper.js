@@ -130,7 +130,7 @@ export function buildTree(data) {
     node = data[i];
     if (node.ParentID !== null) {
       // Nếu có ParentID, tìm phần tử cha và thêm nút hiện tại vào mảng children của nó
-      data[map[node.ParentID]].children.push(node);
+      data[map[node.ParentID]]?.children.push(node);
     } else {
       // Nếu không có ParentID, nó là nút gốc
       roots.push(node);

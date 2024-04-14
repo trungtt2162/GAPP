@@ -197,6 +197,8 @@ background-color: black;
 .flex-start{
   display: flex;
   justify-content: flex-start;
+  gap:13px;
+  align-items: center;
 
 }
 .border{

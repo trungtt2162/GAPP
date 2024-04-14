@@ -11,3 +11,50 @@
         // top: 0;
     }
 }
+@keyframes glowing {
+    0% {
+      border-color: #fff;
+      box-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #e60073, 0 0 5px #e60073;
+    }
+    100% {
+      border-color: #ff4da6;
+      box-shadow: 0 0 5px #fff, 0 0 10px #ff4da6, 0 0 5px #ff4da6, 0 0 5px #ff4da6;
+    }
+  }
+  @keyframes glowing-blue {
+    0% {
+      border-color: #fff;
+      box-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px blue, 0 0 10px blue;
+    }
+    100% {
+      border-color: blue;
+      box-shadow: 0 0 10px #fff, 0 0 10px blue, 0 0 10px blue, 0 0 5px blue;
+    }
+  }
+  
+  @keyframes scale {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  
+  .animated-avatar {
+    border: 3px solid #fff; /* Đặt một border ban đầu */
+    border-radius: 50%; /* Giữ border tròn, phù hợp với hình dạng avatar */
+    animation: glowing 2s ease-in-out infinite alternate, scale 2s infinite ease-in-out;
+  }
+  .animated-avatar-blue{
+    border: 3px solid #fff; /* Đặt một border ban đầu */
+    border-radius: 50%; /* Giữ border tròn, phù hợp với hình dạng avatar */
+    animation:  glowing-blue 2s ease-in-out infinite alternate, scale 2s infinite ease-in-out;
+  }
+  .wrap-ex{
+    width: 400px;
+    height: 100px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    border-radius: 10px;
+  }

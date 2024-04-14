@@ -74,26 +74,26 @@ function AddMemberForm({ item, refreshData }) {
   // Add
   const onAdd = async () => {
     try {
-      const itemTree = listFamilyTree.find(i => i.Id == memberData.IdFamilyTree);
-      if(itemTree){
+      // const itemTree = listFamilyTree.find(i => i.Id == memberData.IdFamilyTree);
+      // if(itemTree){
         
-        if(itemTree?.Users?.length >=2){
-          if(!item){
-            toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
-            return;
-          }
-          else{
-            console.log(item)
-            const  itemIdTree = item.IdFamilyTree;
-            const itemUserId = item.UserId;
-            if(!itemTree?.Users.map(i => i.UserId)?.includes(itemUserId)){
-              toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
-              return;
-            }
-          }
+      //   if(itemTree?.Users?.length >=2){
+      //     if(!item){
+      //       toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
+      //       return;
+      //     }
+      //     else{
+      //       console.log(item)
+      //       const  itemIdTree = item.IdFamilyTree;
+      //       const itemUserId = item.UserId;
+      //       if(!itemTree?.Users.map(i => i.UserId)?.includes(itemUserId)){
+      //         toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
+      //         return;
+      //       }
+      //     }
          
-        }
-      }
+      //   }
+      // }
       const res = !item
         ? await genealogyApi.addNewMember({
             ...memberData,

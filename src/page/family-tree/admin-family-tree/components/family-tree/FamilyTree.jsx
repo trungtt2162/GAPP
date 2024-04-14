@@ -2,11 +2,15 @@ import React, { useEffect } from "react";
 import Tree from "react-d3-tree";
 import { useCallback, useState } from "react";
 import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
-import { buildTree, handleError } from "../../../../../ultils/helper";
+import {
+  buildTree,
+  dateFormat,
+  handleError,
+} from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
-import { Avatar } from "@mui/material";
+import { Avatar, Popover } from "@mui/material";
 import "./Tree.scss";
 // import "./styles.css";
 
@@ -120,53 +124,160 @@ const containerStyles = {
   height: "100vh",
 };
 
-const renderRectSvgNode = ({ nodeDatum, toggleNode }) => {
-  console.log(nodeDatum.Users);
+const InfoItem = ({ item }) => {
+  return (
+    <div
+      style={{
+        width: 300,
+        height: 300,
+        padding: 10,
+      }}
+    >
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Tên :{" "}
+        </span>
+        <span>{item.FirstName + " " + item.LastName}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Email :{" "}
+        </span>
+        <span>{item.Email}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Địa chỉ :{" "}
+        </span>
+        <span>{item.Address}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Ngày sinh :{" "}
+        </span>
+        <span>{dateFormat(item.DateOfBirth)}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Ngày mất :{" "}
+        </span>
+        <span>{dateFormat(item.DateOfDeath)}</span>
+      </div>
+    </div>
+  );
+};
+const NodeItem = ({ nodeDatum }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { user } = useAuthStore();
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+  const count = nodeDatum?.Users?.length;
+
+  const isMutilpe = count >= 2;
   return (
     <g>
-      <g>
-        <foreignObject
-          style={
-            {
-              // background:"red"
-            }
+      <foreignObject
+        style={
+          {
+            // background:"red"
           }
-          width="200"
-          height="100"
-          x={nodeDatum.Users.length >= 2 ?"-60":"-30"}
-          y="-40"
+        }
+        width={count * 56}
+        height="400"
+        x={isMutilpe ? "-70" : "-30"}
+        y="-40"
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+
+            background: "white",
+            marrginLeft: 200,
+            flexWrap: "nowrap",
+            border: isMutilpe && "2px dotted  gray",
+            borderRadius: 5,
+            // height:300
+          }}
         >
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              width: "100%",
-              background:"white",
-              marrginLeft:200
-            }}
-          >
-            {nodeDatum.Users.map((item, index) => (
+          {nodeDatum.Users.map((item, index) => {
+            const useId = item.UserId;
+            const isMineBlue = useId == user.Id && item.Gender == 0;
+            const isMineRed = useId == user.Id && item.Gender == 1;
+            return (
               <div
                 className={
                   index === 0 && nodeDatum.Users.length >= 2 && "user-line"
                 }
                 style={{
                   position: "relative",
-                  // border: "1px solid gray",
-                  // background: item.Gender == "0" ?"blue":"red",
-                  // height: 60,
-                  // width:60,
-                  // display: "flex",
-                  // justifyContent: "center",
-                  // alignItems: "center",
-                  // borderRadius:30,
-                  // fontSize:10,
-                  // fontWeight:"bold"
-                  // background: "red",
+                  paddingTop: 3,
                   marginLeft: 10,
+                  background: "white",
                 }}
               >
                 <Avatar
+                  className={
+                    isMineBlue
+                      ? "animated-avatar-blue"
+                      : isMineRed
+                      ? "animated-avatar"
+                      : ""
+                  }
+                  aria-describedby={id}
+                  onClick={handleClick}
                   style={{
                     borderWidth: "3px",
                     borderStyle: "solid",
@@ -174,18 +285,43 @@ const renderRectSvgNode = ({ nodeDatum, toggleNode }) => {
                   }}
                   src={item?.Avatar}
                 />
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <div>
+                    <InfoItem item={item} />
+                  </div>
+                </Popover>
                 <span
-                  style={{ color: "black", fontSize: 11, fontWeight: "bold",display:"inline-block",width:40 }}
+                  style={{
+                    color: "black",
+                    fontSize: 11,
+                    fontWeight: "bold",
+                    display: "inline-block",
+                    width: 40,
+                  }}
                 >
                   {item?.FirstName + " " + item?.LastName}
                 </span>
               </div>
-            ))}
-          </div>
-        </foreignObject>
-      </g>
+            );
+          })}
+        </div>
+      </foreignObject>
     </g>
   );
+};
+const RenderRectSvgNode = ({ nodeDatum, toggleNode }) => {
+  console.log(nodeDatum.Users);
+
+  return <NodeItem nodeDatum={nodeDatum} />;
 };
 
 export default function Tree1({ isGuest }) {
@@ -227,57 +363,149 @@ export default function Tree1({ isGuest }) {
   };
   const listFilter = listNode.filter((i) => i.Users.length > 0);
   return (
-    <div style={{ ...containerStyles }} ref={containerRef}>
-      {listFilter.length > 0 && (
-        <Tree
-          data={buildTree(listFilter)}
-          dimensions={dimensions}
-          translate={translate}
-          renderCustomNodeElement={renderRectSvgNode}
-          orientation="vertical"
-          pathFunc={"step"}
-        />
-      )}
-      <div
-        style={{
-          position: "fixed",
-          height: "50px",
-          width: "calc(100vw  - 320px)",
-          marginLeft: 320,
-          right: 0,
-          bottom: 50,
+    <div>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div className="wrap-ex">
+          <p className="bold">Chú thích</p>
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: "bold",
+            }}
+          >
+            <div className="flex-start">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  
+                }}
+              >
+                <Avatar
+                  style={{
+                    borderWidth: "3px",
+                    borderStyle: "solid",
+                    borderColor: "blue",
+                    width: 25,
+                    height: 25,
+                  }}
+                  src={""}
+                />{" "}
+                <span>Nam</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                
+                }}
+              >
+                <Avatar
+                  style={{
+                    borderWidth: "3px",
+                    borderStyle: "solid",
+                    borderColor: "red",
+                    width: 25,
+                    height: 25,
+                  }}
+                  src={""}
+                />{" "}
+                <span>Nữ</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+                <Avatar
+                  className="animated-avatar-blue"
+                  style={{
+                    borderWidth: "3px",
+                    borderStyle: "solid",
+                    borderColor: "red",
+                    width: 25,
+                    height: 25,
+                  }}
+                  src={""}
+                />{" "}
+                <span>Chính mình</span>
+              </div>
+         <div className="flex-start" style={{
+          gap:5
+         }}>
+         <div
+                style={{
+                 width:50,
+                 height:25,
+                 borderRadius:5,
+                 border:"2px dotted gray"
+                }}
+              >
+               
+              </div>
+              <span>Vợ chồng</span>
+         </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginRight: 20,
-          // borderTop:"1px solid lightgray"
-        }}
-      >
-        {!isGuest && (
-          <div
-            style={{
-              marginTop: 20,
-            }}
-          >
-            {" "}
-            <PrimaryButton title={"Export PNG "} />
-          </div>
+      <div style={{ ...containerStyles }} ref={containerRef}>
+        {listFilter.length > 0 && (
+          <Tree
+            data={buildTree(listFilter)}
+            dimensions={dimensions}
+            translate={translate}
+            renderCustomNodeElement={RenderRectSvgNode}
+            orientation="vertical"
+            pathFunc={"step"}
+          />
         )}
-        {!isGuest && (
-          <div
-            style={{
-              marginTop: 20,
-              marginLeft: 15,
-            }}
-          >
-            {" "}
-            <PrimaryButton
-              event={() => handleDownloadExcel()}
-              title={"Export EXCEL "}
-            />
-          </div>
-        )}
+        <div
+          style={{
+            position: "fixed",
+            height: "50px",
+            width: "calc(100vw  - 320px)",
+            marginLeft: 320,
+            right: 0,
+            bottom: 50,
+
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginRight: 20,
+            // borderTop:"1px solid lightgray"
+          }}
+        >
+          {!isGuest && (
+            <div
+              style={{
+                marginTop: 20,
+              }}
+            >
+              {" "}
+              <PrimaryButton title={"Export PNG "} />
+            </div>
+          )}
+          {!isGuest && (
+            <div
+              style={{
+                marginTop: 20,
+                marginLeft: 15,
+              }}
+            >
+              {" "}
+              <PrimaryButton
+                event={() => handleDownloadExcel()}
+                title={"Export EXCEL "}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
