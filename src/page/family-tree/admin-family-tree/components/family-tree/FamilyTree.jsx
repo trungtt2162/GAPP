@@ -124,7 +124,7 @@ const containerStyles = {
   height: "100vh",
 };
 
-const InfoItem = ({ item }) => {
+const InfoItem = ({ item,geneName }) => {
   return (
     <div
       style={{
@@ -159,9 +159,54 @@ const InfoItem = ({ item }) => {
             width: 100,
           }}
         >
+          Nhánh :{" "}
+        </span>
+        <span>{geneName}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Giới tính :{" "}
+        </span>
+        <span>{item.Gender == "0" ?"Nam":"Nữ"}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
           Email :{" "}
         </span>
         <span>{item.Email}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Số điện thoại :{" "}
+        </span>
+        <span>{item.Phone}</span>
       </div>
       <div
         style={{
@@ -224,7 +269,6 @@ const NodeItem = ({ nodeDatum }) => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const count = nodeDatum?.Users?.length;
-
   const isMutilpe = count >= 2;
   return (
     <g>
@@ -296,7 +340,7 @@ const NodeItem = ({ nodeDatum }) => {
                   }}
                 >
                   <div>
-                    <InfoItem item={item} />
+                    <InfoItem geneName={nodeDatum?.Name} item={item} />
                   </div>
                 </Popover>
                 <span
@@ -319,7 +363,6 @@ const NodeItem = ({ nodeDatum }) => {
   );
 };
 const RenderRectSvgNode = ({ nodeDatum, toggleNode }) => {
-  console.log(nodeDatum.Users);
 
   return <NodeItem nodeDatum={nodeDatum} />;
 };
@@ -345,11 +388,9 @@ export default function Tree1({ isGuest }) {
   const handleDownloadExcel = async () => {
     try {
       const res = await genealogyApi.exportExcel(currentIdGenealogy);
-      console.log(res);
       if (res.data.StatusCode === 200) {
         const fileName = res.data.Data;
         const url = `http://localhost:7291/api/Download?fileName=${fileName}`;
-        console.log(url);
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", fileName);

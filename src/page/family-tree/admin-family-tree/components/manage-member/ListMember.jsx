@@ -26,6 +26,7 @@ import useAuthStore from "../../../../../zustand/authStore";
 import { LIST_ROLE, USER_ROLE } from "../../../../../constant/common";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddMemberForm from "./AddMember";
+import { familyTreeApi } from "../../../../../api/familyTree.api";
 
 function ListMember({ list,action=true }) {
   const [listMember, setlistMember] = useState([]);
@@ -33,7 +34,42 @@ function ListMember({ list,action=true }) {
   const isSiteAdmin = roleCode === USER_ROLE.SiteAdmin;
   const curremtList = list || listMember;
   const [currentMember, setCurrentMember] = useState(null);
+  const [listNode, setListNode] = useState([]);
 
+  const getListAllNode = async () => {
+    const res = await familyTreeApi.getListAllNode(currentIdGenealogy);
+    if (res.data.StatusCode === 200) {
+      setListNode(res.data.Data);
+    }
+  };
+  useEffect(() => {
+    if (currentIdGenealogy) {
+      getListAllNode();
+    }
+  }, [currentIdGenealogy]);
+
+  const checkDelete = (idUser) => {
+    let flag = true;
+    const nodeItem = listNode.find((i) =>{
+      const listId=    i.Users.map((i) => i.UserId + "");
+      return listId.includes(idUser+"")
+    }
+     
+    );
+    if (nodeItem) {
+      // find Child
+      const idNode = nodeItem.Id;
+      listNode.forEach((item) => {
+        const node = listNode.find((i) => i.ParentID === idNode);
+        if (node) {
+          if (node.Users.length > 0 && nodeItem.Users.length == 1) {
+            flag = false;
+          }
+        }
+      });
+    }
+    return flag;
+  };
   // get List member
   const getListMember = async () => {
     try {
@@ -73,6 +109,12 @@ function ListMember({ list,action=true }) {
     }
   };
   const handleDelete = async (user) => {
+    if(!checkDelete(user.UserId)){
+      toast.warning("Không thể xóa do user này đang có user con",{
+      autoClose:1000
+      });
+      return ;
+    }
     try {
       const res = await genealogyApi.deleteUserGene(
         currentIdGenealogy,

@@ -21,6 +21,8 @@ import { toast } from "react-toastify";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 
 function AddMemberForm({ item, refreshData }) {
+  const { currentIdGenealogy } = useAuthStore();
+  
   const originData = {
     Id: 0,
     ModifiedBy: "string",
@@ -51,7 +53,6 @@ function AddMemberForm({ item, refreshData }) {
   const [listFamilyTree, setListFamilyTree] = useState([]);
 
   const fileRef = useRef();
-  const { currentIdGenealogy } = useAuthStore();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -74,26 +75,6 @@ function AddMemberForm({ item, refreshData }) {
   // Add
   const onAdd = async () => {
     try {
-      // const itemTree = listFamilyTree.find(i => i.Id == memberData.IdFamilyTree);
-      // if(itemTree){
-        
-      //   if(itemTree?.Users?.length >=2){
-      //     if(!item){
-      //       toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
-      //       return;
-      //     }
-      //     else{
-      //       console.log(item)
-      //       const  itemIdTree = item.IdFamilyTree;
-      //       const itemUserId = item.UserId;
-      //       if(!itemTree?.Users.map(i => i.UserId)?.includes(itemUserId)){
-      //         toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
-      //         return;
-      //       }
-      //     }
-         
-      //   }
-      // }
       const res = !item
         ? await genealogyApi.addNewMember({
             ...memberData,
@@ -102,18 +83,17 @@ function AddMemberForm({ item, refreshData }) {
         : await genealogyApi.updateUsergene({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
-            Name:"sss"
+            Name: "sss",
           });
       if (res.data.StatusCode === 200) {
-        if(!item){
+        if (!item) {
           setMemberData(originData);
-        toast.success("Thêm thành công");
-        }
-        else{
+          toast.success("Thêm thành công");
+        } else {
           await refreshData();
           toast.success("Sửa thành công");
         }
-        getListFamilyTree()
+        getListFamilyTree();
       }
     } catch (error) {
       handleError(error);
