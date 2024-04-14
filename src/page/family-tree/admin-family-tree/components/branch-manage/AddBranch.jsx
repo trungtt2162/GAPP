@@ -13,10 +13,35 @@ import useAuthStore from "../../../../../zustand/authStore";
 import { handleError } from "../../../../../ultils/helper";
 import { toast } from "react-toastify";
 
-const AddBranch = ({item,getListAllNode}) => {
-  const classes = {};
+const AddBranch = ({ item, getListAllNode }) => {
+  const [currentMember, setCurrentMember] = useState(null);
+  const [listNode, setListNode] = useState([]);
   const [listFamilyTree, setListFamilyTree] = useState([]);
   const { currentIdGenealogy } = useAuthStore();
+  let disalbedRoot = false;
+  const getListAllNode1 = async () => {
+    const res = await familyTreeApi.getListAllNode(currentIdGenealogy);
+    if (res.data.StatusCode === 200) {
+      setListNode(res.data.Data);
+    }
+  };
+
+  useEffect(() => {
+    if (currentIdGenealogy) {
+      getListAllNode1();
+    }
+  }, [currentIdGenealogy]);
+
+  //
+  const currentRoot = listFamilyTree.find((i) => i.ParentID == null);
+  if (currentRoot) {
+    if (item && item.ParentID == "000") {
+      disalbedRoot =  false;
+    }
+    disalbedRoot= true;
+  }
+  const classes = {};
+ 
   // State để lưu trữ giá trị của các trường
   const originData = {
     IdGenealogy: 0,
@@ -54,25 +79,26 @@ const AddBranch = ({item,getListAllNode}) => {
   }, [currentIdGenealogy]);
   const handleAdd = async () => {
     try {
-      const res = !item ?  await familyTreeApi.addTree({
-        ...formData,
-        IdGenealogy: currentIdGenealogy,
-        parentId: formData.parentId === "000" ? null : formData.parentId
-      }):  await familyTreeApi.updateTree({
-        ...formData,
-        IdGenealogy: currentIdGenealogy,
-        parentId: formData.parentId === "000" ? null : formData.parentId
-      });
+      const res = !item
+        ? await familyTreeApi.addTree({
+            ...formData,
+            IdGenealogy: currentIdGenealogy,
+            parentId: formData.parentId === "000" ? null : formData.parentId,
+          })
+        : await familyTreeApi.updateTree({
+            ...formData,
+            IdGenealogy: currentIdGenealogy,
+            parentId: formData.parentId === "000" ? null : formData.parentId,
+          });
       if (res.data.StatusCode === 200) {
-       if(!item){
-        setFormData(originData);
-        toast.success("Thêm thành công");
-        getListFamilyTree();
-       }
-       else{
-        toast.success("Đã sửa");
-        getListAllNode()
-       }
+        if (!item) {
+          setFormData(originData);
+          toast.success("Thêm thành công");
+          getListFamilyTree();
+        } else {
+          toast.success("Đã sửa");
+          getListAllNode();
+        }
       }
     } catch (error) {
       handleError(error);
@@ -112,7 +138,7 @@ const AddBranch = ({item,getListAllNode}) => {
               onChange={handleChange}
             >
               {/* Thay đổi MenuItem theo nhu cầu */}
-              <MenuItem value={"000"}>Không có nhánh cha</MenuItem>
+              <MenuItem disabled={disalbedRoot} value={"000"}>Không có nhánh cha</MenuItem>
               {listFamilyTree.map((i) => (
                 <MenuItem value={i.Id}>{i.Name}</MenuItem>
               ))}
@@ -125,7 +151,7 @@ const AddBranch = ({item,getListAllNode}) => {
           variant="contained"
           color="primary"
         >
-         {item  ? "Sửa" :"Thêm"}
+          {item ? "Sửa" : "Thêm"}
         </Button>
       </form>
     </Container>
