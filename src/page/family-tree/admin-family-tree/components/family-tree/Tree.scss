@@ -18,17 +18,17 @@
     }
     100% {
       border-color: #ff4da6;
-      box-shadow: 0 0 5px #fff, 0 0 10px #ff4da6, 0 0 5px #ff4da6, 0 0 5px #ff4da6;
+      box-shadow: 0 0 5px #fff, 0 0 3px #ff4da6, 0 0 5px #ff4da6, 0 0 5px #ff4da6;
     }
   }
   @keyframes glowing-blue {
     0% {
       border-color: #fff;
-      box-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px blue, 0 0 10px blue;
+      box-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px blue, 0 0 3px blue;
     }
     100% {
       border-color: blue;
-      box-shadow: 0 0 10px #fff, 0 0 10px blue, 0 0 10px blue, 0 0 5px blue;
+      box-shadow: 0 0 3px #fff, 0 0 3px blue, 0 0 10px blue, 0 0 5px blue;
     }
   }
   

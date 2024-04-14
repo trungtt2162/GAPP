@@ -463,6 +463,7 @@ export default function Tree1({ isGuest }) {
             renderCustomNodeElement={RenderRectSvgNode}
             orientation="vertical"
             pathFunc={"step"}
+            zoomable={false}
           />
         )}
         <div

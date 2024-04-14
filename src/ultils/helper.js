@@ -65,7 +65,7 @@ export const handleError = (error,isshowToast=true) => {
     mess = error.message || "Something went wrong";
   }
   if(isshowToast){
-    toast.error(mess)
+    toast.error("Có lỗi xảy ra")
   }
   return mess;
 };

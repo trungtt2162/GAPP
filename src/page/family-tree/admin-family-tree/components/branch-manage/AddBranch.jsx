@@ -13,7 +13,7 @@ import useAuthStore from "../../../../../zustand/authStore";
 import { handleError } from "../../../../../ultils/helper";
 import { toast } from "react-toastify";
 
-const AddBranch = () => {
+const AddBranch = ({item,getListAllNode}) => {
   const classes = {};
   const [listFamilyTree, setListFamilyTree] = useState([]);
   const { currentIdGenealogy } = useAuthStore();
@@ -25,7 +25,7 @@ const AddBranch = () => {
     description: "",
     parentId: "",
   };
-  const [formData, setFormData] = useState(originData);
+  const [formData, setFormData] = useState(item || originData);
 
   // Xử lí sự kiện thay đổi giá trị của các trường input
   const handleChange = (e) => {
@@ -54,15 +54,25 @@ const AddBranch = () => {
   }, [currentIdGenealogy]);
   const handleAdd = async () => {
     try {
-      const res = await familyTreeApi.addTree({
+      const res = !item ?  await familyTreeApi.addTree({
+        ...formData,
+        IdGenealogy: currentIdGenealogy,
+        parentId: formData.parentId === "000" ? null : formData.parentId
+      }):  await familyTreeApi.updateTree({
         ...formData,
         IdGenealogy: currentIdGenealogy,
         parentId: formData.parentId === "000" ? null : formData.parentId
       });
       if (res.data.StatusCode === 200) {
+       if(!item){
         setFormData(originData);
         toast.success("Thêm thành công");
         getListFamilyTree();
+       }
+       else{
+        toast.success("Đã sửa");
+        getListAllNode()
+       }
       }
     } catch (error) {
       handleError(error);
@@ -115,7 +125,7 @@ const AddBranch = () => {
           variant="contained"
           color="primary"
         >
-          Thêm
+         {item  ? "Sửa" :"Thêm"}
         </Button>
       </form>
     </Container>
