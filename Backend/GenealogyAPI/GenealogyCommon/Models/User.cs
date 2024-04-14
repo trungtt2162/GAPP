@@ -22,8 +22,8 @@ namespace GenealogyCommon.Models
         public string Address { get; set; }
         public int Gender { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
-        public DateTime DateOfDeath { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public DateTime? DateOfDeath { get; set; }
         public string Avatar { get; set; }
         public int Type { get; set; }
         public string HomeTown { get; set; }
