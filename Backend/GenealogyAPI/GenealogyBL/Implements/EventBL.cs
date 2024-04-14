@@ -89,7 +89,9 @@ namespace GenealogyBL.Implements
 
 
             }
-            await _emailSender.SendEmailAsync(receips, $"Thư mời tham gia sự kiện {eventInfo.Name}", $"Link tham giá sự kiên {eventInfo.LinkStream}", $"Link tham giá sự kiên {eventInfo.LinkStream}");
+            await _emailSender.SendEmailAsync(receips, $"Thư mời tham gia sự kiện {eventInfo.Name}",
+                $"<div>Link tham giá sự kiên {eventInfo.LinkStream}</div><div>Thời gian diễn ra: {eventInfo.OrganizationDate.ToString("MM:HH dd/MM/yy")}</div>",
+                $"<div>Link tham giá sự kiên {eventInfo.LinkStream}</div><div>Thời gian diễn ra: {eventInfo.OrganizationDate.ToString("MM:HH dd/MM/yy")}</div>");
             return true;
         }
     }

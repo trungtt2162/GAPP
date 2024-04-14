@@ -144,6 +144,15 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            // case Email null
+            if (string.IsNullOrWhiteSpace(userGenealogyParam.Email))
+            {
+                var iduser1 = await _userBL.Create(_mapper.Map<User>(userGenealogyParam));
+                userGenealogyParam.UserId = (int)iduser1;
+                await _userGenealogyBL.Create(userGenealogyParam);
+                await _userGenealogyBL.ApproveNewMember(userGenealogyParam);
+                return serviceResult;
+            }
             var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Add, userGenealogyParam.IdGenealogy);
             if (!check)
             {

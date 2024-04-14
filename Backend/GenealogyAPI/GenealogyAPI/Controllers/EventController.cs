@@ -164,8 +164,9 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnUnauthorized("Không có quyền");
             }
-            await _baseBL.Create(_mapper.Map<UserEvent>(param));
-
+            var userEvent = _mapper.Map<UserEvent>(param);
+            await _baseBL.Create(userEvent);
+            await _eventBL.SendEmails(new List<UserEvent>() { userEvent });
             return serviceResult.OnSuccess("Created");
         }
 

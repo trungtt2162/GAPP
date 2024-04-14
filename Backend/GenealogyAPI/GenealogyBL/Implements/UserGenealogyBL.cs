@@ -95,7 +95,7 @@ namespace GenealogyBL.Implements
             return null;
         }
 
-        public async Task<object> ApproveNewMember(UserGenealogy user, UserRegister userRegister)
+        public async Task<object> ApproveNewMember(UserGenealogy user, UserRegister userRegister = null)
         {
             var param = new Dictionary<string, object>()
             {
@@ -119,9 +119,13 @@ namespace GenealogyBL.Implements
                                    user.FirstName
                                 }
                                 };
-            await _emailSender.SendEmailAsync(new JArray() { recip }, 
+            if (userRegister != null)
+            {
+                await _emailSender.SendEmailAsync(new JArray() { recip },
                 "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>",
                 $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>");
+            }
+
             return null;
         }
         override

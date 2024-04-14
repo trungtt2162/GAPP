@@ -14,7 +14,7 @@ namespace GenealogyBL.Interfaces
         Task <IEnumerable<UserGenealogy>> GetUserGenealogyByFamilyTree(int idFamilyTree, int idGenealogy);
 
         Task<object> ApproveRegister(UserGenealogy obj);
-        Task<object> ApproveNewMember(UserGenealogy user, UserRegister userRegister);
+        Task<object> ApproveNewMember(UserGenealogy user, UserRegister userRegister = null);
         Task<IEnumerable<UserGenealogy>> GetAllByUserId(int userID);
     }
 }
