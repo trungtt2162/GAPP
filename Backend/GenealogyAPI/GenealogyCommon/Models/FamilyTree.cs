@@ -23,6 +23,8 @@ namespace GenealogyCommon.Models
         public string Description { get; set; }
         public int? ParentID { get; set; } = null;
 
+        public string? GenealogyName { get; set; }
+
         public List<UserGenealogy> Users { get; set; }  = new List<UserGenealogy> { };
     }
 

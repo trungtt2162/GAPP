@@ -169,10 +169,10 @@ namespace GenealogyBL.Implements
             {
                 throw new ArgumentException("Không có quyền");
             }
-            permission.Roles.ForEach(role =>
-            {
-                role.Permissions = permission.Permissions.Where(x => x.IdGenealogy == role.IdGenealogy).ToList();
-            });
+            //permission.Roles.ForEach(role =>
+            //{
+            //    role.Permissions = permission.Permissions.Where(x => x.IdGenealogy == role.IdGenealogy).ToList();
+            //});
             return permission.Roles;
         }
 

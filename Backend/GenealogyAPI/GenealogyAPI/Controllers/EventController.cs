@@ -59,6 +59,31 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Created");
         }
 
+        [HttpPost("admin-request")]
+        public async Task<ServiceResult> AdminRequestEvent(EventRequest param)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest("Invalid Param");
+            }
+            var eventData = _mapper.Map<Event>(param);
+            var idEvent = await _eventBL.Create(eventData);
+            if (param.UserEvents != null && param.UserEvents.Any())
+            {
+                List<Task> taskList = new List<Task>();
+                param.UserEvents.ForEach(e =>
+                {
+                    e.IdEvent = (int)idEvent;
+                    taskList.Add(_baseBL.Create(e));
+                });
+                await Task.WhenAll(taskList);
+                await _eventBL.SendEmails(param.UserEvents);
+            }
+
+            return serviceResult.OnSuccess("Created");
+        }
+
 
         [HttpPost("request-event")]
         public async Task<ServiceResult> RequestEvent(EventRequest param)

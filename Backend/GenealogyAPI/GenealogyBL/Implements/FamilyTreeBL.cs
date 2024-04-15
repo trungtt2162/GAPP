@@ -40,12 +40,14 @@ namespace GenealogyBL.Implements
         {
             var trees =  await _familyTreeDL.GetAll(idGenealogy);
             var users = await _userGenealogyDL.GetAll(idGenealogy);
+            var genInfo = await _genealogyDL.GetById(idGenealogy);
             var treeClient = new List<FamilyTreeClient>();
             if (trees.Any())
             {
                 foreach(var t in trees)
                 {
                     var d = _mapper.Map<FamilyTreeClient>(t);
+                    d.GenealogyName = genInfo.Name;
                     d.Users = users.Where(x => x.IdFamilyTree == t.Id).ToList();
                     treeClient.Add(d);
                 }
