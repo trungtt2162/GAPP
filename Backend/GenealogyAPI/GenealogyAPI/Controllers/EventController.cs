@@ -196,6 +196,33 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Created");
         }
 
+        [HttpPost("users-event")]
+        public async Task<ServiceResult> InsertEventUsers(List<EventUserParam> userEvents)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest("Invalid Param");
+            }
+            if (userEvents == null || userEvents.Count == 0)
+            {
+                return serviceResult;
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.Event, PermissionCode.Add, userEvents[0].IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
+            userEvents.ForEach(async (user) =>
+            {
+                var userEvent = _mapper.Map<UserEvent>(user);
+                await _baseBL.Create(userEvent);
+                await _eventBL.SendEmails(new List<UserEvent>() { userEvent });
+            });
+
+            return serviceResult.OnSuccess("Created");
+        }
+
         [HttpDelete("user-event")]
         public async Task<ServiceResult> DeleteEventUser([FromQuery] int id, [FromQuery] int idGenealogy)
         {
