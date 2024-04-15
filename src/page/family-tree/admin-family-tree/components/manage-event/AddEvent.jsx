@@ -110,7 +110,7 @@ function AddEvent({ item, updateItem }) {
             : listMember,
       };
       const res = !item
-        ? await eventApi.resquestEvent(data)
+        ? await eventApi.adminRequestEvent(data)
         : await eventApi.updateEvent(data);
       if (res.data.StatusCode === 200) {
         toast.success(item ? "Cập nhât thành công" : "Tạo thành công");

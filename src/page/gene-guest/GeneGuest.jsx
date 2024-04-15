@@ -19,10 +19,10 @@ import { historyApi } from "../../api/history.api";
 import CustomModal from "../../components/common/modal/CustomModal";
 import Tree1 from "../family-tree/admin-family-tree/components/family-tree/FamilyTree";
 const GeneGuest = () => {
-    const [curent, setCurrent] = useState(null);
+  const [curent, setCurrent] = useState(null);
 
-    const [id, setId] = useState("");
-    const [des, setDes] = useState("");
+  const [id, setId] = useState("");
+  const [des, setDes] = useState("");
   const [listEvent, setListEvent] = useState([]);
   const [currentEvent, setCurrentEvent] = useState(null);
   const [listGene, setListGene] = useState([]);
@@ -34,7 +34,7 @@ const GeneGuest = () => {
     );
     return modifiedValue;
   };
- 
+
   const getListEvent = async () => {
     try {
       const res = await eventApi.getListEventGuest(id);
@@ -128,7 +128,7 @@ const GeneGuest = () => {
                     labelId="select-label"
                     id="select"
                     value={id}
-                    onChange={e => setId(e.target.value)}
+                    onChange={(e) => setId(e.target.value)}
                     label="Gia phả"
                   >
                     {listGene.map((i) => (
@@ -136,27 +136,27 @@ const GeneGuest = () => {
                     ))}
                   </Select>
                 </FormControl>
-                <Button variant="contained" onClick={async () =>{
+                <Button
+                  variant="contained"
+                  onClick={async () => {
                     // if(id){
                     //     await getDes()
                     //     await  getListHistory()
                     // }
-                }}>
+                  }}
+                >
                   Tìm kiếm
                 </Button>
               </div>
             </Grid>
-           
-              <div className="content-card card-item">
-              <Grid item xs={12}>
-             <Tree1 isGuest idTree={id} />
-            </Grid>
-              </div>
-          
           </Grid>
         </Box>
       </div>
-      <CustomModal minHeight={600} open={curent} onClose={() => setCurrent(null)}>
+      <CustomModal
+        minHeight={600}
+        open={curent}
+        onClose={() => setCurrent(null)}
+      >
         <Grid container spacing={2}>
           <Grid item xs={4}>
             <img
@@ -178,6 +178,9 @@ const GeneGuest = () => {
           </Grid>
         </Grid>
       </CustomModal>
+      <div className="content-card card-item">
+        <Tree1 isGuest idTree={id} />
+      </div>
     </div>
   );
 };

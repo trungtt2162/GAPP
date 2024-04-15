@@ -113,14 +113,14 @@ const useCenteredTree = (defaultTranslate = { x: 0, y: 0 }) => {
     if (containerElem !== null) {
       const { width, height } = containerElem.getBoundingClientRect();
       setDimensions({ width, height });
-      setTranslate({ x: width / 3, y: 60 });
+      setTranslate({ x: width / 2, y: 60 });
     }
   }, []);
   return [dimensions, translate, containerRef];
 };
 
 const containerStyles = {
-  width: "100vw",
+  width: "100%",
   height: "100vh",
 };
 
@@ -403,15 +403,20 @@ export default function Tree1({ isGuest,idTree }) {
     }
   };
   const listFilter = listNode.filter((i) => i.Users.length > 0);
+  const nameGene = listNode.length > 0 ? listNode[0]?.GenealogyName : "";
+  const isEmpty = listNode.every(item => !item?.Users?.length)
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+    {!isEmpty &&  
+     <div style={{ display: "flex", justifyContent: "flex-end",alignItems:'center' }}>
+        
         <div className="wrap-ex">
           <p className="bold">Chú thích</p>
           <div
             style={{
               fontSize: 12,
               fontWeight: "bold",
+             
             }}
           >
             <div className="flex-start">
@@ -493,8 +498,14 @@ export default function Tree1({ isGuest,idTree }) {
             </div>
           </div>
         </div>
-      </div>
-
+      </div>}
+      <p style={{
+          fontWeight:"bold",
+          flex:1,
+          textAlign:'center',
+           fontSize:20,
+           marginTop:20
+        }}>Cây gia phả {nameGene ? (" của " + nameGene):""} </p>
       <div style={{ ...containerStyles }} ref={containerRef}>
         {listFilter.length > 0 && (
           <Tree
@@ -507,6 +518,13 @@ export default function Tree1({ isGuest,idTree }) {
             zoomable={false}
           />
         )}
+       {
+        isEmpty &&   <div style={{
+         
+          textAlign:'center',
+          marginTop:50
+        }}>Cây gia phả trống</div>
+       }
         <div
           style={{
             position: "fixed",

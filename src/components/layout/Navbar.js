@@ -161,7 +161,7 @@ const Navbar = () => {
                 Quản lý quỹ
               </Link>
             )}
-            {isLogin && isCreateGene && (
+            {isLogin && isCreateGene && !isSupperAdmin&& (
               <Link
                 to="/create-gene"
                 className={"link" + (url === "/create-gene" ? " active" : "")}

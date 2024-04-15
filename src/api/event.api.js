@@ -8,11 +8,11 @@ export const eventApi = {
     return API.put("/api/FamilyAddress", data);
   },
 
-  getListEventAdmin: (id,query) => {
+  getListEventAdmin: (id, query) => {
     return API.post("/api/Event/paging", {
       PageSize: 1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and Inactive=false ` + (query ? query :""),
+      Condition: `IdGenealogy=${id} and Inactive=false ` + (query ? query : ""),
       SortOrder: "",
       SearchKey: "",
     });
@@ -37,11 +37,11 @@ export const eventApi = {
       SearchKey: "",
     });
   },
-  getListEventGuest: (id,query) => {
+  getListEventGuest: (id, query) => {
     return API.post("api/Event/guest/paging?idGenealogy=" + id, {
       PageSize: 1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and Inactive=false` + (query ||""),
+      Condition: `IdGenealogy=${id} and Inactive=false` + (query || ""),
       SortOrder: "",
       SearchKey: "",
     });
@@ -60,11 +60,14 @@ export const eventApi = {
     return API.delete(`/api/Event?id=${id}&idGenealogy=${idGenealogy}`);
   },
   requestEvent: (data) => {
-    return API.post("/api/Event/request-event", {
-      data,
-    });
+    return API.post("/api/Event/request-event", data);
   },
-  sendEmailEvent:(idgene,IdEvent)=>{
-return API.get(`/api/Event/send-email?idGenealogy=${idgene}&idEvent=${IdEvent}`)
-  }
+  adminRequestEvent: (data) => {
+    return API.post("/api/Event/admin-request", data);
+  },
+  sendEmailEvent: (idgene, IdEvent) => {
+    return API.get(
+      `/api/Event/send-email?idGenealogy=${idgene}&idEvent=${IdEvent}`
+    );
+  },
 };
