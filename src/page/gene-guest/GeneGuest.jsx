@@ -137,10 +137,10 @@ const GeneGuest = () => {
                   </Select>
                 </FormControl>
                 <Button variant="contained" onClick={async () =>{
-                    if(id){
-                        await getDes()
-                        await  getListHistory()
-                    }
+                    // if(id){
+                    //     await getDes()
+                    //     await  getListHistory()
+                    // }
                 }}>
                   Tìm kiếm
                 </Button>
@@ -149,7 +149,7 @@ const GeneGuest = () => {
            
               <div className="content-card card-item">
               <Grid item xs={12}>
-             <Tree1 isGuest />
+             <Tree1 isGuest idTree={id} />
             </Grid>
               </div>
           

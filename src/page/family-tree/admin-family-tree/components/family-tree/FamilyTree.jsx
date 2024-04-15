@@ -367,11 +367,11 @@ const RenderRectSvgNode = ({ nodeDatum, toggleNode }) => {
   return <NodeItem nodeDatum={nodeDatum} />;
 };
 
-export default function Tree1({ isGuest }) {
+export default function Tree1({ isGuest,idTree }) {
   const [dimensions, translate, containerRef] = useCenteredTree();
-  const { currentIdGenealogy } = useAuthStore();
+  const { currentIdGenealogy :idTree2 } = useAuthStore();
   const [listNode, setListNode] = useState([]);
-
+ const currentIdGenealogy = idTree ||idTree2
   const getListAllNode = async () => {
     const res = await familyTreeApi.getListAllNode(currentIdGenealogy);
     if (res.data.StatusCode === 200) {
