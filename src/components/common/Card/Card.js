@@ -23,7 +23,7 @@ const Card = ({ number, title, description }) => {
     >
       <Typography
         sx={{
-          color: palette.secondary.light,
+          // color: palette.secondary.light,
           fontWeight: "bold",
           fontSize: { md: "2rem", xs: "1.25rem" },
         }}
@@ -41,7 +41,7 @@ const Card = ({ number, title, description }) => {
         <Typography
           variant="head"
           sx={{
-            color: palette.text.primary,
+            // color: palette.text.primary,
             fontWeight: "bold",
             fontSize: { md: "1.25rem", xs: "1.25rem" },
           }}

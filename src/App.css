@@ -3,6 +3,7 @@ body {
   font-family:Arial !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fff !important;
 }
 .MuiTableCell-root,
 .MuiTableRow-root {
@@ -246,10 +247,9 @@ h1,h2,h3,h4,h5,p{
 }
 .bg-default{
   
-  background-color:#fbfaf9 ;
+  /* background-color:#fbfaf9 ; */
 }
 .app-content{
-  /* padding-top: 30px; */
 
 }
 .content-card{
@@ -259,9 +259,16 @@ h1,h2,h3,h4,h5,p{
   
 }
 .card-bg{
-  background:#263544;
-  background: linear-gradient(45deg, #54616d 0%,#263544 100%);
-
+  background: rgb(242, 184, 79);
   color:#fff;
   border-radius: 5px;
+  height: 120px;
+}
+.txt-start{
+  text-align: left;
+}
+.title{
+  font-size: 18px;
+  text-align: left;
+  font-weight: bold;
 }

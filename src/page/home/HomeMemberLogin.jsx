@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import ButtonTab from "../../components/common/button/ButtonTab";
 import ListMember from "../family-tree/admin-family-tree/components/manage-member/ListMember";
 import { historyApi } from "../../api/history.api";
-import { handleError } from "../../ultils/helper";
+import { dateFormat, handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { genealogyApi } from "../../api/genealogy.api";
 import ListEvent from "../family-tree/admin-family-tree/components/manage-event/ListEvent";
@@ -50,7 +50,7 @@ const HomeMemberLogin = () => {
               currentIdGenealogy,
               txtSearch
             )
-          : await eventApi.getListEventByName(currentIdGenealogy,txtSearch);
+          : await eventApi.getListEventByName(currentIdGenealogy, txtSearch);
       if (res.data.StatusCode !== 200) {
         throw new Error("error");
       }
@@ -148,9 +148,19 @@ const HomeMemberLogin = () => {
             <Grid item xs={6}>
               <div className="content-card card-item">
                 <h4 className="bold">Lịch sử gia đình</h4>
-               
-                <div style={{textAlign:"start",color:"black",marginBttom:15,cursor:"pointer"}} onClick={() => navigate("/history")}>Xem thêm</div>
-                {listHistory?.slice(0,4).map((item, index) => (
+
+                <div
+                  style={{
+                    textAlign: "start",
+                    color: "black",
+                    marginBttom: 15,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => navigate("/history")}
+                >
+                  Xem thêm
+                </div>
+                {listHistory?.slice(0, 4).map((item, index) => (
                   <div
                     style={{
                       padding: 10,
@@ -158,14 +168,24 @@ const HomeMemberLogin = () => {
                     }}
                     className="item-history card-bg"
                   >
-                    <p>{item.Description}</p>
-                    <Avatar
-                      src={item.Image}
-                      sx={{ width: 100, height: 100 }}
-                    ></Avatar>
+                    <div className="item-history">
+                      <div
+                        className="flex-center"
+                        style={{
+                          width: "100%",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <p className="title">{item.Title}</p>
+                        <div style={{ textAlign: "start" }}>
+                          Ngày : {dateFormat(item.Date)}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ))}
-               
               </div>
             </Grid>
           </Grid>

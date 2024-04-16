@@ -15,7 +15,7 @@ const PrimaryButton = ({ title, event }) => {
         borderRadius: 2,
         alignSelf: { xs: "center", md: "flex-start" },
         boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-        "&:hover": { color: palette.primary.main },
+        // "&:hover": { color: palette.primary.main },
       }}
       onClick={() => {
         if (event) {

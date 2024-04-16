@@ -16,7 +16,7 @@ const ButtonTabSideBar = ({ text, value, index, onClick,noMargin,path }) => {
       className="tabItemSideBar"
       style={{
         // border: index === value && `1px solid ${palette.secondary.light} `,
-        background: index === value && `${"#1d2531"} `,
+        background: index === value && `${"#f1d4a0"} `,
         // color: index === value ? `white` : `${palette.primary.main}`,
         marginRight: !noMargin && 20,
       }}

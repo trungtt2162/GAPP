@@ -17,6 +17,7 @@ import {
 import { genealogyApi } from "../../api/genealogy.api";
 import { historyApi } from "../../api/history.api";
 import CustomModal from "../../components/common/modal/CustomModal";
+import HistoryFamily from "../history-family/HistoryFamily";
 const HistoryGuest = () => {
   const [curent, setCurrent] = useState(null);
   const [startDate,setStartDate] = useState("");
@@ -104,10 +105,10 @@ const HistoryGuest = () => {
       <div className="how-work">
         <Box
           sx={{
-            display: "flex",
-            alignItems: { md: "flex-end", xs: "center" },
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: { md: "space-between", xs: "center" },
+            // display: "flex",
+            // alignItems: { md: "flex-end", xs: "center" },
+            // flexDirection: { xs: "column", md: "row" },
+            // justifyContent: { md: "space-between", xs: "center" },
             p: "40px",
             background: "#f0f0f0",
           }}
@@ -157,7 +158,7 @@ const HistoryGuest = () => {
                 </Button>
               </div>
             </Grid>
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
               <div className="content-card card-item">
                 <Grid item xs={6}>
                   <div className="content-card card-item">
@@ -179,8 +180,8 @@ const HistoryGuest = () => {
                   </div>
                 </Grid>
               </div>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid> */}
+            {/* <Grid item xs={6}>
               <div className="content-card card-item">
                 <h4 className="bold">Các mốc sự kiện lịch sử</h4>
                 <Grid style={{marginTop:20}} container spacing={2} alignItems="center">
@@ -253,9 +254,17 @@ const HistoryGuest = () => {
                   </div>
                 ))}
               </div>
-            </Grid>
+            </Grid> */}
           </Grid>
+          
+        <div style={{
+          background:"white",
+          paddingTop:-50
+        }}> 
+        <HistoryFamily list={listHistory} desHis={des} />
+        </div>
         </Box>
+      
       </div>
       <CustomModal
         minHeight={600}

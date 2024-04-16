@@ -98,7 +98,7 @@ const PriceForm = () => {
             ":before": { borderBottomColor: "#bfbfbff7" },
             ":after": { borderBottomColor: "#bfbfbff7" },
             "& .MuiSvgIcon-root": {
-              color: palette.primary.main,
+              // color: palette.primary.main,
             },
             " & ": {
               color: palette.text.secondary,
@@ -145,13 +145,13 @@ const PriceForm = () => {
             sx={{
               ":before": { borderBottomColor: "#bfbfbff7" },
               ":after": { borderBottomColor: "#bfbfbff7" },
-              "& .MuiSvgIcon-root": {
-                color: palette.primary.main,
-              },
-              " & ": {
-                color: palette.text.secondary,
-                fontWeight: "500",
-              },
+              // "& .MuiSvgIcon-root": {
+              //   color: palette.primary.main,
+              // },
+              // " & ": {
+              //   color: palette.text.secondary,
+              //   fontWeight: "500",
+              // },
             }}
           >
             <MenuItem value="">To</MenuItem>
@@ -169,7 +169,7 @@ const PriceForm = () => {
               ":before": { borderBottomColor: "#bfbfbff7" },
               ":after": { borderBottomColor: "#bfbfbff7" },
               "& .MuiSvgIcon-root": {
-                color: palette.primary.main,
+                // color: palette.primary.main,
               },
               " & ": {
                 color: palette.text.secondary,

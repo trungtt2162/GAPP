@@ -17,7 +17,7 @@ const ButtonLoading = ({ title, event, loading }) => {
         borderRadius: 2,
         alignSelf: { xs: "center", md: "flex-start" },
         boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-        "&:hover": {  color: `${palette.primary.main}!important` },
+        // "&:hover": {  color: `${palette.primary.main}!important` },
       }}
       onClick={() => {
         if (event) {

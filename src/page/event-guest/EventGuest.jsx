@@ -73,10 +73,7 @@ const EventGuest = () => {
       <div className="how-work">
         <Box
           sx={{
-            display: "flex",
-            alignItems: { md: "flex-end", xs: "center" },
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: { md: "space-between", xs: "center" },
+          
             p: "40px",
             background: "#f0f0f0",
           }}

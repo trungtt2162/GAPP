@@ -240,7 +240,7 @@ const Navbar = () => {
                   color: "#ffffff",
                   borderRadius: 2,
                   boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-                  "&:hover": { color: palette.primary.main },
+                  // "&:hover": { color: palette.primary.main },
                 }}
                 onClick={() => {
                   navigate("/login");
@@ -258,7 +258,7 @@ const Navbar = () => {
                   color: "#ffffff",
                   borderRadius: 2,
                   boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-                  "&:hover": { color: palette.primary.main },
+                  // "&:hover": { color: palette.primary.main },
                 }}
                 onClick={() => {
                   navigate("/register");
@@ -347,7 +347,7 @@ const Navbar = () => {
                     p: ".5rem 1.5rem",
                     color: palette.text.secondary,
                     backgroundColor: "transparent",
-                    "&:hover": { color: palette.primary.main },
+                    // "&:hover": { color: palette.primary.main },
                   }}
                 >
                   Signin

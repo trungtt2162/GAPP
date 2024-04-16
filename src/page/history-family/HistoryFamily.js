@@ -9,12 +9,12 @@ import { dateFormat, handleError } from "../../ultils/helper";
 
 import useAuthStore from "../../zustand/authStore";
 import CustomModal from "../../components/common/modal/CustomModal";
-const HistoryFamily = () => {
+const HistoryFamily = ({list,desHis}) => {
   const { palette } = useTheme(theme);
   const [des, setDes] = useState("");
   const { currentIdGenealogy } = useAuthStore();
-  const [startDate,setStartDate] = useState("");
-  const [endDate,setEndDate]  = useState("")
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const modifyInitialValue = (value) => {
     const modifiedValue = value?.replace(
       /<img/g,
@@ -24,16 +24,18 @@ const HistoryFamily = () => {
   };
   const [curent, setCurrent] = useState(null);
   const [listHistory, setListHistory] = useState([]);
+  const lisFinal = list || listHistory
+  const desFinal = desHis || des
   const getListHistory = async (id) => {
     let query = "";
-    if(startDate ){
-      query += ` and Date>='${startDate}' `
+    if (startDate) {
+      query += ` and Date>='${startDate}' `;
     }
-    if(endDate){
-      query += ` and Date<='${endDate}' `
+    if (endDate) {
+      query += ` and Date<='${endDate}' `;
     }
     try {
-      const res = await historyApi.getListAllHistoryByGenealogyId(id,query);
+      const res = await historyApi.getListAllHistoryByGenealogyId(id, query);
       if (res.data.StatusCode === 200) {
         setListHistory(res.data.Data.Data);
       }
@@ -41,9 +43,7 @@ const HistoryFamily = () => {
       handleError(error);
     }
   };
-  useEffect(() => {
-    getListHistory(currentIdGenealogy);
-  }, [currentIdGenealogy]);
+  
   const getDes = async (id) => {
     try {
       const res = await historyApi.getDescriptionHistorufamily(id);
@@ -62,7 +62,6 @@ const HistoryFamily = () => {
   }, [currentIdGenealogy]);
   return (
     <div>
-      <Navbar />
       <Box
         width="100%"
         max-width="10w"
@@ -74,30 +73,33 @@ const HistoryFamily = () => {
         <Box
           sx={{
             display: "flex",
-            alignItems: { md: "flex-end", xs: "center" },
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: { md: "space-between", xs: "center" },
-            p: "40px",
-            background: "#f0f0f0",
+
+            flexDirection: { xs: "column", md: "column" },
+            p: "40px 200px",
           }}
         >
           <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <div className="content-card card-item">
-                <h4 className="bold">Giới thiệu lịch sử</h4>
+            <Grid item xs={12}>
+              <div className="">
+                <p className="title">Giới thiệu lịch sử</p>
                 <p style={{ textAlign: "start" }}>
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: modifyInitialValue(des),
+                      __html: modifyInitialValue(desFinal),
                     }}
                   />
                 </p>
               </div>
             </Grid>
-            <Grid item xs={6}>
-              <div className="content-card card-item">
-                <h4 className="bold">Các mốc sự kiện lịch sử</h4>
-                <Grid style={{marginTop:20}} container spacing={2} alignItems="center">
+            <Grid item xs={12}>
+              <div className="">
+                <p className="title">Các mốc sự kiện lịch sử</p>
+                <Grid
+                  style={{ marginTop: 20 }}
+                  container
+                  spacing={2}
+                  alignItems="center"
+                >
                   <Grid item>
                     <TextField
                       sx={{ "& input": { height: "12px" } }}
@@ -123,52 +125,65 @@ const HistoryFamily = () => {
                     />
                   </Grid>
                   <Grid item>
-                    <Button onClick={() => getListHistory(currentIdGenealogy)} variant="contained" color="primary">
+                    <Button
+                      onClick={() => getListHistory(currentIdGenealogy)}
+                      variant="contained"
+                      color="primary"
+                    >
                       Lọc
                     </Button>
                   </Grid>
                   <Grid item flex={1}>
-                    <div style={{textAlign:"end"}}>Có {listHistory.length} sự kiện</div>
+                    <div style={{ textAlign: "end" }}>
+                      Có {lisFinal.length} sự kiện
+                    </div>
                   </Grid>
                 </Grid>
-                {listHistory.map((item, index) => (
-                  <div
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setCurrent(item)}
-                    className="item-history-wrap card-bg"
-                  >
-                    <div className="item-history">
-                      <div style={{ width: "100%" }}>
-                        <div
-                          className="display-3-line "
-                          style={{
-                            width: "calc(100% - 80px)",
-                            textAlign: "start",
-                            fontSize: 20,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {item.Title}
-                        </div>
-                        <div
-                          className="display-3-line "
-                          style={{
-                            textAlign: "start",
-                          }}
-                        >
-                          {dateFormat(item.Date)}
-                        </div>
-                      </div>
-                      <Avatar
-                        src={item.Image}
-                        sx={{ width: 100, height: 100 }}
-                      ></Avatar>
-                    </div>
-                  </div>
-                ))}
               </div>
             </Grid>
+            <Grid item xs={12}></Grid>
           </Grid>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+            }}
+          >
+            {lisFinal.map((item, index) => (
+              <div
+                key={index}
+                style={{ width: "calc(50% - 10px)", marginBottom: "20px" }}
+              >
+                <div
+                  style={{
+                    cursor: "pointer",
+                    width: "100%",
+                    background: "rgb(242, 184, 79)",
+                  }}
+                  onClick={() => setCurrent(item)}
+                  className="item-history-wrap card-bg"
+                >
+                  <div className="item-history">
+                    <div
+                      className="flex-center"
+                      style={{
+                        width: "100%",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <p className="title">{item.Title}</p>
+                      <div style={{ textAlign: "start" }}>
+                        Ngày : {dateFormat(item.Date)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </Box>
       </div>
       <CustomModal
@@ -176,30 +191,30 @@ const HistoryFamily = () => {
         open={curent}
         onClose={() => setCurrent(null)}
       >
-          <div
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: 24,
+            fontWeight: "bold",
+            overflow: "auto",
+          }}
+        >
+          {curent?.Title}
+        </div>
+        <div>
+          <span className="bold">Ngày diễn ra : </span>
+          <span>{dateFormat(curent?.Date)}</span>
+        </div>
+        <div>
+          <span className="bold">Nội dung: </span>
+          <span
             style={{
-              textAlign: "center",
-              fontSize: 24,
-              fontWeight: "bold",
-              overflow:"auto"
+              textAlign: "start",
             }}
           >
-            {curent?.Title}
-          </div>
-          <div>
-            <span className="bold">Ngày diễn ra : </span>
-            <span>{dateFormat(curent?.Date)}</span>
-          </div>
-          <div>
-            <span className="bold">Nội dung: </span>
-            <span
-              style={{
-                textAlign: "start",
-              }}
-            >
-              {curent?.Description}
-            </span>{" "}
-          </div>
+            {curent?.Description}
+          </span>{" "}
+        </div>
         <Grid item xs={24}>
           <img
             src={curent?.Image}
