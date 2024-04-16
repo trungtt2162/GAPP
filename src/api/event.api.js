@@ -70,4 +70,19 @@ export const eventApi = {
       `/api/Event/send-email?idGenealogy=${idgene}&idEvent=${IdEvent}`
     );
   },
+  addListNewUserEvent: (data) => {
+    return API.post("/api/Event/users-event", data);
+  },
+  deleteUserEvent: (id, idGene) => {
+    return API.delete(`/api/Event/user-event?id=${id}&idGenealogy=${idGene}`);
+  },
+  getListUserAttendEvent: (idGene, IdEvent) => {
+    return API.post("/api/Event/user-event/paging", {
+      PageSize: 0,
+      PageNumber: -1,
+      Condition:`idGenealogy = ${idGene} and idEvent = ${IdEvent}`,
+      SortOrder: "",
+      SearchKey: "",
+    });
+  },
 };

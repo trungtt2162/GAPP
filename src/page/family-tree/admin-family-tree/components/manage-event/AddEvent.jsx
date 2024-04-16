@@ -25,9 +25,13 @@ import { toast } from "react-toastify";
 import Checkbox from "@mui/material/Checkbox";
 import { eventApi } from "../../../../../api/event.api";
 import useAuthStore from "../../../../../zustand/authStore";
-import { handleError, uploadImageToFirebase } from "../../../../../ultils/helper";
+import {
+  handleError,
+  uploadImageToFirebase,
+} from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 import AddImage from "../../../../../components/common/addImage/AddImage";
+import { list } from "firebase/storage";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -45,9 +49,10 @@ const useStyles = makeStyles((theme) => ({
 function AddEvent({ item, updateItem }) {
   const classes = useStyles();
   const fileRef = useRef();
-  const { userGenealogy, currentIdGenealogy } = useAuthStore();
+  const { userGenealogy, currentIdGenealogy, user } = useAuthStore();
   const [limitMeber, setLimitMember] = useState(false);
   const [listMember, setlistMember] = useState([]);
+  const [listUserAttend, setListUserAttend] = useState([]);
 
   const originData = {
     IdGenealogy: 26,
@@ -63,7 +68,7 @@ function AddEvent({ item, updateItem }) {
     InActive: false,
     UserEvents: [],
   };
-  const [formData, setFormData] = useState(originData);
+  const [formData, setFormData] = useState(item || originData);
 
   const handleChangeData = (key) => (e) => {
     const newValue = e?.target?.value;
@@ -87,7 +92,9 @@ function AddEvent({ item, updateItem }) {
         currentIdGenealogy
       );
       if (res.data.StatusCode === 200) {
-        setlistMember(res.data.Data.Data);
+        setlistMember(
+          res?.data?.Data?.Data?.filter((i) => i.UserId != user.Id)
+        );
       }
     } catch (error) {
       handleError(error);
@@ -117,6 +124,30 @@ function AddEvent({ item, updateItem }) {
         if (!item) {
           setFormData(originData);
         } else {
+          const listFinal =
+            limitMeber == "true"
+              ? listMember.filter((i) => i.checked)
+              : listMember;
+          const listAdd = getListAdd(listUserAttend, listFinal);
+          const lisDelete = getListDelete(listUserAttend, listFinal);
+          if(listAdd.length > 0){
+            await eventApi.addListNewUserEvent(
+              listAdd.map((i) => ({
+                IdGenealogy: i.IdGenealogy,
+                UserID: i.UserId,
+                IdEvent: item.Id,
+                FirstName: i.FirstName,
+                LastName: i.LastName,
+                Email: i.Email,
+                Id: i.Id,
+              }))
+            );
+          }
+          if(lisDelete.length > 0){
+            lisDelete.forEach((item) => {
+             eventApi.deleteUserEvent(item.Id,item.IdGenealogy)
+            })
+          }
           updateItem(data);
         }
       }
@@ -124,12 +155,66 @@ function AddEvent({ item, updateItem }) {
       handleError(error);
     }
   };
+
+  // get list user attend
+  const getListUserAttend = async (idgene, idevent) => {
+    try {
+      const res = await eventApi.getListUserAttendEvent(idgene, idevent);
+      if (res.data.StatusCode === 200) {
+        setListUserAttend(res.data.Data.Data || []);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  useEffect(() => {
+    if (item) {
+      getListUserAttend(item.IdGenealogy, item.Id);
+    }
+  }, [item]);
+
+  useEffect(() => {
+    if (listUserAttend.length > 0 && item && listMember.length > 0) {
+      const listUserid = listUserAttend.map((i) => i.UserID + "");
+      const newListMem = listMember.map((item) => {
+        if (listUserid.includes(item.UserId + "")) {
+          item.checked = true;
+        }
+        return item;
+      });
+
+      setlistMember(newListMem);
+    }
+  }, [listUserAttend, item]);
+
+  useEffect(() => {
+    if (item) {
+      if (listMember.length === listUserAttend.length) {
+        setLimitMember("false");
+      } else {
+        setLimitMember("true");
+      }
+    }
+  }, [item, listUserAttend]);
+
+  //List Add
+  const getListAdd = (listAttendOrigin, listFinal) => {
+    const listOriginUserId = listAttendOrigin.map((i) => i.UserID + "");
+
+    return listFinal.filter((i) => !listOriginUserId.includes(i.UserId + ""));
+  };
+  // ListDelete
+  const getListDelete = (listAttendOrigin, listFinal) => {
+    const listFinalid = listFinal.map((i) => i.UserId + "");
+    return listAttendOrigin.filter((i) => !listFinalid.includes(i.UserID + ""));
+  };
+ 
+   
   return (
     <div>
-     
       <Container maxWidth="md">
         <h4 style={{ marginTop: 30 }} className="bold">
-          {!item ?"Tạo sự kiện":"Cập nhật sự kiện"}
+          {!item ? "Tạo sự kiện" : "Cập nhật sự kiện"}
         </h4>
         <Grid container spacing={1}>
           <Grid item xs={8}>
@@ -291,30 +376,32 @@ function AddEvent({ item, updateItem }) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {listMember.map((user, index) => (
-                        <TableRow key={index}>
-                          <TableCell>
-                            <Checkbox
-                              onChange={(e) => {
-                                const list = [...listMember];
-                                list[index].checked = e.target.checked;
-                                setlistMember(list);
-                              }}
-                              checked={user.checked}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            {user?.FirstName + " " + user?.LastName}
-                          </TableCell>
-                          <TableCell>{user.DateOfBirth}</TableCell>
-                          <TableCell>{user.Email}</TableCell>
-                          <TableCell>{user.Address}</TableCell>
-                          <TableCell>
-                            {user.Gender === 0 ? "Name" : "Nữ"}
-                          </TableCell>
-                          {/*  */}
-                        </TableRow>
-                      ))}
+                      {listMember.map((user, index) => {
+                        return (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Checkbox
+                                onChange={(e) => {
+                                  const list = [...listMember];
+                                  list[index].checked = e.target.checked;
+                                  setlistMember(list);
+                                }}
+                                checked={user.checked == true}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {user?.FirstName + " " + user?.LastName}
+                            </TableCell>
+                            <TableCell>{user.DateOfBirth}</TableCell>
+                            <TableCell>{user.Email}</TableCell>
+                            <TableCell>{user.Address}</TableCell>
+                            <TableCell>
+                              {user.Gender === 0 ? "Name" : "Nữ"}
+                            </TableCell>
+                            {/*  */}
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -324,7 +411,7 @@ function AddEvent({ item, updateItem }) {
                 variant="contained"
                 color="primary"
               >
-               {!item ?"Tạo sự kiện":"Cập nhật sự kiện"}
+                {!item ? "Tạo sự kiện" : "Cập nhật sự kiện"}
               </Button>
             </form>
           </Grid>
