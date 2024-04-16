@@ -36,5 +36,7 @@ namespace GenealogyBL.Interfaces
         Task<bool>InsertUserRole(int userID, string roleCode, int idGenealogy);
 
         Task<bool> DeletePermission(DecentralizationParam param);
+
+        Task<bool> RecoverPass(RecoverPass param);
     }
 }

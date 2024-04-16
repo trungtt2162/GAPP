@@ -194,5 +194,13 @@ namespace GenealogyAPI.Controllers
             return serviceResult.OnSuccess("Deleted");
         }
 
+        [HttpGet("export")]
+        public async Task<ServiceResult> ExportUser([FromQuery] int idGenealogy)
+        {
+            var serviceResult = new ServiceResult();
+            serviceResult.Data = await _userGenealogyBL.ExportUser(idGenealogy);
+            return serviceResult;
+        }
+
     }
 }

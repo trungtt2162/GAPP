@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Constant;
+using GenealogyCommon.Implements;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
@@ -11,6 +12,7 @@ using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Data;
 using System.Net;
@@ -25,7 +27,8 @@ namespace GenealogyBL.Implements
         private readonly IPermissionDL _permissionDL;
         private readonly IMapper _mapper;
         private readonly IUserGenealogyDL _userGenealogyDL;
-        public UserBL(IUserGenealogyDL userGenealogyDL, IMapper mapper, IAuthService authService,
+        private readonly IEmailSender _emailSender;
+        public UserBL(IEmailSender emailSender, IUserGenealogyDL userGenealogyDL, IMapper mapper, IAuthService authService,
             IPermissionDL permissionDL, IUserDL userDL,
             IPasswordHasher passwordHasher, IWebHostEnvironment env, ILogDL logDL) : base(env, userDL, logDL, authService)
         {
@@ -34,6 +37,7 @@ namespace GenealogyBL.Implements
             _passwordHasher = passwordHasher;
             _mapper = mapper;
             _userGenealogyDL = userGenealogyDL;
+            _emailSender = emailSender;
         }
 
         public bool IsValidUserCredentials(string userName, string password)
@@ -153,6 +157,32 @@ namespace GenealogyBL.Implements
             await _userGenealogyDL.InsertUserRegister(userRegister);
             return true;
 
+        }
+
+        public async Task<bool> RecoverPass(RecoverPass param)
+        {
+            var password = _passwordHasher.GenerateRandomPassword(12);
+            var creden = new Credential()
+            {
+                UserName = param.Email,
+                Password = await _passwordHasher.HashPassword(password)
+            };
+            var recip = new JObject {
+                                {
+                                    "Email",
+                                    param.Email
+                                }, {
+                                    "Name",
+                                   param.Email
+                                }
+                                };
+
+            await _emailSender.SendEmailAsync(new JArray() { recip },
+            "Thông tin đăng nhập", $"<div>UserName: {param.Email}</div> <div>Password: {password}</div><div>LinkWeb: https://localhost:3000/login</div>",
+            $"<div>UserName: {param.Email}</div> <div>Password: {password}</div><div>LinkWeb: https://localhost:3000/login</div>");
+            
+            await _userDL.UpdateCredential(creden);
+            return true;
         }
 
         #region Permission

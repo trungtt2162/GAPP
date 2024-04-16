@@ -16,5 +16,7 @@ namespace GenealogyBL.Interfaces
         Task<object> ApproveRegister(UserGenealogy obj);
         Task<object> ApproveNewMember(UserGenealogy user, UserRegister userRegister = null);
         Task<IEnumerable<UserGenealogy>> GetAllByUserId(int userID);
+
+        Task<string> ExportUser(int idGenealogy);
     }
 }

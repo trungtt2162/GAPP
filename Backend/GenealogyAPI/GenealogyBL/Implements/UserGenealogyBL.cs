@@ -24,14 +24,18 @@ namespace GenealogyBL.Implements
         private readonly IMapper _mapper;
         private readonly IPermissionDL _permissionDL;
         private readonly IEmailSender _emailSender;
+        private readonly IGenealogyDL _genealogyDL;
+        private readonly IExportService _exportService;
 
-        public UserGenealogyBL(IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userGenealogyDL, logDL, authService)
+        public UserGenealogyBL(IExportService exportService, IGenealogyDL genealogyDL, IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userGenealogyDL, logDL, authService)
         {
             _userGenealogyDL = userGenealogyDL;
             _userBL = userBL;
             _mapper = mapper;
             _permissionDL = permissionDL;
             _emailSender = emailSender;
+            _genealogyDL = genealogyDL;
+            _exportService = exportService;
         }
 
         public async Task<object> Create(UserGenealogy userGenealogy)
@@ -146,6 +150,22 @@ namespace GenealogyBL.Implements
         public async Task<IEnumerable<UserGenealogy>> GetAllByUserId(int userID)
         {
             return await _userGenealogyDL.GetAllByUserID(userID);
+        }
+
+        public async Task<string> ExportUser(int idGenealogy)
+        {
+            PageRequest paggingRequest = new PageRequest()
+            {
+                PageNumber = -1,
+                PageSize = -1,
+                SearchKey = "",
+                SortOrder = "",
+                Condition = $" IdGenealogy = {idGenealogy} and (InActive = false or InActive is null) and IsBlock = false"
+            };
+            var data = await this.GetPagingData( paggingRequest );
+            var userGenealogies = data.Data;
+            var gen = await _genealogyDL.GetById(idGenealogy);
+            return _exportService.ExportUserGenealogy(userGenealogies, gen);
         }
 
 

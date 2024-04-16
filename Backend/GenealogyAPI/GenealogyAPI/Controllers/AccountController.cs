@@ -3,6 +3,7 @@ using GenealogyAPI.Infrastructure;
 using GenealogyBL.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
+using GenealogyCommon.Models.Param;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,26 @@ namespace GenealogyAPI.Controllers
             await _userBL.Create(_mapper.Map<User>(userRegister));
 
             return serviceResult.OnSuccess("Created");
+        }
+
+        [AllowAnonymous]
+        [HttpPost("recover-pass")]
+        public async Task<ServiceResult> RecoverPassword(RecoverPass param)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest();
+            }
+            var isExist = await _userBL.CheckExistUser(param.Email);
+
+            if (!isExist)
+            {
+                return serviceResult.OnBadRequest("Bad request");
+            }
+            await _userBL.RecoverPass(param);
+
+            return serviceResult.OnSuccess("Updated");
         }
 
 
