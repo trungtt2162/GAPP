@@ -5,11 +5,11 @@ import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
 import "./History.scss";
 import { historyApi } from "../../api/history.api";
-import { dateFormat, handleError } from "../../ultils/helper";
+import { checkEmptyData, dateFormat, handleError } from "../../ultils/helper";
 
 import useAuthStore from "../../zustand/authStore";
 import CustomModal from "../../components/common/modal/CustomModal";
-const HistoryFamily = ({list,desHis}) => {
+const HistoryFamily = ({ list, desHis }) => {
   const { palette } = useTheme(theme);
   const [des, setDes] = useState("");
   const { currentIdGenealogy } = useAuthStore();
@@ -24,8 +24,8 @@ const HistoryFamily = ({list,desHis}) => {
   };
   const [curent, setCurrent] = useState(null);
   const [listHistory, setListHistory] = useState([]);
-  const lisFinal = list || listHistory
-  const desFinal = desHis || des
+  const lisFinal = list || listHistory;
+  const desFinal = desHis || des;
   const getListHistory = async (id) => {
     let query = "";
     if (startDate) {
@@ -43,7 +43,12 @@ const HistoryFamily = ({list,desHis}) => {
       handleError(error);
     }
   };
-  
+
+  useEffect(() => {
+    if (!list) {
+      getListHistory(currentIdGenealogy);
+    }
+  }, [currentIdGenealogy, list]);
   const getDes = async (id) => {
     try {
       const res = await historyApi.getDescriptionHistorufamily(id);
@@ -62,13 +67,6 @@ const HistoryFamily = ({list,desHis}) => {
   }, [currentIdGenealogy]);
   return (
     <div>
-      <Box
-        width="100%"
-        max-width="10w"
-        sx={{
-          p: "2.5rem",
-        }}
-      ></Box>
       <div className="how-work">
         <Box
           sx={{
@@ -184,8 +182,10 @@ const HistoryFamily = ({list,desHis}) => {
               </div>
             ))}
           </div>
+          {checkEmptyData(lisFinal)}
         </Box>
       </div>
+    
       <CustomModal
         minHeight={600}
         open={curent}

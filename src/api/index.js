@@ -2,9 +2,9 @@ import axios from 'axios';
 import { LOCAL_STORAGE_KEY } from '../constant/common';
 import { isTokenExpired, logout } from '../ultils/helper';
 import { toast } from 'react-toastify';
-
+export const BASE_URL_DOWNLOAD =process.env.REACT_APP_URL_DOWNLOAD
 export  const API = axios.create({
-  baseURL: 'http://localhost:5210/',
+  baseURL: process.env.REACT_APP_URL_API,
   headers: {
     'Content-Type': 'application/json',
   },

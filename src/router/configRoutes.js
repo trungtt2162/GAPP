@@ -23,6 +23,7 @@ import HistoryGuest from "../page/history-guest/HistoryGuest";
 import GeneGuest from "../page/gene-guest/GeneGuest";
 import PublicTree from "../page/public-tree/PubLicTreeFamily";
 import AddGene from "../page/create-gene/CreateGene";
+import ForgotPass from "../components/Auth/ForgotPass";
 const NotFound = () => {
   return (
     <div className="container mt-3 alert alert-danger" role="alert">
@@ -47,7 +48,7 @@ const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USE
         <CssBaseline />
         <Routes>
         <Route path="/" element={<PraviteLayout />}>
-            <Route path="/" element={!isLogin ?<HomeNoLogin />: <Home />} />
+            <Route path="/" element={(!isLogin || isSupperAdmin) ?<HomeNoLogin />: <Home />} />
             {!isLogin && (
               <Route path="/home-nologin" element={<HomeNoLogin />} />
             )}
@@ -65,7 +66,9 @@ const isAdmin = isLogin && (roleCode === USER_ROLE.SiteAdmin || roleCode === USE
             {(isLogin && !isSiteAdmin && !isSupperAdmin) && <Route path="/request-event" element={<RequestEvents />} />}
            {(isUser || isAdmin | !isLogin) &&  <Route path="/history" element={isLogin?<HistoryFamily />:<HistoryGuest />} />}
           </Route>
-          { <Route path="/login" element={<Login />} />}
+          {!isLogin && <Route path="/login" element={<Login />} />}
+          {!isLogin && <Route path="/forgot-pass" element={<ForgotPass />} />}
+
           {!isLogin && <Route path="/register" element={<Register />} />}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>

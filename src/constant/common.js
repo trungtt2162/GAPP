@@ -49,3 +49,4 @@ export const LIST_ROLE = [
     RoleName: "User",
   },
 ];
+export   const listNoHero = ["/pageTree","/fund","/admin","tree","profile"]

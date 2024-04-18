@@ -23,7 +23,7 @@ import { handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 
 const Register = (props) => {
-  const { login,logOutAction } = useAuthStore();
+  const { login, logOutAction } = useAuthStore();
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -63,20 +63,18 @@ const Register = (props) => {
   };
   const handlleRegister = async () => {
     if (!validateusername()) {
-      toast.error("Invalid Email")
+      toast.error("Invalid Email");
       return;
     }
     try {
       const res = await authApi.register({
         ...formData,
-        
       });
-      if(res.data.StatusCode ===200){
-        toast.success("Đăng ký thành công",{
-          onClose:() => navigate("/login"),
-          autoClose:500
+      if (res.data.StatusCode === 200) {
+        toast.success("Đăng ký thành công", {
+          onClose: () => navigate("/login"),
+          autoClose: 500,
         });
-        
       }
     } catch (error) {
       handleError(error);
@@ -89,17 +87,23 @@ const Register = (props) => {
     console.log(formData);
   };
   useEffect(() => {
-    logOutAction(false)
-   },[])
+    logOutAction(false);
+  }, []);
   return (
     <div className="signup-container">
       <div
         style={{
-          height: "100vh",
+          background: "rgb(70 21 17)",
+          height: "120vh",
         }}
         className="content-left"
       >
-        <div className="title col-6 mx-auto">
+        <div
+          style={{
+            color: "rgb(242, 184, 79)",
+          }}
+          className="title col-6 mx-auto"
+        >
           <span>Sign up</span>
           <br />
           <span>and come on in</span>
@@ -113,6 +117,7 @@ const Register = (props) => {
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
               overflow: "hidden",
+              color: "rgb(242, 184, 79)",
             }}
           >
             GAPP &#169;
@@ -135,6 +140,8 @@ const Register = (props) => {
           className="title"
           style={{
             marginBottom: -50,
+            color:"rgb(242, 184, 79)",
+
           }}
         >
           <span

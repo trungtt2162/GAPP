@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Tree from "react-d3-tree";
 import { useCallback, useState } from "react";
 import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
+import { saveSvgAsPng } from "save-svg-as-png";
 import {
   buildTree,
+  checkEmptyData,
   dateFormat,
   handleError,
 } from "../../../../../ultils/helper";
@@ -12,6 +14,9 @@ import useAuthStore from "../../../../../zustand/authStore";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
 import { Avatar, Popover } from "@mui/material";
 import "./Tree.scss";
+import { BASE_URL_DOWNLOAD } from "../../../../../api";
+import { toPng } from "html-to-image";
+
 // import "./styles.css";
 
 const orgChartJson = {
@@ -124,12 +129,12 @@ const containerStyles = {
   height: "100vh",
 };
 
-const InfoItem = ({ item,geneName }) => {
+const InfoItem = ({ item, geneName }) => {
   return (
     <div
       style={{
-        width: 300,
-        height: 300,
+        width: 400,
+        height: 400,
         padding: 10,
       }}
     >
@@ -176,7 +181,22 @@ const InfoItem = ({ item,geneName }) => {
         >
           Giới tính :{" "}
         </span>
-        <span>{item.Gender == "0" ?"Nam":"Nữ"}</span>
+        <span>{item.Gender == "0" ? "Nam" : "Nữ"}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Nghề nghiệp :{" "}
+        </span>
+        <span>{item.JobTitle}</span>
       </div>
       <div
         style={{
@@ -363,15 +383,36 @@ const NodeItem = ({ nodeDatum }) => {
   );
 };
 const RenderRectSvgNode = ({ nodeDatum, toggleNode }) => {
-
   return <NodeItem nodeDatum={nodeDatum} />;
 };
 
-export default function Tree1({ isGuest,idTree }) {
+export default function Tree1({ isGuest, idTree }) {
+  const elementRef = useRef(null);
+  const captureElement = () => {
+    saveSvgAsPng(document.getElementsByClassName("svgClass")[0], "familyTree", {
+      backgroundColor: "white",
+    });
+    // if (elementRef.current) {
+    //   toPng(elementRef.current)
+    //     .then((imgDataUrl) => {
+    //       // Tạo một thẻ a để tải xuống
+    //       const link = document.createElement("a");
+    //       link.href = imgDataUrl;
+    //       link.download = "captured_element.png"; // Đặt tên file
+    //       link.click();
+    //     })
+    //     .catch((error) => {
+    //       console.error("Không thể chụp phần tử:", error);
+    //     });
+    // } else {
+    //   console.error("Không tìm thấy phần tử để chụp");
+    // }
+  };
+
   const [dimensions, translate, containerRef] = useCenteredTree();
-  const { currentIdGenealogy :idTree2 } = useAuthStore();
+  const { currentIdGenealogy: idTree2 } = useAuthStore();
   const [listNode, setListNode] = useState([]);
- const currentIdGenealogy = idTree ||idTree2
+  const currentIdGenealogy = idTree || idTree2;
   const getListAllNode = async () => {
     const res = await familyTreeApi.getListAllNode(currentIdGenealogy);
     if (res.data.StatusCode === 200) {
@@ -390,7 +431,7 @@ export default function Tree1({ isGuest,idTree }) {
       const res = await genealogyApi.exportExcel(currentIdGenealogy);
       if (res.data.StatusCode === 200) {
         const fileName = res.data.Data;
-        const url = `http://localhost:7291/api/Download?fileName=${fileName}`;
+        const url = BASE_URL_DOWNLOAD + `?fileName=${fileName}`;
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", fileName);
@@ -404,108 +445,118 @@ export default function Tree1({ isGuest,idTree }) {
   };
   const listFilter = listNode.filter((i) => i.Users.length > 0);
   const nameGene = listNode.length > 0 ? listNode[0]?.GenealogyName : "";
-  const isEmpty = listNode.every(item => !item?.Users?.length)
+  const isEmpty = listNode.every((item) => !item?.Users?.length);
   return (
     <div>
-    {!isEmpty &&  
-     <div style={{ display: "flex", justifyContent: "flex-end",alignItems:'center' }}>
-        
-        <div className="wrap-ex">
-          <p className="bold">Chú thích</p>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: "bold",
-             
-            }}
-          >
-            <div className="flex-start">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                  
-                }}
-              >
-                <Avatar
+      {!isEmpty && (
+        <div
+          ref={elementRef}
+          id="elementId"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <div className="wrap-ex">
+            <p className="bold">Chú thích</p>
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: "bold",
+              }}
+            >
+              <div className="flex-start">
+                <div
                   style={{
-                    borderWidth: "3px",
-                    borderStyle: "solid",
-                    borderColor: "blue",
-                    width: 25,
-                    height: 25,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
                   }}
-                  src={""}
-                />{" "}
-                <span>Nam</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                
-                }}
-              >
-                <Avatar
+                >
+                  <Avatar
+                    style={{
+                      borderWidth: "3px",
+                      borderStyle: "solid",
+                      borderColor: "blue",
+                      width: 25,
+                      height: 25,
+                    }}
+                    src={""}
+                  />{" "}
+                  <span>Nam</span>
+                </div>
+                <div
                   style={{
-                    borderWidth: "3px",
-                    borderStyle: "solid",
-                    borderColor: "red",
-                    width: 25,
-                    height: 25,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
                   }}
-                  src={""}
-                />{" "}
-                <span>Nữ</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                }}
-              >
-                <Avatar
-                  className="animated-avatar-blue"
+                >
+                  <Avatar
+                    style={{
+                      borderWidth: "3px",
+                      borderStyle: "solid",
+                      borderColor: "red",
+                      width: 25,
+                      height: 25,
+                    }}
+                    src={""}
+                  />{" "}
+                  <span>Nữ</span>
+                </div>
+                <div
                   style={{
-                    borderWidth: "3px",
-                    borderStyle: "solid",
-                    borderColor: "red",
-                    width: 25,
-                    height: 25,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
                   }}
-                  src={""}
-                />{" "}
-                <span>Chính mình</span>
+                >
+                  <Avatar
+                    className="animated-avatar-blue"
+                    style={{
+                      borderWidth: "3px",
+                      borderStyle: "solid",
+                      borderColor: "red",
+                      width: 25,
+                      height: 25,
+                    }}
+                    src={""}
+                  />{" "}
+                  <span>Chính mình</span>
+                </div>
+                <div
+                  className="flex-start"
+                  style={{
+                    gap: 5,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 50,
+                      height: 25,
+                      borderRadius: 5,
+                      border: "2px dotted gray",
+                    }}
+                  ></div>
+                  <span>Vợ chồng</span>
+                </div>
               </div>
-         <div className="flex-start" style={{
-          gap:5
-         }}>
-         <div
-                style={{
-                 width:50,
-                 height:25,
-                 borderRadius:5,
-                 border:"2px dotted gray"
-                }}
-              >
-               
-              </div>
-              <span>Vợ chồng</span>
-         </div>
             </div>
           </div>
         </div>
-      </div>}
-      <p style={{
-          fontWeight:"bold",
-          flex:1,
-          textAlign:'center',
-           fontSize:20,
-           marginTop:20
-        }}>Cây gia phả {nameGene ? (" của " + nameGene):""} </p>
+      )}
+      <p
+        style={{
+          fontWeight: "bold",
+          flex: 1,
+          textAlign: "center",
+          fontSize: 20,
+          marginTop: 20,
+        }}
+      >
+        Cây gia phả {nameGene ? " của " + nameGene : ""}{" "}
+      </p>
       <div style={{ ...containerStyles }} ref={containerRef}>
         {listFilter.length > 0 && (
           <Tree
@@ -516,15 +567,19 @@ export default function Tree1({ isGuest,idTree }) {
             orientation="vertical"
             pathFunc={"step"}
             zoomable={false}
+            svgClassName="svgClass"
           />
         )}
-       {
-        isEmpty &&   <div style={{
-         
-          textAlign:'center',
-          marginTop:50
-        }}>Cây gia phả trống</div>
-       }
+        {isEmpty && (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: 50,
+            }}
+          >
+          {checkEmptyData([])}
+          </div>
+        )}
         <div
           style={{
             position: "fixed",
@@ -548,7 +603,10 @@ export default function Tree1({ isGuest,idTree }) {
               }}
             >
               {" "}
-              <PrimaryButton title={"Export PNG "} />
+              <PrimaryButton
+                event={() => captureElement()}
+                title={"Export PNG "}
+              />
             </div>
           )}
           {!isGuest && (

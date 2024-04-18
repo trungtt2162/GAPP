@@ -82,15 +82,19 @@ code {
 
 .link {
   text-decoration: none;
-  color: black;
+  color: rgb(242, 184, 79);
   font-size: 1rem;
   padding: 1.5rem;
   /* padding: 10px; */
 
 }
+.link:hover{
+  color: rgb(242, 184, 79);
+  opacity: 0.7;
+}
 
 .active {
-  color: black;
+  /* color: white; */
   font-weight: bold;
 }
 
@@ -268,7 +272,27 @@ h1,h2,h3,h4,h5,p{
   text-align: left;
 }
 .title{
-  font-size: 18px;
+  font-size: 20px;
   text-align: left;
   font-weight: bold;
+}
+.header-container{
+  /* position: fixed;
+  top: 0;
+  left: 0;
+  right: 0; */
+}
+.app-hero{
+  
+}
+.MuiButton-contained{
+  color:#fff !important
+}
+.gradient-text {
+  background: linear-gradient(to right, rgb(231, 167, 48), rgb(222, 196, 147));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.Mui-selected,.PrivateSwitchBase-input{
+  color: rgb(242, 184, 79) !important;
 }

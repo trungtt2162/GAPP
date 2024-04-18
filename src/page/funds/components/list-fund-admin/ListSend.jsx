@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { handleError } from "../../../../ultils/helper";
+import { checkEmptyData, handleError } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import {
   Card,
@@ -93,7 +93,7 @@ const ListSend = () => {
   return (
     <div>
       <h4>Danh sách người đóng góp</h4>
-      <Card
+      <div
         style={{
           display: "flex",
           alignItems: "center",
@@ -131,7 +131,7 @@ const ListSend = () => {
         >
           Tìm kiếm
         </Button>
-      </Card>
+      </div>
 
       <p style={{ color: "black" }} className="bold">
         Danh sách
@@ -196,6 +196,8 @@ const ListSend = () => {
         page={page}
         onPageChange={handleChangePage}
       />
+            {checkEmptyData(ListSend)}
+
 
       <CustomModal open={currentItem} onClose={onClose}>
         <AddSpend setNewList={setNewList} item={currentItem} />

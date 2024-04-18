@@ -21,7 +21,7 @@ import moment from "moment";
 import { USER_ROLE } from "../../../../constant/common";
 import useAuthStore from "../../../../zustand/authStore";
 import { fundApi } from "../../../../api/fund.api";
-import { handleError } from "../../../../ultils/helper";
+import { checkEmptyData, handleError } from "../../../../ultils/helper";
 import CustomModal from "../../../../components/common/modal/CustomModal";
 import AddSpend from "../list-fund-admin/AddSpend";
 import { feedbackApi } from "../../../../api/feedback.api";
@@ -154,7 +154,7 @@ const ListFeedback = () => {
            <FeedBackItem setCurr = {() => setCurrentItem(item)} refreshList={refreshList} {...item} />
          </Grid>)}
       </Grid>
-    </div>:<p>Danh sách trống</p>}
+    </div>:<p>{checkEmptyData([])}</p>}
       
       <CustomModal open={currentItem} onClose={onClose}>
         <FeedBackFund setNewList={async() =>{

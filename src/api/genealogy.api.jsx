@@ -51,7 +51,7 @@ export const genealogyApi = {
     return API.post("/api/User/register?idGenealogy=" + id);
   },
   getListUserRequest: (id) => {
-    return API.get("/api/UserGenealogy/member-request?idGenealogy="+id, {
+    return API.get("/api/UserGenealogy/member-request?idGenealogy=" + id, {
       PageSize: 0,
       PageNumber: -1,
       Condition: `IdGenealogy = ${id} and InActive = true`,
@@ -81,29 +81,32 @@ export const genealogyApi = {
     return API.post("/api/Genealogy/paging", {
       PageSize: 0,
       PageNumber: -1,
-      Condition: "Id="+id,
+      Condition: "Id=" + id,
       SortOrder: "",
       SearchKey: "",
     });
   },
-  updateCurrentGene:(data) => {
+  updateCurrentGene: (data) => {
     return API.put("/api/Genealogy", data);
   },
-  createGene:(data) => {
+  createGene: (data) => {
     return API.post("/api/Genealogy", data);
   },
-  deleteUserGene:(idgene,iduser) => {
-  return API.delete(`/api/UserGenealogy?id=${iduser}&idGenealogy=${idgene}`)
+  deleteUserGene: (idgene, iduser) => {
+    return API.delete(`/api/UserGenealogy?id=${iduser}&idGenealogy=${idgene}`);
   },
-  updateUsergene:(data) => {
+  updateUsergene: (data) => {
     return API.put("/api/UserGenealogy", data);
   },
-  exportExcel:(id) => {
-    return API.get("/api/FamilyTree/export?idGenealogy="+id)
+  exportExcel: (id) => {
+    return API.get("/api/FamilyTree/export?idGenealogy=" + id);
   },
-  downloadExcel:(fileName) => {
-    return API.get("/api/Download?fileName="+fileName,{
-      responseType:"blob"
-    })
-  }
+  downloadExcel: (fileName) => {
+    return API.get("/api/Download?fileName=" + fileName, {
+      responseType: "blob",
+    });
+  },
+  exportListMember: (id) => {
+    return API.get("/api/UserGenealogy/export?idGenealogy=" + id);
+  },
 };

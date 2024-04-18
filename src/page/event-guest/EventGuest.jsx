@@ -62,14 +62,7 @@ const EventGuest = () => {
   }, [id]);
   return (
     <div>
-      <Navbar />
-      <Box
-        width="100%"
-        max-width="10w"
-        sx={{
-          p: "2.5rem",
-        }}
-      ></Box>
+    
       <div className="how-work">
         <Box
           sx={{

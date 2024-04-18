@@ -140,3 +140,18 @@ export function buildTree(data) {
   // Trả về mảng gốc, trong trường hợp này chỉ có một phần tử gốc
   return roots[0]; // Giả sử chỉ có một gốc
 }
+
+export const checkEmptyData = ( list) => {
+  if(list.length === 0){
+    return <div>
+      <img style={{
+        width:100
+      }} src="/empty.png" />
+      <p style={{
+      color:"gray",
+      padding:20,
+      marginTop:20
+    }}>Dữ liệu trống</p>
+    </div>
+  }
+}

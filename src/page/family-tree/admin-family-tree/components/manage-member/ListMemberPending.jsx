@@ -17,7 +17,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import useAuthStore from "../../../../../zustand/authStore";
 import { USER_ROLE } from "../../../../../constant/common";
-import { handleError } from "../../../../../ultils/helper";
+import { checkEmptyData, handleError } from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
@@ -157,6 +157,7 @@ function ListMemberPending() {
           </TableBody>
         </Table>
       </TableContainer>
+      {checkEmptyData(users)}
       <CustomModal open={currentUser} onClose={onClose}>
         <h4 style={{ marginBottom: 15 }}>Chọn chi/nhánh/phái/đời</h4>
         <FormControl>

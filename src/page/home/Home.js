@@ -39,7 +39,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <Hero />
+      {/* <Hero /> */}
       {/* TOOLS */}
       <div style={{}}>
         <Box

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import HistoryEventItem from "./HistoryEventItem";
 import useAuthStore from "../../../../../zustand/authStore";
-import { handleError } from "../../../../../ultils/helper";
+import { checkEmptyData, handleError } from "../../../../../ultils/helper";
 import { historyApi } from "../../../../../api/history.api";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddHistory from "./AddHostory";
@@ -59,6 +59,7 @@ const HisoryEvent = () => {
         />
       ))}
       <CustomModal onClose={onClose} open={currentItem}>{<AddHistory updateItem={updateItem} item={currentItem} />}</CustomModal>
+      {checkEmptyData(listHistory)}
     </div>
   );
 };

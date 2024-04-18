@@ -6,12 +6,13 @@ import { genealogyApi } from '../../../../../api/genealogy.api';
 import { toast } from "react-toastify";
 
 function SettingGene() {
- const {currentIdGenealogy} = useAuthStore()
+ const {currentIdGenealogy,setGeneName} = useAuthStore()
   const [formData, setFormData] = useState({
     Name: '',
     Description: '',
     IsPublic: 'true',
   });
+
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -49,7 +50,11 @@ function SettingGene() {
     try {
         const res = await genealogyApi.updateCurrentGene({...formData,IsPublic:formData.IsPublic === "true" ? true :false});
         if(res.data.StatusCode === 200){
-         toast.success("Đã cập nhật")
+         toast.success("Đã cập nhật",{
+          onClose:() =>   setGeneName(formData.Name),
+          autoClose:200
+         })
+       
         }
     } catch (error) {
         handleError(error)

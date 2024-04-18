@@ -4,10 +4,14 @@ import {
   Button,
   Select,
   MenuItem,
-  FormControl,
   InputLabel,
   Grid,
   Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup,
+  Radio
 } from "@mui/material";
 import AddImage from "../../../../../components/common/addImage/AddImage";
 import {
@@ -22,7 +26,7 @@ import { genealogyApi } from "../../../../../api/genealogy.api";
 
 function AddMemberForm({ item, refreshData }) {
   const { currentIdGenealogy } = useAuthStore();
-  
+
   const originData = {
     Id: 0,
     ModifiedBy: "string",
@@ -47,6 +51,8 @@ function AddMemberForm({ item, refreshData }) {
     IdFamilyTree: "",
     IdGenealogy: "",
     UserId: 0,
+    JobTitle: "",
+    IsMartyrs: false,
   };
 
   const [memberData, setMemberData] = useState(item || originData);
@@ -79,11 +85,13 @@ function AddMemberForm({ item, refreshData }) {
         ? await genealogyApi.addNewMember({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
+            IsMartyrs:true
           })
         : await genealogyApi.updateUsergene({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
             Name: "sss",
+            IsMartyrs:JSON.parse(memberData.IsMartyrs)
           });
       if (res.data.StatusCode === 200) {
         if (!item) {
@@ -183,6 +191,16 @@ function AddMemberForm({ item, refreshData }) {
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Nghề nghiệp"
+                  variant="outlined"
+                  name="JobTitle"
+                  value={memberData.JobTitle}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
                   <InputLabel>Giới tính</InputLabel>
                   <Select
@@ -267,6 +285,42 @@ function AddMemberForm({ item, refreshData }) {
                     ))}
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+              <div
+                style={{
+                  width: "100%",
+                }}
+                className="flex-start"
+              >
+                <FormControl component="fieldset">
+                  <FormLabel
+                    style={{
+                      textAlign: "start",
+                    }}
+                    component="legend"
+                  >
+                   Là liệt sỹ
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    value={memberData.IsMartyrs}
+                    onChange={handleChange}
+                    name="IsMartyrs"
+                  >
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio />}
+                      label="Phải"
+                    />
+                    <FormControlLabel
+                      value={false}
+                      control={<Radio />}
+                      label="Không"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
               </Grid>
             </Grid>
           </Grid>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import { handleError } from '../../../../../ultils/helper';
+import { checkEmptyData, handleError } from '../../../../../ultils/helper';
 import { eventApi } from '../../../../../api/event.api';
 import useAuthStore from '../../../../../zustand/authStore';
 import { TYPE_EVENT } from '../../../../../constant/common';
@@ -104,6 +104,7 @@ function ListEvent({list,action = true}) {
         </TableBody>
       </Table>
     </TableContainer>
+    {checkEmptyData(currentList || [])}
     <CustomModal width={1000} open={currentEvent} onClose={onClose}>
 
       <AddEventForm updateItem={updateItem} item={currentEvent} />

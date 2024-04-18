@@ -4,7 +4,7 @@ import Tree from "react-d3-tree";
 import { useCallback, useState } from "react";
 import useAuthStore from "../../../../../zustand/authStore";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
-import { buildTree, handleError } from "../../../../../ultils/helper";
+import { buildTree, checkEmptyData, handleError } from "../../../../../ultils/helper";
 import { Avatar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -232,6 +232,7 @@ const BranchMap = () => {
           zoomable={false}
         />
       )}
+      {checkEmptyData(listNode)}
     </div>
   );
 };

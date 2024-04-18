@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { handleError } from "../../../../../ultils/helper";
+import { checkEmptyData, handleError } from "../../../../../ultils/helper";
 import { addressApi } from "../../../../../api/address.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { getLocationName } from "../../../../../constant/common";
@@ -102,6 +102,7 @@ function OtherLocation() {
         </TableBody>
       </Table>
     </TableContainer>
+    {checkEmptyData(listAddress)}
     <CustomModal onClose={() => setCurrentId(null)} open={currentId}>
       <AddLocationForm updateNewItem={updateNewItem} item={currentId}  onClose={() => setCurrentId(null)} />
     </CustomModal>

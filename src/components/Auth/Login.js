@@ -45,9 +45,14 @@ const Login = (props) => {
   logOutAction(false)
  },[])
   return (
-    <div className="login-container">
+    <div style={{
+      height:"100vh",
+      background: "rgb(70 21 17)",
+    }} className="login-container">
       <div className="header">
-        <span>Bạn chưa có tài khoản?</span>
+        <span  style={{
+          color:"rgb(242, 184, 79)"
+        }}>Bạn chưa có tài khoản?</span>
         <button
           className="btn-signup"
           onClick={() => {
@@ -59,6 +64,9 @@ const Login = (props) => {
       </div>
       <div className="title col-3 mx-auto">
         <span
+        style={{
+          color:"rgb(242, 184, 79)"
+        }}
           onClick={() => {
             navigate("/");
           }}
@@ -66,8 +74,15 @@ const Login = (props) => {
           GAPP
         </span>
       </div>
-      <div className="welcome col-3 mx-auto">Chào mừng bạn trở lại!</div>
-      <div className="content-form col-3 mx-auto">
+      <div  style={{
+          color:"rgb(242, 184, 79)"
+        }} className="welcome col-3 mx-auto">Chào mừng bạn trở lại!</div>
+      <div style={{
+        width:550,
+        background:"#fff",
+        padding:30,
+        borderRadius:20
+      }} className="content-form col-3 mx-auto">
         <div className="form-group">
           <label>Email</label>
           <input
@@ -88,12 +103,20 @@ const Login = (props) => {
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
-        <span className="forgot-password">Quên mật khẩu?</span>
+        <span
+        onClick={() => navigate("/forgot-pass")}
+         style={{
+          cursor:"pointer"
+        }} className="forgot-password">Quên mật khẩu?</span>
         <div>
           <button
             className="btn-submit"
             onClick={() => handlleLogin()}
             disabled={isLoading}
+            style={{
+              background:"rgb(242, 184, 79)",
+              border:"none"
+            }}
           >
             {/* {isLoading === true && <ImSpinner6 className='loaderIcon' />} */}
             <span> Đăng nhập</span>

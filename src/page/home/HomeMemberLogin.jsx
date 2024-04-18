@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import ButtonTab from "../../components/common/button/ButtonTab";
 import ListMember from "../family-tree/admin-family-tree/components/manage-member/ListMember";
 import { historyApi } from "../../api/history.api";
-import { dateFormat, handleError } from "../../ultils/helper";
+import { checkEmptyData, dateFormat, handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { genealogyApi } from "../../api/genealogy.api";
 import ListEvent from "../family-tree/admin-family-tree/components/manage-event/ListEvent";
@@ -137,12 +137,13 @@ const HomeMemberLogin = () => {
               >
                 <h4 className="bold">Kết quả tìm kiếm</h4>
                 {modeSearch === MODE_SEARCH.MEMBER ? (
-                  <ListMember action={false} list={listSearch} />
+                  <ListMember isExport={false} action={false} list={listSearch} />
                 ) : (
                   <>
                     <ListEvent action={false} list={listSearchEvent} />
                   </>
                 )}
+                {checkEmptyData(MODE_SEARCH.MEMBER?listSearch:listSearchEvent )}
               </div>
             </Grid>
             <Grid item xs={6}>
@@ -153,14 +154,14 @@ const HomeMemberLogin = () => {
                   style={{
                     textAlign: "start",
                     color: "black",
-                    marginBttom: 15,
+                    marginBottom: 15,
                     cursor: "pointer",
                   }}
                   onClick={() => navigate("/history")}
                 >
                   Xem thêm
                 </div>
-                {listHistory?.slice(0, 4).map((item, index) => (
+                {listHistory?.slice(0, 3).map((item, index) => (
                   <div
                     style={{
                       padding: 10,
@@ -186,6 +187,7 @@ const HomeMemberLogin = () => {
                     </div>
                   </div>
                 ))}
+                {checkEmptyData(listHistory)}
               </div>
             </Grid>
           </Grid>

@@ -18,5 +18,8 @@ export const authApi = {
   },
   changePass:(data) => {
     return API.post("/api/Account/change-password",data)
+  },
+  forgotPass:(data) => {
+    return API.post("/api/Account/recover-pass",data)
   }
 };

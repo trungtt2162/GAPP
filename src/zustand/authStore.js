@@ -15,7 +15,8 @@ const useAuthStore = create(
       roleName: null,
       userGenealogy: [],
       currentIdGenealogy: null,
-      listRole:[],
+      geneName: "",
+      listRole: [],
       isCreateGene: false,
       setUser: (user) => {
         set({
@@ -33,16 +34,22 @@ const useAuthStore = create(
           isLogin: false,
           listRole: [],
           isCreateGene: "",
+          geneName:""
         });
       },
-      selectGeneAction: (currentId,currentRole) => {
-        const list = useAuthStore.getState().listRole
-        const current  = list.find(i => i.IdGenealogy == currentId)
+      selectGeneAction: (currentId, currentRole) => {
+        const list = useAuthStore.getState().listRole;
+        const current = list.find((i) => i.IdGenealogy == currentId);
         set({
-         
           currentIdGenealogy: currentId,
-          roleCode:current?.RoleCode
-         
+          roleCode: current?.RoleCode,
+          geneName: current?.GenealogyName,
+        });
+      },
+      setGeneName: (name) => {
+        const list = useAuthStore.getState().listRole;
+        set({
+          geneName: name,
         });
       },
       login: async ({ userName, password }) => {
@@ -71,6 +78,7 @@ const useAuthStore = create(
           const infoRes = await authApi.getInfoUser();
           const currentUser = infoRes.data.Data.User;
           const giapha = infoRes.data.Data.UserGenealogy;
+          let geneName = "";
           let haveAdmin = false;
           let listRole =
             infoRes.data.Data?.UserRole?.filter((i) => i.IdGenealogy != -1) ||
@@ -99,20 +107,23 @@ const useAuthStore = create(
                 .find((i) => i.IdGenealogy === currentId);
               if (item) {
                 currRole = item.RoleCode;
+                geneName = item.GenealogyName;
               }
             }
           }
-          
+
           // listRole = listRole.map(item => {
           //   const id = item.IdGenealogy;
           //   const current = giapha.find(i => i.Id ==id );
           //   if(current){
           //      item.GeneName = current.Name
-          //   } 
+          //   }
           //   return item;
           // })
-          const isHaveAdmin = listRole.find(i => i.RoleCode == USER_ROLE.SiteAdmin)
-          
+          const isHaveAdmin = listRole.find(
+            (i) => i.RoleCode == USER_ROLE.SiteAdmin
+          );
+
           set({
             user: currentUser,
             userGenealogy: giapha,
@@ -120,7 +131,8 @@ const useAuthStore = create(
             isLogin: true,
             roleCode: currRole,
             listRole: listRole,
-            isCreateGene:!isHaveAdmin
+            isCreateGene: !isHaveAdmin,
+            geneName,
           });
         } catch (error) {}
       },

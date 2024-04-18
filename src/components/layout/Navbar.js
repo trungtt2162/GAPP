@@ -26,14 +26,15 @@ import {
 } from "@mui/material";
 //import { default as logo } from "../../assets/logo.svg";
 import { theme } from "../../theme";
-import { USER_ROLE } from "../../constant/common";
+import { USER_ROLE, listNoHero } from "../../constant/common";
 import useAuthStore from "../../zustand/authStore";
 
 const Navbar = () => {
   const { palette } = useTheme(theme);
   const navigate = useNavigate();
 
-  const location = useLocation();
+  const location  = useLocation();
+  const isNotHero = listNoHero.includes(location.pathname) || listNoHero.some(i => location.pathname.includes(i))
   const [url, setUrl] = useState(null);
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
 
@@ -69,9 +70,10 @@ const Navbar = () => {
       alignItems="center"
       sx={{
         p: "1rem 3%",
-        background: isNotHome && "white",
+        // background: isNotHome && "white",
         // borderBottom:"1px solid lightgray",
         boxShadow: isNotHome && `0 2px 4px 0 rgba(43,43,43,.1)`,
+        color: !isNotHero ?"white" :"black !important"
       }}
     >
       <span
@@ -82,6 +84,8 @@ const Navbar = () => {
           fontSize: 30,
           fontWeight: "bold",
           cursor: "pointer",
+          color:"rgb(242, 184, 79)"
+          
         }}
       >
         GAPP
@@ -204,7 +208,7 @@ const Navbar = () => {
             {!isSupperAdmin && listRole.length > 0 && <FormControl  variant="outlined">
               <InputLabel>Gia phả</InputLabel>
               <Select
-              style={{width:150,height:45}}
+              style={{width:150,height:45,color: !isNotHero && "rgb(242, 184, 79)",borderColor:"white"}}
                 name="Gender"
                 value={currentIdGenealogy}
                 onChange={handleChange}

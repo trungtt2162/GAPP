@@ -4,7 +4,7 @@ import { useTheme } from "@emotion/react";
 import "./../history-family/History.scss";
 import { eventApi } from "../../api/event.api";
 import { theme } from "../../theme";
-import { dateFormat, handleError } from "../../ultils/helper";
+import { checkEmptyData, dateFormat, handleError } from "../../ultils/helper";
 import Navbar from "../../components/layout/Navbar";
 import {
   FormControl,
@@ -94,14 +94,14 @@ const HistoryGuest = () => {
   };
   return (
     <div>
-      <Navbar />
+      {/* <Navbar />
       <Box
         width="100%"
         max-width="10w"
         sx={{
           p: "2.5rem",
         }}
-      ></Box>
+      ></Box> */}
       <div className="how-work">
         <Box
           sx={{
@@ -261,7 +261,10 @@ const HistoryGuest = () => {
           background:"white",
           paddingTop:-50
         }}> 
-        <HistoryFamily list={listHistory} desHis={des} />
+        
+        <HistoryFamily  list={listHistory} desHis={des} />
+        {checkEmptyData(listHistory)}
+
         </div>
         </Box>
       

@@ -41,31 +41,36 @@ function AddAccount() {
     IsBlock: false,
     Name: "a",
     Description: "string",
-    TypeRole:"string"
-  }
+    TypeRole: "string",
+    JobTitle: "",
+    IsMartyrs: false,
+  };
   const [formData, setFormData] = useState(originData);
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const fileRef = useRef();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     try {
-      setLoading(true)
-      const res = await supperAdminApi.createAdmin({...formData,gender:formData.gender == true ? 1:0});
-      console.log(res.data)
-      if(res.data.StatusCode===200 ){
+      setLoading(true);
+      const res = await supperAdminApi.createAdmin({
+        ...formData,
+        gender: formData.gender == true ? 1 : 0,
+      });
+      console.log(res.data);
+      if (res.data.StatusCode === 200) {
         toast.success("Thêm thành công");
-        setFormData(originData)
+        setFormData(originData);
       }
       setLoading(false);
     } catch (error) {
-      handleError(error,true)
-      setLoading(false)
+      handleError(error, true);
+      setLoading(false);
+    }
   };
-}
 
   return (
     <form onSubmit={handleSubmit}>

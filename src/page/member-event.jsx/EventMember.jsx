@@ -4,7 +4,7 @@ import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
 import "./../history-family/History.scss";
-import { dateFormat, handleError } from "../../ultils/helper";
+import { checkEmptyData, dateFormat, handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { eventApi } from "../../api/event.api";
 import CustomModal from "../../components/common/modal/CustomModal";
@@ -41,13 +41,7 @@ const EventMember = () => {
   }, [currentIdGenealogy]);
   return (
     <div>
-      <Box
-        width="100%"
-        max-width="10w"
-        sx={{
-          p: "2.5rem",
-        }}
-      ></Box>
+     
       <div className="how-work">
         <Box
           sx={{
@@ -151,6 +145,8 @@ const EventMember = () => {
               </div>
             </Grid>
           </Grid>
+          {checkEmptyData(listEvent)}
+
         </Box>
       </div>
       <CustomModal open={currentEvent} onClose={() => setCurrentEvent(null)}>
