@@ -109,4 +109,7 @@ export const genealogyApi = {
   exportListMember: (id) => {
     return API.get("/api/UserGenealogy/export?idGenealogy=" + id);
   },
+  giveNewAcount:(data) => {
+    return API.post("/api/UserGenealogy/account",data)
+  }
 };

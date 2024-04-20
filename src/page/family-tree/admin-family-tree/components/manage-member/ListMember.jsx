@@ -12,6 +12,7 @@ import {
   FormControl,
   InputLabel,
   Button,
+  TextField,
 } from "@mui/material";
 import { toast } from "react-toastify";
 
@@ -28,14 +29,17 @@ import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddMemberForm from "./AddMember";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
 import { BASE_URL_DOWNLOAD } from "../../../../../api";
+import { Email } from "@mui/icons-material";
 
-function ListMember({ list, action = true ,isExport=true}) {
+function ListMember({ list, action = true, isExport = true }) {
   const [listMember, setlistMember] = useState([]);
   const { userGenealogy, currentIdGenealogy, roleCode, user } = useAuthStore();
   const isSiteAdmin = roleCode === USER_ROLE.SiteAdmin;
   const curremtList = list || listMember;
   const [currentMember, setCurrentMember] = useState(null);
   const [listNode, setListNode] = useState([]);
+  const [userNoAcc, setUserNoAcc] = useState(null);
+  const [email,setEmail] = useState("")
 
   // EXPORT
   const handleExportListMember = async () => {
@@ -106,6 +110,32 @@ function ListMember({ list, action = true ,isExport=true}) {
       getListMember();
     }
   }, [currentIdGenealogy]);
+
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+  // ADD ACOUNT
+  const handleAddAccount = async()=>{
+    try {
+      const isValidateEmail = validateEmail(email);
+    if (!isValidateEmail) {
+        toast.error("Invalid Email !!!");
+      return;
+    }
+      const res  = genealogyApi.giveNewAcount({...userNoAcc,Email:email})
+      if(res.data.StatusCode === 200){
+        getListMember()
+          toast.success("Đã thêm")
+      }
+      else{throw new Error("Error")}
+    } catch (error) {
+      handleError(error)
+    }
+  }
 
   const handleChange = (user, index) => async (e) => {
     const newRole = e.target.value;
@@ -235,12 +265,25 @@ function ListMember({ list, action = true ,isExport=true}) {
                         Sửa
                       </Button>
                       <Button
+                        style={{
+                          marginRight: 10,
+                        }}
                         onClick={() => handleDelete(user)}
                         variant="contained"
                         color="error"
                       >
                         Xóa
                       </Button>
+                      {!user.Email && (
+                        <Button
+
+                          onClick={() => setUserNoAcc(user)}
+                          variant="contained"
+                          color="warning"
+                        >
+                          Cấp tài khoản
+                        </Button>
+                      )}
                     </TableCell>
                   )}
                 {/*  */}
@@ -283,6 +326,22 @@ function ListMember({ list, action = true ,isExport=true}) {
               : null
           }
         />
+      </CustomModal>
+      <CustomModal open={userNoAcc} onClose={() => setUserNoAcc(null)}>
+        <p className="title">Nhập email</p>
+        <TextField
+        style={{
+          marginTop:10,
+          marginBottom:10
+        }}
+          fullWidth
+          label="Email"
+          variant="outlined"
+         
+          value={email}
+          onChange={(e) =>setEmail(e.target.value)}
+        />
+        <PrimaryButton title={"Xác nhận"} event={() => handleAddAccount()} />
       </CustomModal>
     </div>
   );
