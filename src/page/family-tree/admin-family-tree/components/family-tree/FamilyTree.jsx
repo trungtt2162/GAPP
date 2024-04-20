@@ -513,7 +513,7 @@ export default function Tree1({ isGuest, idTree }) {
                   }}
                 >
                   <Avatar
-                    className="animated-avatar-blue"
+                    className="animated-avatar-mind"
                     style={{
                       borderWidth: "3px",
                       borderStyle: "solid",

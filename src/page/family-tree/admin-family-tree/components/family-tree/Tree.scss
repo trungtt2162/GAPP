@@ -58,3 +58,19 @@
     padding: 10px;
     border-radius: 10px;
   }
+  @keyframes glowing-mind {
+    0% {
+      border-color: #fff;
+      box-shadow: 0 0 5px blue, 0 0 5px blue, 0 0 5px #e60073, 0 0 5px #e60073;
+    }
+    100% {
+      border-color: #ff4da6;
+      box-shadow: 0 0 5px blue, 0 0 3px #ff4da6, 0 0 5px #ff4da6, 0 0 5px #ff4da6;
+    }
+  }
+  .animated-avatar-mind {
+    border: 3px solid #fff; /* Đặt một border ban đầu */
+    border-radius: 50%; /* Giữ border tròn, phù hợp với hình dạng avatar */
+    animation: glowing-mind 2s ease-in-out infinite alternate, scale 2s infinite ease-in-out;
+  }
+  

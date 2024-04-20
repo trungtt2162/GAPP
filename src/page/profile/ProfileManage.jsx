@@ -5,6 +5,7 @@ import ChangePasswordForm from "./ChangePass";
 import RequestGele from "./RequestGele";
 import useAuthStore from "../../zustand/authStore";
 import { USER_ROLE } from "../../constant/common";
+import CurrentPositionGene from "./CurrentPostionGene";
 
 const ProfileManager = () => {
   const { isLogin, roleCode } = useAuthStore();
@@ -28,6 +29,14 @@ const ProfileManager = () => {
       component:ChangePasswordForm,
       show:true
     },
+    {
+ 
+      key: 2.5,
+      name: "Vị trí trong gia phả",
+      component:CurrentPositionGene,
+      show:    isSiteAdmin 
+    },
+    
     {
  
       key: 3,
