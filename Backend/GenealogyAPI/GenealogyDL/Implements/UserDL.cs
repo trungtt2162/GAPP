@@ -142,6 +142,17 @@ namespace GenealogyDL.Implements
         }
 
 
+        public async Task<bool> UpdateEmail(int userID, string email)
+        {
+            var sql = "UPDATE user u set u.Email = @Email WHERE u.Id = @UserID; ";
+            var param = new Dictionary<string, object>()
+            {
+                ["Email"] = email,
+                ["UserID"] = userID
+            };
+            return (await this.ExecuteAsync(sql, param)) > 0;
+        }
+
         #region Supper Admin
         public async Task<int> CreateAdmin(User user)
         {

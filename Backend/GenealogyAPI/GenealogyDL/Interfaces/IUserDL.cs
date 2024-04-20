@@ -31,6 +31,7 @@ namespace GenealogyDL.Interfaces
         Task<bool> AdminDecentralization(DecentralizationParam param);
 
         Task<bool> DeletePermission(DecentralizationParam param);
+        Task<bool> UpdateEmail(int userID, string email);
 
     }
 }

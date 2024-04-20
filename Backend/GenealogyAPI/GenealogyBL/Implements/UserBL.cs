@@ -67,6 +67,11 @@ namespace GenealogyBL.Implements
             return _userDL.CheckUserExist(userName).Result;
         }
 
+        public async Task<bool> UpdateEmail(int userID, string email)
+        {
+            return await _userDL.UpdateEmail(userID, email);
+        }
+
         public async Task<object> Create(GenealogyCommon.Models.User user)
         {
             var lastId =  await _userDL.Create(user);

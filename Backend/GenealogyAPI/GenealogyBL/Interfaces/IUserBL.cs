@@ -38,5 +38,7 @@ namespace GenealogyBL.Interfaces
         Task<bool> DeletePermission(DecentralizationParam param);
 
         Task<bool> RecoverPass(RecoverPass param);
+
+        Task<bool> UpdateEmail(int userID, string email);
     }
 }
