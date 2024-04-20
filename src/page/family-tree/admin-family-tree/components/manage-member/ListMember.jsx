@@ -126,10 +126,11 @@ function ListMember({ list, action = true, isExport = true }) {
         toast.error("Invalid Email !!!");
       return;
     }
-      const res  = genealogyApi.giveNewAcount({...userNoAcc,Email:email})
+      const res  = await genealogyApi.giveNewAcount({...userNoAcc,Email:email})
       if(res.data.StatusCode === 200){
         getListMember()
           toast.success("Đã thêm")
+          setUserNoAcc(null)
       }
       else{throw new Error("Error")}
     } catch (error) {
