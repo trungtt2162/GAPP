@@ -28,6 +28,7 @@ namespace GenealogyBL.Implements
         private readonly IMapper _mapper;
         private readonly IUserGenealogyDL _userGenealogyDL;
         private readonly IEmailSender _emailSender;
+        private string appUrl = string.Empty;
         public UserBL(IEmailSender emailSender, IUserGenealogyDL userGenealogyDL, IMapper mapper, IAuthService authService,
             IPermissionDL permissionDL, IUserDL userDL,
             IPasswordHasher passwordHasher, IWebHostEnvironment env, ILogDL logDL) : base(env, userDL, logDL, authService)
@@ -38,6 +39,7 @@ namespace GenealogyBL.Implements
             _mapper = mapper;
             _userGenealogyDL = userGenealogyDL;
             _emailSender = emailSender;
+            appUrl = _configuration.GetSection("AppSettings")["APPURL"];
         }
 
         public bool IsValidUserCredentials(string userName, string password)
@@ -183,8 +185,8 @@ namespace GenealogyBL.Implements
                                 };
 
             await _emailSender.SendEmailAsync(new JArray() { recip },
-            "Thông tin đăng nhập", $"<div>UserName: {param.Email}</div> <div>Password: {password}</div><div>LinkWeb: https://localhost:3000/login</div>",
-            $"<div>UserName: {param.Email}</div> <div>Password: {password}</div><div>LinkWeb: https://localhost:3000/login</div>");
+            "Thông tin đăng nhập", $"<div>UserName: {param.Email}</div> <div>Password: {password}</div><div>LinkWeb: {appUrl}</div>",
+            $"<div>UserName: {param.Email}</div> <div>Password: {password}</div><div>LinkWeb: {appUrl}</div>");
             
             await _userDL.UpdateCredential(creden);
             return true;

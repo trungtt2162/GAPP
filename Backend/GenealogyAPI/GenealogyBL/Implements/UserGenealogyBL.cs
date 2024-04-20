@@ -26,6 +26,7 @@ namespace GenealogyBL.Implements
         private readonly IEmailSender _emailSender;
         private readonly IGenealogyDL _genealogyDL;
         private readonly IExportService _exportService;
+        private string appUrl = string.Empty;
 
         public UserGenealogyBL(IExportService exportService, IGenealogyDL genealogyDL, IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userGenealogyDL, logDL, authService)
         {
@@ -36,6 +37,7 @@ namespace GenealogyBL.Implements
             _emailSender = emailSender;
             _genealogyDL = genealogyDL;
             _exportService = exportService;
+            appUrl = _configuration.GetSection("AppSettings")["APPURL"];
         }
 
         public async Task<object> Create(UserGenealogy userGenealogy)
@@ -126,8 +128,8 @@ namespace GenealogyBL.Implements
             if (userRegister != null)
             {
                 await _emailSender.SendEmailAsync(new JArray() { recip },
-                "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>",
-                $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>");
+                "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb:{appUrl}</div>",
+                $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: {appUrl}</div>");
             }
 
             return null;
@@ -147,8 +149,8 @@ namespace GenealogyBL.Implements
             if (userRegister != null)
             {
                 await _emailSender.SendEmailAsync(new JArray() { recip },
-                "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>",
-                $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>");
+                "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb:{appUrl}</div>",
+                $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: {appUrl}</div>");
             }
             return true;
         }
