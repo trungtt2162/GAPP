@@ -175,6 +175,41 @@ namespace GenealogyAPI.Controllers
         }
 
 
+        [HttpPost("account")]
+        public async Task<ServiceResult> AddAccount(UserGenealogy userGenealogyParam)
+        {
+            var serviceResult = new ServiceResult();
+            if (!ModelState.IsValid)
+            {
+                return serviceResult.OnBadRequest("Invalid Param");
+            }
+            // case Email null
+            if (string.IsNullOrWhiteSpace(userGenealogyParam.Email))
+            {
+                return serviceResult.OnBadRequest("Email null");
+            }
+            var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Add, userGenealogyParam.IdGenealogy);
+            if (!check)
+            {
+                return serviceResult.OnUnauthorized("Không có quyền");
+            }
+            var userRegister = _mapper.Map<UserRegister>(userGenealogyParam);
+            var isExist = await _userBL.CheckExistUser(userRegister.Username);
+            if (isExist)
+            {
+                return serviceResult.OnBadRequest("Duplicate user");
+            }
+            // tạo user : fix cố định password
+            userRegister.Password = "12345678";
+            await _userBL.SaveCredential(_mapper.Map<Credential>(userRegister));
+            var iduser = await _userBL.Create(_mapper.Map<User>(userRegister));
+            userGenealogyParam.UserId = (int)iduser;
+            await _userGenealogyBL.Update(userGenealogyParam);
+            await _userGenealogyBL.ApproveNewMember(userGenealogyParam, userRegister);
+            return serviceResult.OnSuccess("AddAccount");
+        }
+
+
 
         [HttpDelete("")]
         public async Task<ActionResult<object>> DeleteUserGenealogy([FromQuery] int id, [FromQuery] int idGenealogy)
