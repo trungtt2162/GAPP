@@ -132,6 +132,27 @@ namespace GenealogyBL.Implements
 
             return null;
         }
+
+        public async Task<bool> SendMailCreateAccount(UserGenealogy user, UserRegister userRegister = null)
+        {
+            var recip = new JObject {
+                                {
+                                    "Email",
+                                    user.Email
+                                }, {
+                                    "Name",
+                                   user.FirstName
+                                }
+                                };
+            if (userRegister != null)
+            {
+                await _emailSender.SendEmailAsync(new JArray() { recip },
+                "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>",
+                $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: https://localhost:3000/login</div>");
+            }
+            return true;
+        }
+
         override
         public void GetCustomParamPaging(PageRequest pagingRequest)
         {

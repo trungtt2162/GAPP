@@ -18,5 +18,6 @@ namespace GenealogyBL.Interfaces
         Task<IEnumerable<UserGenealogy>> GetAllByUserId(int userID);
 
         Task<string> ExportUser(int idGenealogy);
+        Task<bool> SendMailCreateAccount(UserGenealogy user, UserRegister userRegister = null);
     }
 }

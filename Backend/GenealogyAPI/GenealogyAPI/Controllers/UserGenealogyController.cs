@@ -202,10 +202,8 @@ namespace GenealogyAPI.Controllers
             // tạo user : fix cố định password
             userRegister.Password = "12345678";
             await _userBL.SaveCredential(_mapper.Map<Credential>(userRegister));
-            var iduser = await _userBL.Create(_mapper.Map<User>(userRegister));
-            userGenealogyParam.UserId = (int)iduser;
             await _userGenealogyBL.Update(userGenealogyParam);
-            await _userGenealogyBL.ApproveNewMember(userGenealogyParam, userRegister);
+            await _userGenealogyBL.SendMailCreateAccount(userGenealogyParam, userRegister);
             return serviceResult.OnSuccess("AddAccount");
         }
 
