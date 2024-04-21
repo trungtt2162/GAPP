@@ -33,7 +33,7 @@ namespace GenealogyDL.Implements
             _env = env;
             _authService = authService;
             _configuration = ConfigService.GetConfiguration(env);
-            ConnectionString = _configuration.GetConnectionString("Genealogy_DB");
+            ConnectionString = _configuration.GetValue<string>("ConnectionStrings:Genealogy_DB");
         }
         #region Properties
 

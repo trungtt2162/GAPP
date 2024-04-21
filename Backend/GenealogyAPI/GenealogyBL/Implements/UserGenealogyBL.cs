@@ -37,7 +37,7 @@ namespace GenealogyBL.Implements
             _emailSender = emailSender;
             _genealogyDL = genealogyDL;
             _exportService = exportService;
-            appUrl = _configuration.GetSection("AppSettings")["APPURL"];
+            appUrl = _configuration.GetValue<string>("AppSettings:APPURL");
         }
 
         public async Task<object> Create(UserGenealogy userGenealogy)

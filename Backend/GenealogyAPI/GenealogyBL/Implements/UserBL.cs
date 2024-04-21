@@ -39,7 +39,7 @@ namespace GenealogyBL.Implements
             _mapper = mapper;
             _userGenealogyDL = userGenealogyDL;
             _emailSender = emailSender;
-            appUrl = _configuration.GetSection("AppSettings")["APPURL"];
+            appUrl = _configuration.GetValue<string>("AppSettings:APPURL");
         }
 
         public bool IsValidUserCredentials(string userName, string password)
