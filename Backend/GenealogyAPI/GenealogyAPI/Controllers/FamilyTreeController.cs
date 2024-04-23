@@ -40,11 +40,11 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
-            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyTree, PermissionCode.Add, familytreeParam.IdGenealogy);
-            if (!check)
-            {
-                return serviceResult.OnUnauthorized("Không có quyền");
-            }
+            //var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyTree, PermissionCode.Add, familytreeParam.IdGenealogy);
+            //if (!check)
+            //{
+            //    return serviceResult.OnUnauthorized("Không có quyền");
+            //}
             await _familyTreeBL.Create(_mapper.Map<FamilyTree>(familytreeParam));
 
             return serviceResult.OnSuccess("Created");
@@ -67,11 +67,11 @@ namespace GenealogyAPI.Controllers
             {
                 return BadRequest();
             }
-            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyTree, PermissionCode.Update, familytreeParam.IdGenealogy);
-            if (!check)
-            {
-                return serviceResult.OnUnauthorized("Không có quyền");
-            }
+            //var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyTree, PermissionCode.Update, familytreeParam.IdGenealogy);
+            //if (!check)
+            //{
+            //    return serviceResult.OnUnauthorized("Không có quyền");
+            //}
             await _familyTreeBL.Update(_mapper.Map<FamilyTree>(familytreeParam));
 
             return serviceResult.OnSuccess("Updated");
@@ -85,11 +85,11 @@ namespace GenealogyAPI.Controllers
             {
                 return BadRequest();
             }
-            var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyTree, PermissionCode.Delete, idGenealogy);
-            if (!check)
-            {
-                return serviceResult.OnUnauthorized("Không có quyền");
-            }
+            //var check = await _userBL.CheckPermissionSubSystem(SubSystem.FamilyTree, PermissionCode.Delete, idGenealogy);
+            //if (!check)
+            //{
+            //    return serviceResult.OnUnauthorized("Không có quyền");
+            //}
             await _familyTreeBL.DeleteByID(id, idGenealogy);
 
             return serviceResult.OnSuccess("Deleted");

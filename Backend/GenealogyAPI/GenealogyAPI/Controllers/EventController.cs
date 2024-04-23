@@ -104,7 +104,7 @@ namespace GenealogyAPI.Controllers
                     taskList.Add(_baseBL.Create(e));
                 });
                 await Task.WhenAll(taskList);
-                await _eventBL.SendEmails(param.UserEvents);
+                //await _eventBL.SendEmails(param.UserEvents);
             }
            
             return serviceResult.OnSuccess("Created");
