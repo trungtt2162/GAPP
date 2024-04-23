@@ -59,7 +59,7 @@ function LogManage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listLog.map((user, index) => (
+            {listLog?.reverse()?.map((user, index) => (
               <TableRow key={index}>
                 <TableCell className="text-center">{user.Date && moment(user.Date).format("DD-MM-YYYY hh:mm:ss")}</TableCell>
                 <TableCell className="text-center">{user.Description}</TableCell>

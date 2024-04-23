@@ -36,7 +36,7 @@ const Register = (props) => {
     Gender: "",
     DateOfBirth: "",
     HomeTown: "",
-    Indentification: "string",
+    Indentification: "",
     Avatar: "string",
   });
 

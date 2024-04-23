@@ -141,6 +141,16 @@ function AddAccount() {
               onChange={handleChange}
             />
           </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Nghề nghiệp"
+              variant="outlined"
+              name="JobTitle"
+              value={formData.JobTitle}
+              onChange={handleChange}
+            />
+          </Grid>
           <Grid item xs={6}>
             <TextField
               name="gender"

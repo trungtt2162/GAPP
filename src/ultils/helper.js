@@ -109,8 +109,9 @@ export async function uploadImageToFirebase(file) {
 }
 
 // 
-export const dateFormat = (date) =>  date ? moment(date).format("DD-MM-YYYY"):"";
+export const dateFormat = (date) =>  date ? moment(date).format("DD/MM/YYYY"):"";
 export const dateFormat2 = (date) =>  date ? moment(date).format("YYYY-MM-DD"):"";
+export const dateFormat3 = (date) =>  date ? moment(date).format("DD/MM/YYYY hh:mm:ss"):"";
 
 
 

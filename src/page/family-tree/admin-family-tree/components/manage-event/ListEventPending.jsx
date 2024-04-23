@@ -9,7 +9,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import { checkEmptyData, handleError } from "../../../../../ultils/helper";
+import { checkEmptyData, dateFormat3, handleError } from "../../../../../ultils/helper";
 import { eventApi } from "../../../../../api/event.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import { TYPE_EVENT } from "../../../../../constant/common";
@@ -86,7 +86,7 @@ function ListEventPending({ list, action = true }) {
           <TableHead>
             <TableRow>
               <TableCell>Tên sự kiện</TableCell>
-              <TableCell>Ngày tổ chức</TableCell>
+              <TableCell>Thời gian tổ chức</TableCell>
               <TableCell>Chế độ</TableCell>
               {action && (
                 <TableCell className="text-center">Hành động</TableCell>
@@ -97,7 +97,7 @@ function ListEventPending({ list, action = true }) {
             {currentList?.map((user, index) => (
               <TableRow key={index}>
                 <TableCell>{user.Name}</TableCell>
-                <TableCell>{user.OrganizationDate}</TableCell>
+                <TableCell>{dateFormat3(user.OrganizationDate)}</TableCell>
                 <TableCell>{TYPE_EVENT[user.Type]}</TableCell>
                 <TableCell className="text-center">
                   <Button

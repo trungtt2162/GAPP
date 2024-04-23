@@ -16,13 +16,13 @@ const ManageLocation = () => {
         <ButtonTab
           index={1}
           value={value}
-          text={"Danh sách địa chỉ TV"}
+          text={"Địa chỉ thành viên"}
           onClick={(e) => setValue(1)}
         />
         <ButtonTab
           index={2}
           value={value}
-          text={"Danh sách địa điểm khác"}
+          text={"Địa điểm khác"}
           onClick={(e) => setValue(2)}
         />
          <ButtonTab

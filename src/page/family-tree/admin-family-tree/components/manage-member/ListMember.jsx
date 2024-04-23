@@ -251,8 +251,7 @@ function ListMember({ list, action = true, isExport = true }) {
                 ) : (
                   <TableCell>{user.RoleCode}</TableCell>
                 )}
-                {isSiteAdmin &&
-                  user.RoleCode !== USER_ROLE.SiteAdmin &&
+                {
                   action && (
                     <TableCell>
                       <Button
@@ -265,7 +264,8 @@ function ListMember({ list, action = true, isExport = true }) {
                       >
                         Sửa
                       </Button>
-                      <Button
+                      {isSiteAdmin &&
+                  user.RoleCode !== USER_ROLE.SiteAdmin &&<Button
                         style={{
                           marginRight: 10,
                         }}
@@ -274,7 +274,7 @@ function ListMember({ list, action = true, isExport = true }) {
                         color="error"
                       >
                         Xóa
-                      </Button>
+                      </Button>}
                       {!user.Email && (
                         <Button
 

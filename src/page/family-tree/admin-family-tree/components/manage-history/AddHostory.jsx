@@ -127,6 +127,7 @@ function AddHistory({ item, updateItem }) {
               InputLabelProps={{ shrink: true }}
               fullWidth
               required
+              
             />
             <TextField
               multiline
@@ -141,6 +142,7 @@ function AddHistory({ item, updateItem }) {
             />
 
             <Button
+            disabled={!formData.Description || !formData.Title || !formData.Date}
               onClick={() => handleAdd()}
               variant="contained"
               color="primary"

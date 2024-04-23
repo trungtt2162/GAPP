@@ -29,6 +29,10 @@ function RequestGele() {
   const [listGene, setListGene] = useState([]);
   const onReqest = async () => {
     try {
+      if(!user.Phone){
+        toast.warning("Vui lòng cập nhật số điện thoại trước khi request");
+        return;
+      }
       const res = await genealogyApi.requestgele(id);
       if (res.data.StatusCode === 200) {
         toast.success("Request thành công");

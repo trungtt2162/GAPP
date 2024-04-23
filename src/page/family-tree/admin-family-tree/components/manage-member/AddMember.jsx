@@ -273,12 +273,12 @@ function AddMemberForm({ item, refreshData }) {
               </Grid>
               <Grid item xs={6}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel>Chi/nhánh/phái/đời</InputLabel>
+                  <InputLabel>Chi - nhánh</InputLabel>
                   <Select
                     name="IdFamilyTree"
                     value={memberData.IdFamilyTree}
                     onChange={handleChange}
-                    label="Chi/nhánh/phái/đời"
+                    label="Chi - nhánh"
                   >
                     {listFamilyTree.map((i) => (
                       <MenuItem value={i.Id}>{i.Name}</MenuItem>

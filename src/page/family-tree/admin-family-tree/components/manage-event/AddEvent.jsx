@@ -235,13 +235,18 @@ function AddEvent({ item, updateItem }) {
                 required
               />
               <TextField
-                label="Ngày tổ chức"
-                type="date"
+                label="Thời gian tổ chức"
+                type="datetime-local"
                 value={formData.OrganizationDate}
                 onChange={handleChangeData("OrganizationDate")}
                 InputLabelProps={{ shrink: true }}
                 fullWidth
                 required
+                inputProps={{
+                  min: '1900-01-01T00:00', // Ngày và giờ tối thiểu
+                  max: '2100-12-31T23:59', // Ngày và giờ tối đa
+                  step: 3600, // Bước thời gian là 1 giờ
+                }}
               />
               <TextField
                 label="Địa điểm"
@@ -265,7 +270,7 @@ function AddEvent({ item, updateItem }) {
                     }}
                     component="legend"
                   >
-                    Chế độ
+                    Hình thức tổ chức
                   </FormLabel>
                   <RadioGroup
                     row
@@ -308,7 +313,7 @@ function AddEvent({ item, updateItem }) {
                     }}
                     component="legend"
                   >
-                    Bảo mật
+                    Chế độ hiển thị
                   </FormLabel>
                   <RadioGroup
                     row

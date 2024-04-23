@@ -158,8 +158,8 @@ function RequestEvent({ item, updateItem }) {
                 required
               />
               <TextField
-                label="Ngày tổ chức"
-                type="date"
+                label="Thời gian tổ chức"
+                type="datetime-local"
                 value={formData.OrganizationDate}
                 onChange={handleChangeData("OrganizationDate")}
                 InputLabelProps={{ shrink: true }}
@@ -188,7 +188,7 @@ function RequestEvent({ item, updateItem }) {
                     }}
                     component="legend"
                   >
-                    Chế độ
+                   Hình thức tổ chức
                   </FormLabel>
                   <RadioGroup
                     row
@@ -231,7 +231,7 @@ function RequestEvent({ item, updateItem }) {
                     }}
                     component="legend"
                   >
-                    Bảo mật
+                    Chế độ hiển thị
                   </FormLabel>
                   <RadioGroup
                     row

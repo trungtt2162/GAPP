@@ -17,7 +17,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import useAuthStore from "../../../../../zustand/authStore";
 import { USER_ROLE } from "../../../../../constant/common";
-import { checkEmptyData, handleError } from "../../../../../ultils/helper";
+import { checkEmptyData, dateFormat, dateFormat2, handleError } from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
@@ -116,6 +116,7 @@ function ListMemberPending() {
               <TableCell>Tên</TableCell>
               <TableCell>Ngày Sinh</TableCell>
               <TableCell>Email</TableCell>
+              <TableCell>Số điện thoại</TableCell>
               <TableCell>Địa Chỉ</TableCell>
               <TableCell>Giới Tính</TableCell>
               {isSiteAdmin && (
@@ -127,8 +128,9 @@ function ListMemberPending() {
             {users.map((user, index) => (
               <TableRow key={index}>
                 <TableCell>{user.FirstName + " " + user.LastName}</TableCell>
-                <TableCell>{user.DateOfBirth}</TableCell>
+                <TableCell>{dateFormat(user.DateOfBirth)}</TableCell>
                 <TableCell>{user.Email}</TableCell>
+                <TableCell>{user.Phone}</TableCell>
                 <TableCell>{user.Address}</TableCell>
                 <TableCell>{user.Gender == 0 ? "Nam" : "Nữ"}</TableCell>
                 {isSiteAdmin && (
@@ -159,9 +161,9 @@ function ListMemberPending() {
       </TableContainer>
       {checkEmptyData(users)}
       <CustomModal open={currentUser} onClose={onClose}>
-        <h4 style={{ marginBottom: 15 }}>Chọn chi/nhánh/phái/đời</h4>
+        <h4 style={{ marginBottom: 15 }}>Chọn Chi - nhánh</h4>
         <FormControl>
-          <InputLabel id="select-label">Chi/nhánh/phái/đời</InputLabel>
+          <InputLabel id="select-label">Chi - nhánh</InputLabel>
           <Select
             style={{
               width: 500,
