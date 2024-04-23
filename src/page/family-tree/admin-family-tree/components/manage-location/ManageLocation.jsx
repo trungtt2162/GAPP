@@ -7,8 +7,18 @@ import MemberLocation from "./MemberLocation";
 import OtherLocation from "./OtherLocation";
 import { AddLocation } from "@mui/icons-material";
 import AddLocationForm from "./AddLocation";
+import { USER_ROLE } from "../../../../../constant/common";
+import useAuthStore from "../../../../../zustand/authStore";
 const ManageLocation = () => {
   const { palette } = useTheme(theme);
+  const { isLogin, roleCode } = useAuthStore();
+
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
+  const isPeopleAdmin = isLogin && roleCode === USER_ROLE.PeopleAdmin;
+  const isUser = isLogin && roleCode === USER_ROLE.User;
+  const isMember = isUser || isSiteAdmin || isPeopleAdmin;
+
   const [value, setValue] = useState(1);
   return (
     <div>
@@ -25,12 +35,12 @@ const ManageLocation = () => {
           text={"Địa điểm khác"}
           onClick={(e) => setValue(2)}
         />
-         <ButtonTab
+         {isSiteAdmin && <ButtonTab
           index={3}
           value={value}
           text={"Thêm địa điểm khác"}
           onClick={(e) => setValue(3)}
-        />
+        />}
       </div>
       <div>
         <div

@@ -117,7 +117,7 @@ const HomeMemberLogin = () => {
                   <TextField
                     fullWidth
                     label={`Tìm kiếm ${
-                      value == 1 ? "Thành viên gia đình" : "Sự kiện"
+                      modeSearch == 0 ? "Thành viên gia đình" : "Sự kiện"
                     }`}
                     value={txtSearch}
                     onChange={(e) => setTxtSearch(e.target.value)}
@@ -143,24 +143,14 @@ const HomeMemberLogin = () => {
                     <ListEvent action={false} list={listSearchEvent} />
                   </>
                 )}
-                {checkEmptyData(MODE_SEARCH.MEMBER?listSearch:listSearchEvent )}
+                {checkEmptyData(modeSearch ===MODE_SEARCH.MEMBER?listSearch:[1] )}
               </div>
             </Grid>
             <Grid item xs={6}>
               <div className="content-card card-item">
                 <h4 className="bold">Lịch sử gia đình</h4>
 
-                <div
-                  style={{
-                    textAlign: "start",
-                    color: "black",
-                    marginBottom: 15,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => navigate("/history")}
-                >
-                  Xem thêm
-                </div>
+             
                 {listHistory?.slice(0, 3).map((item, index) => (
                   <div
                     style={{
@@ -186,7 +176,21 @@ const HomeMemberLogin = () => {
                       </div>
                     </div>
                   </div>
+                  
                 ))}
+                  {
+                    listHistory.length > 0 &&  <div
+                    style={{
+                      textAlign: "end",
+                      color: "black",
+                      marginTop: -10,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/history")}
+                  >
+                    Xem thêm
+                  </div>
+                  }
                 {checkEmptyData(listHistory)}
               </div>
             </Grid>

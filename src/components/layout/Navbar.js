@@ -100,7 +100,7 @@ const Navbar = () => {
             {/* EMPTY FAKE LINKS */}
             {isLogin && (
               <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
-                Home
+                Trang chủ
               </Link>
             )}
             {(isMember || !isLogin) && (
@@ -108,7 +108,7 @@ const Navbar = () => {
                 to="/pageTree"
                 className={"link" + (url === "/pageTree" ? " active" : "")}
               >
-                Gia Phả
+               {isSiteAdmin ?"Quản lý gia phả" :"Gia phả"}
               </Link>
             )}
             {(isMember || !isLogin) && (
@@ -116,7 +116,7 @@ const Navbar = () => {
                 to="/history"
                 className={"link" + (url === "/history" ? " active" : "")}
               >
-                Lịch Sử Gia Đình
+                Lịch sử gia đình
               </Link>
             )}
             {isSupperAdmin && (
@@ -140,7 +140,7 @@ const Navbar = () => {
                 to="/request-event"
                 className={"link" + (url === "/request-event" ? " active" : "")}
               >
-                Request Sự kiện
+                Yêu cầu sự kiện
               </Link>
             )}
             {/* <Link
@@ -220,56 +220,37 @@ const Navbar = () => {
               </Select>
             </FormControl>}
             {isLogin && (
-              <Button
-                variant="contained"
-                sx={{
-                  p: ".5rem 1.5rem",
-                  color: "white",
-                }}
-                onClick={() => {
+              <PrimaryButton
+                
+                event={() => {
                   logOutAction(false);
-
+                 
+                  navigate("/login");
+                }}
+                title={"Đăng xuất"}
+              >
+                
+              </PrimaryButton>
+            )}
+            {!isLogin && (
+              <PrimaryButton
+                title={"Đăng nhập"}
+                event={() => {
                   navigate("/login");
                 }}
               >
-                Đăng xuất
-              </Button>
+              
+              </PrimaryButton>
             )}
             {!isLogin && (
-              <Button
-                variant="text"
-                sx={{
-                  p: ".5rem 1.5rem",
-                  backgroundColor: palette.primary.main,
-                  color: "#ffffff",
-                  borderRadius: 2,
-                  boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-                  // "&:hover": { color: palette.primary.main },
-                }}
-                onClick={() => {
-                  navigate("/login");
-                }}
-              >
-                Đăng nhập
-              </Button>
-            )}
-            {!isLogin && (
-              <Button
-                variant="text"
-                sx={{
-                  p: ".5rem 1.5rem",
-                  backgroundColor: palette.primary.main,
-                  color: "#ffffff",
-                  borderRadius: 2,
-                  boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-                  // "&:hover": { color: palette.primary.main },
-                }}
-                onClick={() => {
+              <PrimaryButton
+              title={"Đăng kí"}
+                event={() => {
                   navigate("/register");
                 }}
               >
-                Đăng kí
-              </Button>
+                
+              </PrimaryButton>
             )}
           </Box>
         </>

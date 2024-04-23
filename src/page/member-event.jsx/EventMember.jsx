@@ -4,7 +4,7 @@ import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
 import "./../history-family/History.scss";
-import { checkEmptyData, dateFormat, handleError } from "../../ultils/helper";
+import { checkEmptyData, dateFormat, dateFormat3, handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { eventApi } from "../../api/event.api";
 import CustomModal from "../../components/common/modal/CustomModal";
@@ -136,7 +136,7 @@ const EventMember = () => {
                           >
                             {item.Name}
                           </div>
-                          <div>{dateFormat(item.OrganizationDate)}</div>
+                          <div>Thời gian : {dateFormat3(item.OrganizationDate)}</div>
                         </div>
                       </div>
                     </div>

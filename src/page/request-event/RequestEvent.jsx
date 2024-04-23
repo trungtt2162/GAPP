@@ -114,7 +114,7 @@ function RequestEvent({ item, updateItem }) {
         ? await eventApi.resquestEvent(data)
         : await eventApi.updateEvent(data);
       if (res.data.StatusCode === 200) {
-        toast.success(item ? "Cập nhât thành công" : "Request thành công");
+        toast.success(item ? "Cập nhât thành công" : "Yêu cầu thành công");
         if (!item) {
           setFormData(originData);
         } else {
@@ -127,17 +127,9 @@ function RequestEvent({ item, updateItem }) {
   };
   return (
     <div>
-      <Navbar />
-      <Box
-        width="100%"
-        max-width="10w"
-        sx={{
-          p: "2.5rem",
-        }}
-      ></Box>
-      <Container maxWidth="md">
+      <Container style={{marginTop:60}} maxWidth="md">
         <h4 style={{ marginTop: 30 }} className="bold">
-          {"Request sự kiện"}
+          {"Yêu cầu sự kiện"}
         </h4>
         <Grid container spacing={1}>
           <Grid item xs={8}>
@@ -332,7 +324,7 @@ function RequestEvent({ item, updateItem }) {
                 variant="contained"
                 color="primary"
               >
-                {"Request"}
+                {"Yêu cầu"}
               </Button>
             </form>
           </Grid>

@@ -39,7 +39,7 @@ const Register = (props) => {
     Indentification: "",
     Avatar: "string",
   });
-
+const [repassword,setRePass] = useState("");
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(<VscEyeClosed />);
   const handleChange = (event) => {
@@ -64,6 +64,10 @@ const Register = (props) => {
   const handlleRegister = async () => {
     if (!validateusername()) {
       toast.error("Invalid Email");
+      return;
+    }
+    if(formData.Password !== repassword){
+      toast.error("Xác nhận mật khẩu không trùng khớp");
       return;
     }
     try {
@@ -182,7 +186,7 @@ const Register = (props) => {
                 <TextField
                   fullWidth
                   type="Username"
-                  label="Username"
+                  label="Email"
                   name="Username"
                   value={formData.Username}
                   onChange={handleChange}
@@ -196,6 +200,15 @@ const Register = (props) => {
                   value={formData.Password}
                   type="password"
                   onChange={handleChange}
+                />
+                  </Grid>
+                 <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Xác nhận mật khẩu"
+                  value={repassword}
+                  type="password"
+                  onChange={e => setRePass(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>

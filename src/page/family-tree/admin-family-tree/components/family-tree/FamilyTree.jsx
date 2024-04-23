@@ -138,15 +138,19 @@ const InfoItem = ({ item, geneName }) => {
         padding: 10,
       }}
     >
-       <div
+      <div
         style={{
           marginBottom: 10,
-        }}>
-          <Avatar style={{
-            width:70,
-            height:70
-          }} src={item.Avatar} />
-        </div>
+        }}
+      >
+        <Avatar
+          style={{
+            width: 70,
+            height: 70,
+          }}
+          src={item.Avatar}
+        />
+      </div>
       <div
         style={{
           marginBottom: 10,
@@ -325,23 +329,38 @@ const InfoItem = ({ item, geneName }) => {
         >
           Là liệt sĩ :{" "}
         </span>
-        <span>{item.IsMartyrs == false ? "Không":"Phải"}</span>
+        <span>{item.IsMartyrs == false ? "Không" : "Phải"}</span>
       </div>
     </div>
   );
 };
 const NodeItem = ({ nodeDatum }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorElList, setAnchorElList] = React.useState(
+    Array(nodeDatum?.Users.length).fill(null)
+  );
   const { user } = useAuthStore();
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+
+  const handleClick = (event, index) => {
+    const newAnchorElList = [...anchorElList];
+    newAnchorElList[index] = event.currentTarget;
+    setAnchorElList(newAnchorElList);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClose = (index) => {
+    const newAnchorElList = [...anchorElList];
+    newAnchorElList[index] = null;
+    setAnchorElList(newAnchorElList);
   };
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
+  // const open = Boolean(anchorEl);
   const count = nodeDatum?.Users?.length;
   const isMutilpe = count >= 2;
   return (
@@ -374,6 +393,9 @@ const NodeItem = ({ nodeDatum }) => {
             const useId = item.UserId;
             const isMineBlue = useId == user.Id && item.Gender == 0;
             const isMineRed = useId == user.Id && item.Gender == 1;
+            const open = Boolean(anchorElList[index]);
+            const id = open ? "simple-popover" + index : undefined;
+
             return (
               <div
                 className={
@@ -395,7 +417,7 @@ const NodeItem = ({ nodeDatum }) => {
                       : ""
                   }
                   aria-describedby={id}
-                  onClick={handleClick}
+                  onClick={(event) => handleClick(event, index)}
                   style={{
                     borderWidth: "3px",
                     borderStyle: "solid",
@@ -406,8 +428,8 @@ const NodeItem = ({ nodeDatum }) => {
                 <Popover
                   id={id}
                   open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
+                  anchorEl={anchorElList[index]}
+                  onClose={() => handleClose(index)}
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "left",
@@ -631,7 +653,7 @@ export default function Tree1({ isGuest, idTree }) {
               marginTop: 50,
             }}
           >
-          {checkEmptyData([])}
+            {checkEmptyData([])}
           </div>
         )}
         <div

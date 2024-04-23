@@ -52,9 +52,9 @@ const PageTreeAdmin = () => {
     },
     {
       key: 4,
-      name: "Quản lý địa điểm",
+      name: isSiteAdmin ? "Quản lý địa điểm" :"Địa điểm",
       component:ManageLocation,
-      show:isSiteAdmin
+      show:isMember
     },
     {
       key: 5,

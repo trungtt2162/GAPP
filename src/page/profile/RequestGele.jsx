@@ -30,15 +30,15 @@ function RequestGele() {
   const onReqest = async () => {
     try {
       if(!user.Phone){
-        toast.warning("Vui lòng cập nhật số điện thoại trước khi request");
+        toast.warning("Vui lòng cập nhật số điện thoại trước khi yêu cầu");
         return;
       }
       const res = await genealogyApi.requestgele(id);
       if (res.data.StatusCode === 200) {
-        toast.success("Request thành công");
+        toast.success("Yêu cầu thành công");
       }
     } catch (error) {
-      toast.error("Bạn đã ở trong gia phả này hoặc đã request từ trước");
+      toast.error("Bạn đã ở trong gia phả này hoặc đã yêu cầu từ trước");
       // handleError(error);
     }
   };
@@ -58,7 +58,7 @@ function RequestGele() {
   return (
     <form className={classes.form}>
       <h4 style={{ marginBottom: 20 }} className="bold">
-        Request vào gia phả
+        Yêu cầu vào gia phả
       </h4>
       <FormControl>
         <InputLabel id="select-label">Gia phả</InputLabel>
@@ -85,7 +85,7 @@ function RequestGele() {
         variant="contained"
         color="primary"
       >
-        Request
+       Yêu cầu
       </Button>
     </form>
   );

@@ -64,12 +64,12 @@ function AddGene() {
   }
   return (
  <div>
-      <Navbar />
+     
       <Box
         width="100%"
         max-width="10w"
         sx={{
-          p: "2.5rem",
+          p: "1.5rem",
         }}
       ></Box>
      <Container style={{marginTop:40}} maxWidth="md">

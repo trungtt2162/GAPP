@@ -6,6 +6,7 @@ const PrimaryButton = ({ title, event }) => {
 
   return (
     <Button
+    className="primary-button-custom"
       variant="text"
       sx={{
         // width: "10rem",
@@ -14,8 +15,7 @@ const PrimaryButton = ({ title, event }) => {
         color: "#ffffff",
         borderRadius: 2,
         alignSelf: { xs: "center", md: "flex-start" },
-        boxShadow: ` 0px 7px 5px 0px ${palette.primary.light}}`,
-        "&:hover": { color: "black" },
+        // "&:hover": { opacity: 0.7 },
       }}
       onClick={() => {
         if (event) {

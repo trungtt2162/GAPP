@@ -160,7 +160,7 @@ function FeedBackFund({ setNewList, item }) {
               Tải ảnh lên
             </Button>
           </label>
-          <Button onClick={() => onAdd()} variant="contained" color="primary">
+          <Button disabled={!formData.IdInstance || !formData.Description || !formData.Name} onClick={() => onAdd()} variant="contained" color="primary">
             Gửi
           </Button>
         </div>

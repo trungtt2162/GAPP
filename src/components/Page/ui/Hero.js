@@ -33,7 +33,7 @@ const Hero = () => {
             fontWeight: "bold",
           }}
         >
-          Phả tộc
+        { geneName? "Phả tộc":"Chào mừng đến với trang quản lý gia phả GAPP"}
         </div>
         <div
           className="gradient-text"

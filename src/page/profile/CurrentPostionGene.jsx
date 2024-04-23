@@ -68,7 +68,7 @@ function CurrentPositionGene() {
         ...dataPost,...user,IdGenealogy:currentIdGenealogy,JobTitle:"",Id:siteAdmin?.Id,UserId:user.Id
       });
       if (res.data.StatusCode === 200) {
-        toast.success("Request thành công");
+        toast.success("Yêu cầu thành công");
       }
     } catch (error) {
       handleError(error);

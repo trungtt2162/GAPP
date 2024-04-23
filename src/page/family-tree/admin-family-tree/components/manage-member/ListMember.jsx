@@ -131,6 +131,7 @@ function ListMember({ list, action = true, isExport = true }) {
         getListMember()
           toast.success("Đã thêm")
           setUserNoAcc(null)
+          setEmail("")
       }
       else{throw new Error("Error")}
     } catch (error) {
