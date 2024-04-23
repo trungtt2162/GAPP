@@ -65,7 +65,7 @@ function SettingGene() {
     <h4 className="bold">Cài đặt gia phả</h4>
       <form onSubmit={handleSubmit}>
       <TextField
-        label="Name"
+        label="Tên gia phả"
         name="Name"
         variant="outlined"
         value={formData.Name}
@@ -74,7 +74,7 @@ function SettingGene() {
         margin="normal"
       />
       <TextField
-        label="Description"
+        label="Mô tả ngắn về gia phả"
         name="Description"
         variant="outlined"
         value={formData.Description}

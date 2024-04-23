@@ -30,7 +30,7 @@ const PageTreeAdmin = () => {
       key: 0.5,
       name: "Quản lý nhánh",
       component:BranchManage,
-      show:isSiteAdmin
+      show:isSiteAdmin || isPeopleAdmin
     },
     {
       key: 1,

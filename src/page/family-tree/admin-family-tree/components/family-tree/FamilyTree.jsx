@@ -134,10 +134,19 @@ const InfoItem = ({ item, geneName }) => {
     <div
       style={{
         width: 400,
-        height: 400,
+        height: 500,
         padding: 10,
       }}
     >
+       <div
+        style={{
+          marginBottom: 10,
+        }}>
+          <Avatar style={{
+            width:70,
+            height:70
+          }} src={item.Avatar} />
+        </div>
       <div
         style={{
           marginBottom: 10,
@@ -197,6 +206,36 @@ const InfoItem = ({ item, geneName }) => {
           Nghề nghiệp :{" "}
         </span>
         <span>{item.JobTitle}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Nơi sinh :{" "}
+        </span>
+        <span>{item.HomeTown}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          CMND/CCCD :{" "}
+        </span>
+        <span>{item.Indentification}</span>
       </div>
       <div
         style={{
@@ -272,6 +311,21 @@ const InfoItem = ({ item, geneName }) => {
           Ngày mất :{" "}
         </span>
         <span>{dateFormat(item.DateOfDeath)}</span>
+      </div>
+      <div
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <span
+          className="bold"
+          style={{
+            width: 100,
+          }}
+        >
+          Là liệt sĩ :{" "}
+        </span>
+        <span>{item.IsMartyrs == false ? "Không":"Phải"}</span>
       </div>
     </div>
   );
