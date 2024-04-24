@@ -80,6 +80,11 @@ const [repassword,setRePass] = useState("");
           autoClose: 500,
         });
       }
+      if (res.data.StatusCode === 400) {
+        toast.error("Email đã tồn tại", {
+          autoClose: 500,
+        });
+      }
     } catch (error) {
       handleError(error);
     }

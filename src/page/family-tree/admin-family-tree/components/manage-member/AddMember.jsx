@@ -40,8 +40,8 @@ function AddMemberForm({ item, refreshData }) {
     Phone: "",
     Address: "",
     Gender: "",
-    DateOfBirth: "",
-    DateOfDeath: "",
+    DateOfBirth: null,
+    DateOfDeath:null,
     Avatar: "",
     Type: 0,
     HomeTown: "",
@@ -102,6 +102,11 @@ function AddMemberForm({ item, refreshData }) {
           toast.success("Sửa thành công");
         }
         getListFamilyTree();
+      }
+      if (res.data.StatusCode === 400) {
+        toast.error("Email đã tồn tại", {
+          autoClose: 500,
+        });
       }
     } catch (error) {
       handleError(error);
