@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button,TablePagination } from '@mui/material';
 import { checkEmptyData, dateFormat3, handleError } from '../../../../../ultils/helper';
 import { eventApi } from '../../../../../api/event.api';
 import useAuthStore from '../../../../../zustand/authStore';
@@ -16,6 +16,11 @@ function ListEvent({list,action = true}) {
    const currentList = list || listEvent
    const [startDate,setStartDate] = useState("");
    const [endDate,setEndDate]  = useState("")
+   const [page, setPage] = React.useState(0);
+ const [rowsPerPage, setRowsPerPage] = React.useState(10);
+ const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+};
    const getListEvent = async(id) => {
     let query = "";
     if(startDate ){
@@ -79,7 +84,10 @@ function ListEvent({list,action = true}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {currentList?.map((user, index) => (
+          {currentList?.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            )?.map((user, index) => (
             <TableRow key={index}>
               <TableCell>{user.Name}</TableCell>
               <TableCell>{(dateFormat3(user.OrganizationDate))}</TableCell>
@@ -104,6 +112,13 @@ function ListEvent({list,action = true}) {
         </TableBody>
       </Table>
     </TableContainer>
+    <TablePagination
+        component="div"
+        count={currentList?.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+      />
     {checkEmptyData(currentList || [])}
     <CustomModal width={1000} open={currentEvent} onClose={onClose}>
 

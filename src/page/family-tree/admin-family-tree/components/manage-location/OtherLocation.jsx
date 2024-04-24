@@ -8,6 +8,7 @@ import {
   TableRow,
   Paper,
   Button,
+  TablePagination
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,9 +21,15 @@ import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddLocationForm from "./AddLocation";
 
 function OtherLocation() {
+ 
  const [listAddress,setListAddress] = useState([]);
  const {userGenealogy } = useAuthStore();
  const [currentId,setCurrentId] = useState(null)
+ const [page, setPage] = React.useState(0);
+ const [rowsPerPage, setRowsPerPage] = React.useState(10);
+ const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+};
  const getListAddress = async(id) => {
   try {
     const res = await addressApi.getListAddress(id)
@@ -74,7 +81,10 @@ function OtherLocation() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {listAddress.map((user, index) => (
+          {listAddress.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            ).map((user, index) => (
             <TableRow key={index}>
               <TableCell>{user.Name}</TableCell>
               <TableCell>{user.Location}</TableCell>
@@ -102,6 +112,13 @@ function OtherLocation() {
         </TableBody>
       </Table>
     </TableContainer>
+    <TablePagination
+        component="div"
+        count={listAddress.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+      />
     {checkEmptyData(listAddress)}
     <CustomModal onClose={() => setCurrentId(null)} open={currentId}>
       <AddLocationForm updateNewItem={updateNewItem} item={currentId}  onClose={() => setCurrentId(null)} />

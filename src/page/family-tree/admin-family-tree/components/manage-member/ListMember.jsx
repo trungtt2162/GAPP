@@ -13,6 +13,7 @@ import {
   InputLabel,
   Button,
   TextField,
+  TablePagination
 } from "@mui/material";
 import { toast } from "react-toastify";
 
@@ -40,6 +41,8 @@ function ListMember({ list, action = true, isExport = true }) {
   const [listNode, setListNode] = useState([]);
   const [userNoAcc, setUserNoAcc] = useState(null);
   const [email,setEmail] = useState("")
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   // EXPORT
   const handleExportListMember = async () => {
@@ -133,11 +136,18 @@ function ListMember({ list, action = true, isExport = true }) {
           setUserNoAcc(null)
           setEmail("")
       }
-      else{throw new Error("Error")}
+      if (res.data.StatusCode === 400) {
+        toast.error("Email đã tồn tại", {
+          autoClose: 500,
+        });
+      }
     } catch (error) {
       handleError(error)
     }
   }
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
   const handleChange = (user, index) => async (e) => {
     const newRole = e.target.value;
@@ -207,7 +217,10 @@ function ListMember({ list, action = true, isExport = true }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {curremtList.map((user, index) => (
+            {curremtList.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            ).map((user, index) => (
               <TableRow key={index}>
                 <TableCell>{user?.FirstName + " " + user?.LastName}</TableCell>
                 <TableCell>{dateFormat(user.DateOfBirth)}</TableCell>
@@ -294,6 +307,13 @@ function ListMember({ list, action = true, isExport = true }) {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        component="div"
+        count={curremtList.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+      />
       {isExport && (
         <div
           style={{

@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TablePagination
 } from "@mui/material";
 import TabSidebar from "../../../../../components/common/tabs/TabSidebar";
 import ButtonTab from "../../../../../components/common/button/ButtonTab";
@@ -18,6 +19,11 @@ import moment from "moment/moment";
 function LogManage() {
   const [listLog, setListLog] = useState([]);
   const {currentIdGenealogy} = useAuthStore()
+  const [page, setPage] = React.useState(0);
+ const [rowsPerPage, setRowsPerPage] = React.useState(10);
+ const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+};
   const getListLog = async () => {
     try {
       const res = await logApi.getListLogBygenealogy(currentIdGenealogy);
@@ -59,7 +65,10 @@ function LogManage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listLog?.reverse()?.map((user, index) => (
+            {listLog?.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            )?.reverse()?.map((user, index) => (
               <TableRow key={index}>
                 <TableCell className="text-center">{user.Date && moment(user.Date).format("DD-MM-YYYY hh:mm:ss")}</TableCell>
                 <TableCell className="text-center">{user.Description}</TableCell>
@@ -69,6 +78,13 @@ function LogManage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        component="div"
+        count={listLog?.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+      />
     </div>
   );
 }

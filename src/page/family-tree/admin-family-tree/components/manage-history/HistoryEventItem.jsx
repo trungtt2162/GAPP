@@ -4,9 +4,25 @@ import {
   handleError,
   uploafFileBase64,
 } from "../../../../../ultils/helper";
-import { Button, Card, Grid, TextField, Avatar } from "@mui/material";
+import {
+  Button,
+  Card,
+  Grid,
+  TextField,
+  Avatar,
+  TableRow,
+  TableCell,
+} from "@mui/material";
 import { toast } from "react-toastify";
 import { historyApi } from "../../../../../api/history.api";
+import { Table } from "react-bootstrap";
+{
+  /* <TableRow key={index}>
+<TableCell>{user.Name}</TableCell>
+<TableCell>{(dateFormat3(user.OrganizationDate))}</TableCell>
+
+</TableRow> */
+}
 
 const HisoryEventItem = ({
   Image,
@@ -47,59 +63,33 @@ const HisoryEventItem = ({
     }
   };
   return (
-    <Card
-      style={{
-        marginTop: 10,
-        display: "flex",
-        alignItems: "center",
-        padding: 10,
-      }}
-    >
-      <input
-        ref={fileRef}
-        style={{ display: "none" }}
-        type="file"
-        onChange={onChangeImage}
-      />
-      <Grid container spacing={3}>
-        <Grid xs={2} item>
-          <Avatar src={Image} sx={{ width: 80, height: 80 }}></Avatar>
-        </Grid>
-        <Grid xs={6} item>
-          {!modeEdit ? (
-            <div>
-              <div
-                style={{
-                  textAlign: "start",
-                  fontSize: 20,
-                }}
-                className="flex-start bold"
-              >
-                {Title}
-              </div>
-              <div
-                style={{
-                  textAlign: "start",
-                }}
-              >
-                {dateFormat(Date)}
-              </div>
-            </div>
-          ) : (
-            <div className="flex-start">
-              <TextField
-                style={{
-                  width: "100%",
-                }}
-                value={txtDes}
-                onChange={(e) => {
-                  setTxtDes(e.target.value);
-                }}
-              />
-            </div>
-          )}
-        </Grid>
-        <Grid item xs={3}>
+    <TableRow>
+      <TableCell className='text-center'>
+      <div>
+          <div
+            style={{
+             display:"flex",
+             justifyContent:"center",
+             alignItems:"center"
+            }}
+          >
+            {Title}
+          </div>
+        </div>
+      </TableCell>
+      <TableCell className='text-center'>
+        <div>
+          <div
+            style={{
+              textAlign: "start",
+            }}
+          >
+            {dateFormat(Date)}
+          </div>
+        </div>
+      </TableCell>
+      <TableCell className='text-center'>
+        <div>
           {!modeEdit && (
             <Button
               onClick={() => setCurrentItem(curr)}
@@ -137,9 +127,9 @@ const HisoryEventItem = ({
           >
             Xóa
           </Button>
-        </Grid>
-      </Grid>
-    </Card>
+        </div>
+      </TableCell>
+    </TableRow>
   );
 };
 export default HisoryEventItem;

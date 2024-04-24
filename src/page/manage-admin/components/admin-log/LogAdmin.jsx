@@ -20,6 +20,7 @@ import moment from "moment";
 function AdminLog() {
   const [listLog, setListLog] = useState([]);
   const {currentIdGenealogy} = useAuthStore()
+  
   const getListLog = async () => {
     try {
       const res = await logApi.getListAllLog(currentIdGenealogy);

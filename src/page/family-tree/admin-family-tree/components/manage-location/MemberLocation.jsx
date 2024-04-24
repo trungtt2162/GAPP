@@ -8,6 +8,7 @@ import {
   TableRow,
   Paper,
   Button,
+  TablePagination
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -18,7 +19,11 @@ import { genealogyApi } from "../../../../../api/genealogy.api";
 function MemberLocation() {
   const { userGenealogy } = useAuthStore();
   const [listMember, setlistMember] = useState([]);
-
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const handleChangePage = (event, newPage) => {
+   setPage(newPage);
+ };
   // get List member
   const getListMember = async () => {
     const IDGenealogy = userGenealogy[0]?.IdGenealogy;
@@ -37,6 +42,7 @@ function MemberLocation() {
   }, [userGenealogy]);
 
   return (
+  <>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -48,7 +54,10 @@ function MemberLocation() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {listMember.map((user, index) => (
+          {listMember.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            ).map((user, index) => (
             <TableRow key={index}>
               <TableCell>{user?.FirstName + " " + user?.LastName}</TableCell>
 
@@ -73,6 +82,15 @@ function MemberLocation() {
         </TableBody>
       </Table>
     </TableContainer>
+    <TablePagination
+        component="div"
+        count={listMember.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+      />
+    </>
+    
   );
 }
 
