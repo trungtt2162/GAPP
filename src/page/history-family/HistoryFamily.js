@@ -151,7 +151,7 @@ const HistoryFamily = ({ list, desHis }) => {
             {lisFinal.map((item, index) => (
               <div
                 key={index}
-                style={{ width: "calc(50% - 10px)", marginBottom: "20px" }}
+                style={{ width: "calc(50% - 10px)", marginBottom: "10px" }}
               >
                 <div
                   style={{
@@ -172,11 +172,20 @@ const HistoryFamily = ({ list, desHis }) => {
                         justifyContent: "center",
                       }}
                     >
-                      <p className="title">{item.Title}</p>
+                      <div className="title">{item.Title}</div>
                       <div style={{ textAlign: "start" }}>
                         Ngày : {dateFormat(item.Date)}
                       </div>
                     </div>
+                    {item.Image && (
+                      <Avatar
+                        style={{
+                          width: 70,
+                          height: 70,
+                        }}
+                        src={item.Image}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -185,7 +194,7 @@ const HistoryFamily = ({ list, desHis }) => {
           {checkEmptyData(lisFinal)}
         </Box>
       </div>
-    
+
       <CustomModal
         minHeight={600}
         open={curent}
@@ -219,8 +228,9 @@ const HistoryFamily = ({ list, desHis }) => {
           <img
             src={curent?.Image}
             style={{
-              width: "60%",
-              height: "auto",
+              width: 300,
+              height: 300,
+              objectFit:"contain"
             }}
           />
         </Grid>

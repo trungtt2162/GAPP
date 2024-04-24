@@ -24,6 +24,8 @@ import {
 import { makeStyles } from "@mui/styles";
 import AddImage from "../../../../../components/common/addImage/AddImage";
 import {
+  dateFormat,
+  dateFormat2,
   handleError,
   uploadImageToFirebase,
 } from "../../../../../ultils/helper";
@@ -49,7 +51,7 @@ function AddHistory({ item, updateItem }) {
 
   const fileRef = useRef();
   const [formData, setFormData] = useState(
-    item || {
+    item ? {...item,Date: dateFormat2(item.Date)} : {
       IDGenealogy: "",
       Image: "",
       Description: "",
@@ -60,6 +62,8 @@ function AddHistory({ item, updateItem }) {
       Title: "",
     }
   );
+
+  console.log(formData)
 
   const handleChangeFile = async (event) => {
     const file = event.target.files[0];
