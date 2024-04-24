@@ -4,13 +4,9 @@ import {
   IconButton,
   useMediaQuery,
   useTheme,
+  Popover,
 } from "@mui/material";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  
-} from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import { Menu, Close } from "@mui/icons-material";
@@ -30,17 +26,33 @@ import { USER_ROLE, listNoHero } from "../../constant/common";
 import useAuthStore from "../../zustand/authStore";
 
 const Navbar = () => {
+  const [anchor, setAnchor] = useState(false);
+
+  const open = Boolean(anchor);
+
+  const id = open ? "open-profile" : undefined;
+
   const { palette } = useTheme(theme);
   const navigate = useNavigate();
 
-  const location  = useLocation();
-  const isNotHero = listNoHero.includes(location.pathname) || listNoHero.some(i => location.pathname.includes(i))
+  const location = useLocation();
+  const isNotHero =
+    listNoHero.includes(location.pathname) ||
+    listNoHero.some((i) => location.pathname.includes(i));
   const [url, setUrl] = useState(null);
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
 
   const isNotMobile = useMediaQuery("(min-width: 1200px)");
-  const { isLogin, roleCode, user, logOutAction, isCreateGene ,currentIdGenealogy,listRole,selectGeneAction} =
-    useAuthStore();
+  const {
+    isLogin,
+    roleCode,
+    user,
+    logOutAction,
+    isCreateGene,
+    currentIdGenealogy,
+    listRole,
+    selectGeneAction,
+  } = useAuthStore();
 
   const isAdmin =
     isLogin &&
@@ -57,10 +69,52 @@ const Navbar = () => {
   const isNotHome =
     location.pathname !== "/" && !location.pathname.includes("home");
 
-    const handleChange = (e) => {
-      selectGeneAction(e.target.value)
+  const handleChange = (e) => {
+    selectGeneAction(e.target.value);
+  };
 
-    }
+  ///
+  const arrayPopup = [
+    {
+      name: "Thông tin cá nhân",
+      onClick: () => navigate("/profile"),
+      show: isLogin,
+    },
+    {
+      show: isLogin && isCreateGene && !isSupperAdmin,
+      name: "Tạo gia phả",
+      onClick: () => navigate("/create-gene"),
+    },
+    {
+      name: "Đăng xuất",
+
+      onClick: () => {
+        logOutAction(false);
+
+        navigate("/login");
+      },
+      show: isLogin,
+    },
+  ];
+
+  // render 
+  const renderListPopup = () => {
+    return <div >
+      {arrayPopup.filter(i => i.show).map(item => <div className="bg-hover" style={{
+        padding:10,
+        cursor:"pointer",
+        borderBottom:"1px solid lightgray",
+        "&:hover":{
+          background:"lightgray"
+        }
+      }} onClick={() =>{
+        item.onClick();
+        setAnchor(null)
+      }}>
+        {item.name}
+      </div>)}
+    </div>
+  }
   return (
     <Box
       position="absolute"
@@ -73,7 +127,7 @@ const Navbar = () => {
         // background: isNotHome && "white",
         // borderBottom:"1px solid lightgray",
         boxShadow: isNotHome && `0 2px 4px 0 rgba(43,43,43,.1)`,
-        color: !isNotHero ?"white" :"black !important"
+        color: !isNotHero ? "white" : "black !important",
       }}
     >
       <span
@@ -84,8 +138,7 @@ const Navbar = () => {
           fontSize: 30,
           fontWeight: "bold",
           cursor: "pointer",
-          color:"rgb(242, 184, 79)"
-          
+          color: "rgb(242, 184, 79)",
         }}
       >
         GAPP
@@ -93,7 +146,7 @@ const Navbar = () => {
       {/* DESKTOP NAVBAR */}
       {isNotMobile && (
         <>
-          <Box >
+          <Box>
             {/* <Link to="/" className={"link" + (url === "/" ? " active" : "")}>
               Event Guest
             </Link> */}
@@ -108,7 +161,7 @@ const Navbar = () => {
                 to="/pageTree"
                 className={"link" + (url === "/pageTree" ? " active" : "")}
               >
-               {isSiteAdmin ?"Quản lý gia phả" :"Gia phả"}
+                {isSiteAdmin ? "Quản lý gia phả" : "Gia phả"}
               </Link>
             )}
             {(isMember || !isLogin) && (
@@ -165,14 +218,14 @@ const Navbar = () => {
                 Quản lý quỹ
               </Link>
             )}
-            {isLogin && isCreateGene && !isSupperAdmin&& (
+            {/* {isLogin && isCreateGene && !isSupperAdmin && (
               <Link
                 to="/create-gene"
                 className={"link" + (url === "/create-gene" ? " active" : "")}
               >
                 Tạo gia phả
               </Link>
-            )}
+            )} */}
 
             {/* <Link
               to="/#"
@@ -181,76 +234,104 @@ const Navbar = () => {
               Support
             </Link> */}
           </Box>
-          <Box sx={{
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-            // width:400
-          }} display="flex" gap="1.5rem">
-            {user && (
-              <div
-                onClick={() => navigate("/profile")}
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-              >
-                <Avatar
-                  sx={{ width: 25, height: 25 }}
-                  src={user?.Avatar}
-                ></Avatar>
-                <span>{user?.FirstName + " " + user?.LastName}</span>
-              </div>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              // width:400
+            }}
+            display="flex"
+            gap="1.5rem"
+          >
+             {!isSupperAdmin && listRole.length > 0 && (
+              <FormControl variant="outlined">
+                <InputLabel>Gia phả</InputLabel>
+                <Select
+                  style={{
+                    width: 150,
+                    height: 45,
+                    color: !isNotHero && "rgb(242, 184, 79)",
+                    borderColor: "white",
+                  }}
+                  name="Gender"
+                  value={currentIdGenealogy}
+                  onChange={handleChange}
+                  label="Gia phả"
+                >
+                  {listRole.map((i) => (
+                    <MenuItem value={i.IdGenealogy}>
+                      {i.GenealogyName + " - " + i.RoleCode}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
-            {!isSupperAdmin && listRole.length > 0 && <FormControl  variant="outlined">
-              <InputLabel>Gia phả</InputLabel>
-              <Select
-              style={{width:150,height:45,color: !isNotHero && "rgb(242, 184, 79)",borderColor:"white"}}
-                name="Gender"
-                value={currentIdGenealogy}
-                onChange={handleChange}
-                label="Gia phả"
-              >
-                {listRole.map((i) => (
-                      <MenuItem value={i.IdGenealogy}>{i.GenealogyName+" - " + i.RoleCode}</MenuItem>
-                    ))}
-              </Select>
-            </FormControl>}
-            {isLogin && (
+            {user && (
+              <>
+                <div
+                  onClick={(event) => setAnchor(event.currentTarget)}
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <Avatar
+                    aria-describedby={id}
+                    sx={{ width: 25, height: 25 }}
+                    src={user?.Avatar}
+                  ></Avatar>
+                  <span>{user?.FirstName + " " + user?.LastName}</span>
+                </div>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchor}
+                  onClose={() => setAnchor(null)}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <div>
+                    <div
+                   
+                    >
+                     {renderListPopup()}
+                    </div>
+                  </div>
+                </Popover>
+              </>
+            )}
+           
+            {/* {isLogin && (
               <PrimaryButton
-                
                 event={() => {
                   logOutAction(false);
-                 
+
                   navigate("/login");
                 }}
                 title={"Đăng xuất"}
-              >
-                
-              </PrimaryButton>
-            )}
+              ></PrimaryButton>
+            )} */}
             {!isLogin && (
               <PrimaryButton
                 title={"Đăng nhập"}
                 event={() => {
                   navigate("/login");
                 }}
-              >
-              
-              </PrimaryButton>
+              ></PrimaryButton>
             )}
             {!isLogin && (
               <PrimaryButton
-              title={"Đăng kí"}
+                title={"Đăng kí"}
                 event={() => {
                   navigate("/register");
                 }}
-              >
-                
-              </PrimaryButton>
+              ></PrimaryButton>
             )}
           </Box>
         </>
