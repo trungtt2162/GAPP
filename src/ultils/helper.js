@@ -5,7 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./../firebase";
 import { v4 } from "uuid";
 import moment from "moment";
- export function uploafFileBase64(event, setValue) {
+export function uploafFileBase64(event, setValue) {
   const file = event.target.files[0];
   const reader = new FileReader();
   let base64;
@@ -45,47 +45,43 @@ export function getQuery() {
 }
 
 // handleErr
-export const handleError = (error,isshowToast=true) => {
+export const handleError = (error, isshowToast = true) => {
   let mess = "";
   if (axios.isAxiosError(error)) {
     mess = error.response?.data?.Message || "Something went wrong";
     const errorObj = error.response?.data?.errors;
-    if(errorObj){
+    if (errorObj) {
       const listKey = Object.keys(errorObj);
-      const key = listKey.find(i => !i.includes("$"));
-      
-      if(key){
+      const key = listKey.find((i) => !i.includes("$"));
+
+      if (key) {
         const listErr = errorObj[key];
         mess = listErr.join("\n");
       }
     }
-
-
   } else {
     mess = error.message || "Something went wrong";
   }
-  if(isshowToast){
-    toast.error("Có lỗi xảy ra")
+  if (isshowToast) {
+    toast.error("Có lỗi xảy ra");
   }
   return mess;
 };
 
-
-
 export const logout = (isRedirect = true) => {
   localStorage.removeItem(LOCAL_STORAGE_KEY.token);
-  if(isRedirect){
+  if (isRedirect) {
     window.location.href = "/login";
   }
-}
- export function isTokenExpired(token) {
+};
+export function isTokenExpired(token) {
   // Tách phần payload của token từ phần còn lại bằng cách tách chuỗi bằng dấu chấm
-  const tokenParts = token?.split('.');
+  const tokenParts = token?.split(".");
   const payload = JSON.parse(atob(tokenParts[1]));
 
   // Lấy thời gian hết hạn (exp) từ payload
   const expirationTime = payload?.exp;
-  console.log(expirationTime)
+  console.log(expirationTime);
 
   // Lấy thời gian hiện tại (tính bằng giây)
   const currentTime = Math.floor(Date.now() / 1000);
@@ -93,8 +89,6 @@ export const logout = (isRedirect = true) => {
   // So sánh thời gian hết hạn với thời gian hiện tại
   return expirationTime < currentTime;
 }
-
-
 
 export async function uploadImageToFirebase(file) {
   try {
@@ -108,12 +102,13 @@ export async function uploadImageToFirebase(file) {
   }
 }
 
-// 
-export const dateFormat = (date) =>  date ? moment(date).format("DD/MM/YYYY"):"";
-export const dateFormat2 = (date) =>  date ? moment(date).format("YYYY-MM-DD"):"";
-export const dateFormat3 = (date) =>  date ? moment(date).format("DD/MM/YYYY hh:mm:ss"):"";
-
-
+//
+export const dateFormat = (date) =>
+  date ? moment(date).format("DD/MM/YYYY") : "";
+export const dateFormat2 = (date) =>
+  date ? moment(date).format("YYYY-MM-DD") : "";
+export const dateFormat3 = (date) =>
+  date ? moment(date).format("DD/MM/YYYY hh:mm:ss") : "";
 
 export function buildTree(data) {
   let map = {},
@@ -142,17 +137,38 @@ export function buildTree(data) {
   return roots[0]; // Giả sử chỉ có một gốc
 }
 
-export const checkEmptyData = ( list) => {
-  if(list.length === 0){
-    return <div>
-      <img style={{
-        width:100
-      }} src="/empty.png" />
-      <p style={{
-      color:"gray",
-      padding:20,
-      marginTop:20
-    }}>Dữ liệu trống</p>
-    </div>
+export const checkEmptyData = (list) => {
+  if (list.length === 0) {
+    return (
+      <div>
+        <img
+          style={{
+            width: 100,
+          }}
+          src="/empty.png"
+        />
+        <p
+          style={{
+            color: "gray",
+            padding: 20,
+            marginTop: 20,
+          }}
+        >
+          Dữ liệu trống
+        </p>
+      </div>
+    );
   }
+};
+
+// Sort By Date
+export function sortArrByDate(arr, key) {
+  try {
+    return arr.sort((a, b) => new Date(b[key]) - new Date(a[key]));
+  } catch (error) {
+    console.log("errr");
+  }
+}
+export const splitText = (txt="") => {
+  return txt.split("\n").map(i => <div>{i}</div>)
 }

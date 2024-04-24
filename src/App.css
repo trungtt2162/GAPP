@@ -248,7 +248,7 @@ h1,h2,h3,h4,h5,p{
     border-radius: 5px;
     margin-bottom: 25px;
     height: calc(100vh - 130px);
-  overflow: scroll;
+  overflow: auto;
 }
 .bg-default{
   
@@ -259,7 +259,7 @@ h1,h2,h3,h4,h5,p{
 }
 .content-card{
   height: calc(100vh - 130px);
-  overflow: scroll;
+  /* overflow: scroll; */
   padding:20px;
   
 }
@@ -299,4 +299,15 @@ h1,h2,h3,h4,h5,p{
 }
 .primary-button-custom:hover{
   opacity: 0.8 !important;
+}
+
+.display-1-line {
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  /* Số dòng tối đa */
+
 }

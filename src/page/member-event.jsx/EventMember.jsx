@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card, Grid, TextField, Button } from "@mui/material";
+import { Box, Card, Grid, TextField, Button, Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
 import "./../history-family/History.scss";
-import { checkEmptyData, dateFormat, dateFormat3, handleError } from "../../ultils/helper";
+import {
+  checkEmptyData,
+  dateFormat,
+  dateFormat3,
+  handleError,
+  sortArrByDate,
+  splitText,
+} from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { eventApi } from "../../api/event.api";
 import CustomModal from "../../components/common/modal/CustomModal";
@@ -41,7 +48,6 @@ const EventMember = () => {
   }, [currentIdGenealogy]);
   return (
     <div>
-     
       <div className="how-work">
         <Box
           sx={{
@@ -107,51 +113,67 @@ const EventMember = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  {listEvent.map((item, index) => (
-                    <div
-                      className="card-bg"
-                      onClick={() => {
-                        setCurrentEvent(item);
-                      }}
-                      style={{
-                        marginTop: 10,
-                        cursor: "pointer",
-                        padding: 10,
-                        width: "calc(50% - 10px)",
-                        marginBottom: "20px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          border: "none !important",
-                        }}
-                        className="item-history"
-                      >
-                        <div style={{ textAlign: "start" }}>
+                  {sortArrByDate(listEvent, "OrganizationDate").map(
+                    (item, index) => {
+                      const now = new Date();
+                      const past = now > new Date(item.OrganizationDate);
+                      return (
+                        <div
+                          className="card-bg"
+                          onClick={() => {
+                            setCurrentEvent(item);
+                          }}
+                          style={{
+                            marginTop: 10,
+                            cursor: "pointer",
+                            padding: 10,
+                            width: "calc(50% - 10px)",
+                            marginBottom: "20px",
+                            background: past && "rgb(70 21 17)",
+                          }}
+                        >
                           <div
                             style={{
-                              fontSize: 20,
-                              fontWeight: "bold",
+                              border: "none !important",
                             }}
+                            className="item-history"
                           >
-                            {item.Name}
+                            <div className="" style={{ textAlign: "start" }}>
+                              <div
+                                style={{
+                                  fontSize: 20,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {item.Name}
+                              </div>
+                              <div>
+                                Thời gian : {dateFormat3(item.OrganizationDate)}
+                              </div>
+                            </div>
+                            {item.Background && <Avatar style={{
+                              width:60,height:60
+                            }} src={item.Background} />}
                           </div>
-                          <div>Thời gian : {dateFormat3(item.OrganizationDate)}</div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      );
+                    }
+                  )}
                 </div>
               </div>
             </Grid>
           </Grid>
           {checkEmptyData(listEvent)}
-
         </Box>
       </div>
       <CustomModal open={currentEvent} onClose={() => setCurrentEvent(null)}>
         <Grid item xs={6}>
-          <div className="content-card card-item">
+          <div
+            style={{
+              overflow: "hidden",
+            }}
+            className="content-card card-item"
+          >
             {currentEvent && (
               <>
                 {" "}
@@ -162,6 +184,15 @@ const EventMember = () => {
                     marginTop: 10,
                   }}
                 >
+                  <div
+                    style={{
+                      textAlign: "start",
+                      marginTop: 10,
+                    }}
+                  >
+                    <span className="bold">Người tổ chức : </span>
+                    <span>{currentEvent?.CreatedBy}</span>
+                  </div>
                   <span className="bold">Chế độ : </span>
                   <span>
                     {currentEvent?.Type == "0" ? "Online" : "Offline"}
@@ -210,12 +241,15 @@ const EventMember = () => {
                   }}
                 >
                   <span className="bold">Nội dung : </span>
-                  <span>{currentEvent?.Description}</span>
+                  <span>{splitText(currentEvent?.Description)}</span>
                 </div>
                 <div
                   style={{
                     textAlign: "start",
                     marginTop: 10,
+                    width: 300,
+                    height: 300,
+                    objectFit: "contain",
                   }}
                 >
                   <img src={currentEvent?.Background} />

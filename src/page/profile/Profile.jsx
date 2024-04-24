@@ -10,7 +10,7 @@ import useAuthStore from '../../zustand/authStore';
 
 function Profile() {
   const {user,setUser} = useAuthStore();
-  const [formData, setFormData] = useState({...user,DateOfBirth:user.DateOfBirth?moment(user.DateOfBirth).format("YYYY-MM-DD"):"",DateOfDeath:""});
+  const [formData, setFormData] = useState({...user,DateOfBirth:user.DateOfBirth?moment(user.DateOfBirth).format("YYYY-MM-DD"):null,DateOfDeath:null});
   const fileRef = useRef();
   const [loading,setLoading] = useState(false);
 
