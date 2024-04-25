@@ -391,8 +391,8 @@ const NodeItem = ({ nodeDatum }) => {
         >
           {nodeDatum.Users.map((item, index) => {
             const useId = item.UserId;
-            const isMineBlue = useId == user.Id && item.Gender == 0;
-            const isMineRed = useId == user.Id && item.Gender == 1;
+            const isMineBlue = useId == user?.Id && item.Gender == 0;
+            const isMineRed = useId == user?.Id && item.Gender == 1;
             const open = Boolean(anchorElList[index]);
             const id = open ? "simple-popover" + index : undefined;
 
@@ -534,7 +534,7 @@ export default function Tree1({ isGuest, idTree }) {
             alignItems: "center",
           }}
         >
-          <div className="wrap-ex">
+          <div style={{marginTop:10}} className="wrap-ex">
             <p className="bold">Chú thích</p>
             <div
               style={{

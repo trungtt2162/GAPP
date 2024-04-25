@@ -178,7 +178,7 @@ const GeneGuest = () => {
           </Grid>
         </Grid>
       </CustomModal>
-      <div className="content-card card-item">
+      <div >
         <Tree1 isGuest idTree={id} />
       </div>
     </div>
