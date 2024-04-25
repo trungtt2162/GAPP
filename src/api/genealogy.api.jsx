@@ -1,11 +1,11 @@
 import { API } from ".";
 
 export const genealogyApi = {
-  getListUserFromGenealogy: (id) => {
+  getListUserFromGenealogy: (id, txtSearch = "") => {
     return API.post("/api/UserGenealogy/paging", {
       PageSize: -1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and (Inactive=false or Inactive is null)`,
+      Condition: `IdGenealogy=${id} and (Inactive=false or Inactive is null) and (LastName like '%${txtSearch}%' or FirstName like '%${txtSearch}%')`,
       SortOrder: "",
       SearchKey: "",
     });
@@ -50,11 +50,11 @@ export const genealogyApi = {
   requestgele: (id) => {
     return API.post("/api/User/register?idGenealogy=" + id);
   },
-  getListUserRequest: (id) => {
+  getListUserRequest: (id, txtSearch) => {
     return API.get("/api/UserGenealogy/member-request?idGenealogy=" + id, {
       PageSize: 0,
       PageNumber: -1,
-      Condition: `IdGenealogy = ${id} and InActive = true`,
+      Condition: `IdGenealogy = ${id} and InActive = true  and (LastName like '%${txtSearch}%' or FirstName like '%${txtSearch}%')`,
       SortOrder: "",
       SearchKey: "",
     });
@@ -109,7 +109,7 @@ export const genealogyApi = {
   exportListMember: (id) => {
     return API.get("/api/UserGenealogy/export?idGenealogy=" + id);
   },
-  giveNewAcount:(data) => {
-    return API.post("/api/UserGenealogy/account",data)
-  }
+  giveNewAcount: (data) => {
+    return API.post("/api/UserGenealogy/account", data);
+  },
 };

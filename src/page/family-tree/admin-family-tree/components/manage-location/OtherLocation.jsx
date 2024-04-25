@@ -8,7 +8,8 @@ import {
   TableRow,
   Paper,
   Button,
-  TablePagination
+  TablePagination,
+  TextField
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -19,6 +20,7 @@ import { getLocationName } from "../../../../../constant/common";
 import { toast } from "react-toastify";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddLocationForm from "./AddLocation";
+import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 
 function OtherLocation() {
  
@@ -27,12 +29,13 @@ function OtherLocation() {
  const [currentId,setCurrentId] = useState(null)
  const [page, setPage] = React.useState(0);
  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+ const [txtSearch, setTxtSearch] = useState("");
  const handleChangePage = (event, newPage) => {
   setPage(newPage);
 };
  const getListAddress = async(id) => {
   try {
-    const res = await addressApi.getListAddress(id)
+    const res = await addressApi.getListAddress(id,txtSearch?.trim())
     if(res.data.StatusCode===200){
       setListAddress(res.data.Data.Data)
     }
@@ -69,6 +72,25 @@ function OtherLocation() {
  }
   return (
    <>
+   <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Tên địa điểm"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListAddress(userGenealogy[0].IdGenealogy)} />
+      </div>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>

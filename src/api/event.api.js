@@ -18,11 +18,11 @@ export const eventApi = {
     });
   },
 
-  getListEventPening: (id) => {
+  getListEventPening: (id,query) => {
     return API.post("/api/Event/paging", {
       PageSize: 1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and Inactive=true `,
+      Condition: `IdGenealogy=${id} and Inactive=true `+ (query ? query : ""),
       SortOrder: "",
       SearchKey: "",
     });

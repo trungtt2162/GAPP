@@ -12,6 +12,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  TextField
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -22,6 +23,7 @@ import { genealogyApi } from "../../../../../api/genealogy.api";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
 import { toast } from "react-toastify";
+import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 function ListMemberPending() {
   const { isLogin, roleCode } = useAuthStore();
 
@@ -35,9 +37,11 @@ function ListMemberPending() {
   const [currentUser, setCurrentUser] = useState(null);
   const [idTree, setIdTree] = useState(0);
   const { currentIdGenealogy } = useAuthStore();
+  const [txtSearch, setTxtSearch] = useState("");
+
   const getListUserPending = async () => {
     try {
-      const res = await genealogyApi.getListUserRequest(currentIdGenealogy);
+      const res = await genealogyApi.getListUserRequest(currentIdGenealogy,txtSearch?.trim());
       if (res.data.StatusCode === 200) {
         setUser(res.data.Data.Data || []);
       }
@@ -109,6 +113,25 @@ function ListMemberPending() {
   }, [currentIdGenealogy]);
   return (
     <>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Họ tên"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListUserPending()} />
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

@@ -8,15 +8,18 @@ import {
   TableRow,
   Paper,
   Button,
-  TablePagination
+  TablePagination,
+  TextField
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import useAuthStore from "../../../../../zustand/authStore";
 import { handleError } from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
+import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 
 function MemberLocation() {
+  const [txtSearch, setTxtSearch] = useState("");
   const { userGenealogy } = useAuthStore();
   const [listMember, setlistMember] = useState([]);
   const [page, setPage] = React.useState(0);
@@ -28,7 +31,7 @@ function MemberLocation() {
   const getListMember = async () => {
     const IDGenealogy = userGenealogy[0]?.IdGenealogy;
     try {
-      const res = await genealogyApi.getListUserFromGenealogy(IDGenealogy);
+      const res = await genealogyApi.getListUserFromGenealogy(IDGenealogy,txtSearch?.trim());
       if (res.data.StatusCode === 200) {
         setlistMember(res.data.Data.Data);
       }
@@ -43,6 +46,25 @@ function MemberLocation() {
 
   return (
   <>
+     <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Tên thành viên"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListMember()} />
+      </div>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>

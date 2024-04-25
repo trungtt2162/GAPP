@@ -13,7 +13,7 @@ import {
   InputLabel,
   Button,
   TextField,
-  TablePagination
+  TablePagination,
 } from "@mui/material";
 import { toast } from "react-toastify";
 
@@ -40,9 +40,11 @@ function ListMember({ list, action = true, isExport = true }) {
   const [currentMember, setCurrentMember] = useState(null);
   const [listNode, setListNode] = useState([]);
   const [userNoAcc, setUserNoAcc] = useState(null);
-  const [email,setEmail] = useState("")
+  const [email, setEmail] = useState("");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  //
+  const [txtSearch, setTxtSearch] = useState("");
 
   // EXPORT
   const handleExportListMember = async () => {
@@ -98,7 +100,8 @@ function ListMember({ list, action = true, isExport = true }) {
   const getListMember = async () => {
     try {
       const res = await genealogyApi.getListUserFromGenealogy(
-        currentIdGenealogy
+        currentIdGenealogy,
+        txtSearch?.trim()
       );
       if (res.data.StatusCode === 200) {
         setlistMember(res.data.Data.Data);
@@ -122,19 +125,22 @@ function ListMember({ list, action = true, isExport = true }) {
       );
   };
   // ADD ACOUNT
-  const handleAddAccount = async()=>{
+  const handleAddAccount = async () => {
     try {
       const isValidateEmail = validateEmail(email);
-    if (!isValidateEmail) {
+      if (!isValidateEmail) {
         toast.error("Invalid Email !!!");
-      return;
-    }
-      const res  = await genealogyApi.giveNewAcount({...userNoAcc,Email:email})
-      if(res.data.StatusCode === 200){
-        getListMember()
-          toast.success("Đã thêm")
-          setUserNoAcc(null)
-          setEmail("")
+        return;
+      }
+      const res = await genealogyApi.giveNewAcount({
+        ...userNoAcc,
+        Email: email,
+      });
+      if (res.data.StatusCode === 200) {
+        getListMember();
+        toast.success("Đã thêm");
+        setUserNoAcc(null);
+        setEmail("");
       }
       if (res.data.StatusCode === 400) {
         toast.error("Email đã tồn tại", {
@@ -142,9 +148,9 @@ function ListMember({ list, action = true, isExport = true }) {
         });
       }
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  }
+  };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -198,11 +204,24 @@ function ListMember({ list, action = true, isExport = true }) {
       }}
     >
       <div
-        className="flex-start"
         style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
           marginBottom: 10,
         }}
-      ></div>
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Họ tên"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListMember()} />
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -217,56 +236,56 @@ function ListMember({ list, action = true, isExport = true }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {curremtList.slice(
-              page * rowsPerPage,
-              page * rowsPerPage + rowsPerPage
-            ).map((user, index) => (
-              <TableRow key={index}>
-                <TableCell>{user?.FirstName + " " + user?.LastName}</TableCell>
-                <TableCell>{dateFormat(user.DateOfBirth)}</TableCell>
-                <TableCell>{user.Email}</TableCell>
-                <TableCell>{user.Gender === 0 ? "Nam" : "Nữ"}</TableCell>
-                {isSiteAdmin &&
-                user.RoleCode !== USER_ROLE.SiteAdmin &&
-                action ? (
-                  <>
-                    <FormControl
-                      style={{
-                        marginTop: 10,
-                        marginBottom: 10,
-                        marginRight: 10,
-                        width: 120,
-                      }}
-                    >
-                      <InputLabel id="demo-simple-select-label">
-                        Quyền
-                      </InputLabel>
-                      <Select
+            {curremtList
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((user, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    {user?.FirstName + " " + user?.LastName}
+                  </TableCell>
+                  <TableCell>{dateFormat(user.DateOfBirth)}</TableCell>
+                  <TableCell>{user.Email}</TableCell>
+                  <TableCell>{user.Gender === 0 ? "Nam" : "Nữ"}</TableCell>
+                  {isSiteAdmin &&
+                  user.RoleCode !== USER_ROLE.SiteAdmin &&
+                  action ? (
+                    <>
+                      <FormControl
                         style={{
-                          padding: 0,
-                          height: 40,
+                          marginTop: 10,
+                          marginBottom: 10,
+                          marginRight: 10,
+                          width: 120,
                         }}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={user.RoleCode}
-                        label="Quyền"
-                        onChange={handleChange(user, index)}
                       >
-                        {LIST_ROLE.map((item) => (
-                          <MenuItem value={item.RoleCode}>
-                            {item.RoleCode === "Account"
-                              ? "User"
-                              : item.RoleCode}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </>
-                ) : (
-                  <TableCell>{user.RoleCode}</TableCell>
-                )}
-                {
-                  action && (
+                        <InputLabel id="demo-simple-select-label">
+                          Quyền
+                        </InputLabel>
+                        <Select
+                          style={{
+                            padding: 0,
+                            height: 40,
+                          }}
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={user.RoleCode}
+                          label="Quyền"
+                          onChange={handleChange(user, index)}
+                        >
+                          {LIST_ROLE.map((item) => (
+                            <MenuItem value={item.RoleCode}>
+                              {item.RoleCode === "Account"
+                                ? "User"
+                                : item.RoleCode}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </>
+                  ) : (
+                    <TableCell>{user.RoleCode}</TableCell>
+                  )}
+                  {action && (
                     <TableCell>
                       <Button
                         onClick={() => setCurrentMember(user)}
@@ -278,20 +297,20 @@ function ListMember({ list, action = true, isExport = true }) {
                       >
                         Sửa
                       </Button>
-                      {isSiteAdmin &&
-                  user.RoleCode !== USER_ROLE.SiteAdmin &&<Button
-                        style={{
-                          marginRight: 10,
-                        }}
-                        onClick={() => handleDelete(user)}
-                        variant="contained"
-                        color="error"
-                      >
-                        Xóa
-                      </Button>}
+                      {isSiteAdmin && user.RoleCode !== USER_ROLE.SiteAdmin && (
+                        <Button
+                          style={{
+                            marginRight: 10,
+                          }}
+                          onClick={() => handleDelete(user)}
+                          variant="contained"
+                          color="error"
+                        >
+                          Xóa
+                        </Button>
+                      )}
                       {!user.Email && (
                         <Button
-
                           onClick={() => setUserNoAcc(user)}
                           variant="contained"
                           color="warning"
@@ -301,9 +320,9 @@ function ListMember({ list, action = true, isExport = true }) {
                       )}
                     </TableCell>
                   )}
-                {/*  */}
-              </TableRow>
-            ))}
+                  {/*  */}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -352,16 +371,15 @@ function ListMember({ list, action = true, isExport = true }) {
       <CustomModal open={userNoAcc} onClose={() => setUserNoAcc(null)}>
         <p className="title">Nhập email</p>
         <TextField
-        style={{
-          marginTop:10,
-          marginBottom:10
-        }}
+          style={{
+            marginTop: 10,
+            marginBottom: 10,
+          }}
           fullWidth
           label="Email"
           variant="outlined"
-         
           value={email}
-          onChange={(e) =>setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <PrimaryButton title={"Xác nhận"} event={() => handleAddAccount()} />
       </CustomModal>

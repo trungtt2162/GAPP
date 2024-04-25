@@ -5,11 +5,13 @@ import { checkEmptyData, dateFormat3, handleError } from "../../../../../ultils/
 import { historyApi } from "../../../../../api/history.api";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddHistory from "./AddHostory";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button,TablePagination } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button,TablePagination,TextField } from '@mui/material';
+import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 
 const HisoryEvent = () => {
-  const { userGenealogy } = useAuthStore();
-
+  const { userGenealogy ,currentIdGenealogy} = useAuthStore();
+  
+  const [txtSearch, setTxtSearch] = useState("");
   const [currentItem, setCurrentItem] = useState(null);
   const [listHistory, setListHistory] = useState([]);
   const [page, setPage] = React.useState(0);
@@ -19,7 +21,7 @@ const HisoryEvent = () => {
  };
   const getListHistory = async (id) => {
     try {
-      const res = await historyApi.getListAllHistoryByGenealogyId(id);
+      const res = await historyApi.getListAllHistoryByGenealogyId(id,` and Title like '%${txtSearch?.trim()}%'`);
       if (res.data.StatusCode === 200) {
         setListHistory(res.data.Data.Data);
       }
@@ -28,8 +30,8 @@ const HisoryEvent = () => {
     }
   };
   useEffect(() => {
-    getListHistory(userGenealogy[0]?.IdGenealogy);
-  }, [userGenealogy]);
+    getListHistory(currentIdGenealogy);
+  }, [currentIdGenealogy]);
   const handleSetHistory = (id, newData) => {
     // const newHistoryList = [...listHistory];
     // const index = listHistory.findIndex((i) => i.id === id);
@@ -54,6 +56,25 @@ const HisoryEvent = () => {
   }
   return (
     <div>
+        <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Tên sự kiện lịch sử"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListHistory(currentIdGenealogy)} />
+      </div>
        <TableContainer component={Paper}>
       <Table>
         <TableHead>

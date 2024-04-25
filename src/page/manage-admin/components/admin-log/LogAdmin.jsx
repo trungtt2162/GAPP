@@ -9,6 +9,7 @@ import {
   Paper,
   TablePagination,
   Button,
+  TextField
 } from "@mui/material";
 import ButtonTab from "../../../../components/common/button/ButtonTab";
 import { makeStyles } from "@mui/styles";
@@ -16,14 +17,16 @@ import { logApi } from "../../../../api/log.api";
 import { handleError } from "../../../../ultils/helper";
 import useAuthStore from "../../../../zustand/authStore";
 import moment from "moment";
+import PrimaryButton from "../../../../components/common/button/PrimaryButton";
 
 function AdminLog() {
   const [listLog, setListLog] = useState([]);
   const {currentIdGenealogy} = useAuthStore()
-  
+  const [txtSearch, setTxtSearch] = useState("");
+
   const getListLog = async () => {
     try {
-      const res = await logApi.getListAllLog(currentIdGenealogy);
+      const res = await logApi.getListAllLog(currentIdGenealogy,txtSearch?.trim());
       if(res.data.StatusCode === 200){
         setListLog(res.data.Data.Data || [])
       }
@@ -69,6 +72,25 @@ function AdminLog() {
           onClick={(e) => {}}
         />
       </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Tên người thực hiện"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListLog()} />
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -81,7 +103,10 @@ function AdminLog() {
             </TableRow>
           </TableHead>
           <TableBody>
-          {listLog?.reverse()?.map((user, index) => (
+          {listLog?.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            )?.reverse()?.map((user, index) => (
               <TableRow key={index}>
                 <TableCell className={classes.cellCenter}>{user.Date && moment(user.Date).format("DD-MM-YYYY hh:mm:ss")}</TableCell>
                 <TableCell className={classes.cellCenter}>{user.Description}</TableCell>

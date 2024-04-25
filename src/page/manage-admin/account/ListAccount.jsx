@@ -10,6 +10,7 @@ import {
   TablePagination,
   Button,
   IconButton,
+  TextField
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,12 +21,15 @@ import { handleError } from "../../../ultils/helper";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PrimaryButton from "../../../components/common/button/PrimaryButton";
 
 function ListAccount() {
   // State cho việc phân trang
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [ListAccount, setListAccount] = useState([]);
+  const [txtSearch, setTxtSearch] = useState("");
+
   // Hàm xử lý thay đổi trang
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -34,7 +38,7 @@ function ListAccount() {
   //
   const getListAcount = async () => {
     try {
-      const res = await supperAdminApi.getListAdmin({});
+      const res = await supperAdminApi.getListAdmin(txtSearch?.trim());
       if (res.data.StatusCode === 200) {
         setListAccount(res.data.Data.Data);
       }
@@ -50,7 +54,8 @@ function ListAccount() {
       const res = await supperAdminApi.updateAdmin({
         ...row,
         IsBlock: status === 0 ? true : false,
-        TypeRole :"string"
+        TypeRole :"string",
+        JobTitle:""
       });
       if (res.data.StatusCode === 200) {
         toast.success(
@@ -97,13 +102,32 @@ function ListAccount() {
           Danh sách tài khoản
         </h4>
       </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Email"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListAcount()} />
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell className={"text-center"}>Tên</TableCell>
               <TableCell className={"text-center"}>Email</TableCell>
-              <TableCell className={"text-center"}>Link gia phả</TableCell>
+              {/* <TableCell className={"text-center"}>Link gia phả</TableCell> */}
               <TableCell className={"text-center"}>Khóa/Mở khóa</TableCell>
               <TableCell className={"text-center"}>Xóa</TableCell>
             </TableRow>
@@ -118,11 +142,11 @@ function ListAccount() {
                   {row?.FirstName + " " + row?.LastName}
                 </TableCell>
                 <TableCell className={"text-center"}>{row.Email}</TableCell>
-                <TableCell className={"text-center"}>
+                {/* <TableCell className={"text-center"}>
                   <Link to={"/family-tree-detail/" + row.Id}>
                     Link gia phả của {row?.FirstName + " " + row?.LastName}
                   </Link>
-                </TableCell>
+                </TableCell> */}
                 <TableCell className={"text-center"}>
                   {!row.IsBlock ? (
                     <Button

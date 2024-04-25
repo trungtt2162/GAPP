@@ -14,8 +14,8 @@ const PrimaryButton = ({ title, event }) => {
         backgroundColor: palette.primary.main,
         color: "#ffffff",
         borderRadius: 2,
-        alignSelf: { xs: "center", md: "flex-start" },
-        // "&:hover": { opacity: 0.7 },
+        // alignSelf: { xs: "center", md: "flex-start" },
+        "&:hover": { backgroundColor: palette.primary.main,opacity:0.7 },
       }}
       onClick={() => {
         if (event) {

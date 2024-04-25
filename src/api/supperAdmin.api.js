@@ -1,11 +1,11 @@
 import { API } from ".";
 
 export const supperAdminApi = {
-  getListAdmin: () => {
+  getListAdmin: (txt) => {
     return API.post("/api/SuperAdmin/admin/paging",{
         PageSize: -1,
         PageNumber: -1,
-        Condition: "",
+        Condition: `Email like '%${txt}%'`,
         SortOrder: "",
         SearchKey: ""
       });

@@ -81,7 +81,7 @@ const HisoryEventItem = ({
         <div>
           <div
             style={{
-              textAlign: "start",
+            
             }}
           >
             {dateFormat(Date)}

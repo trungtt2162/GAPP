@@ -1,20 +1,20 @@
 import { API } from ".";
 
 export const logApi = {
-  getListLogBygenealogy: (id) => {
+  getListLogBygenealogy: (id,txt="") => {
     return API.post("/api/User/log", {
       PageSize: 1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id}`,
+      Condition: `IdGenealogy=${id} and CreatedBy like '%${txt}%'`,
       SortOrder: "",
       SearchKey: "",
     });
   },
-  getListAllLog: (id) => {
+  getListAllLog: (id,txt="") => {
     return API.post("/api/User/log", {
       PageSize: 1,
       PageNumber: -1,
-      Condition: "",
+      Condition: `CreatedBy like '%${txt}%'`,
       SortOrder: "",
       SearchKey: "",
     });

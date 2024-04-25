@@ -8,7 +8,8 @@ import {
   TableRow,
   Paper,
   Button,
-  TablePagination
+  TablePagination,
+  TextField
 } from "@mui/material";
 import { checkEmptyData, dateFormat3, handleError } from "../../../../../ultils/helper";
 import { eventApi } from "../../../../../api/event.api";
@@ -19,7 +20,9 @@ import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddEventForm from "./AddEvent";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 function ListEventPending({ list, action = true }) {
+  const [txtSearch, setTxtSearch] = useState("");
   const [listEvent, setListEvent] = useState();
   const { userGenealogy } = useAuthStore();
   const geId = userGenealogy[0]?.IdGenealogy;
@@ -31,8 +34,13 @@ function ListEventPending({ list, action = true }) {
    setPage(newPage);
  };
   const getListEvent = async (id) => {
+    let query = "";
+    
+    if(txtSearch){
+      query += ` and Name like '%${txtSearch}%' `
+    }
     try {
-      const res = await eventApi.getListEventPening(id);
+      const res = await eventApi.getListEventPening(id,query);
       if (res.data.StatusCode === 200) {
         setListEvent(res.data.Data.Data);
       }
@@ -87,6 +95,25 @@ function ListEventPending({ list, action = true }) {
   };
   return (
     <>
+     {!list &&   <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Tên sự kiện"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListEvent(geId)} />
+      </div>}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

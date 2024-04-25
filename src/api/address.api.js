@@ -11,11 +11,11 @@ export const addressApi = {
     return API.delete(`/api/FamilyAddress?id=${id}&idGenealogy=${idGenealogy}`);
   },
   
-  getListAddress: (id) => {
+  getListAddress: (id,txt="") => {
     return API.post("/api/FamilyAddress/paging", {
         "PageSize": 1,
         "PageNumber": -1,
-        "Condition": `IdGenealogy=${id}`,
+        "Condition": `IdGenealogy=${id} and Name like '%${txt}%'`,
         "SortOrder": "",
         "SearchKey": ""
     });

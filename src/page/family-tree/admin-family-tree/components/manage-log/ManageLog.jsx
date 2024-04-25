@@ -7,7 +7,8 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TablePagination
+  TablePagination,
+  TextField
 } from "@mui/material";
 import TabSidebar from "../../../../../components/common/tabs/TabSidebar";
 import ButtonTab from "../../../../../components/common/button/ButtonTab";
@@ -15,18 +16,21 @@ import { handleError } from "../../../../../ultils/helper";
 import { logApi } from "../../../../../api/log.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import moment from "moment/moment";
+import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 
 function LogManage() {
   const [listLog, setListLog] = useState([]);
   const {currentIdGenealogy} = useAuthStore()
   const [page, setPage] = React.useState(0);
  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+ const [txtSearch, setTxtSearch] = useState("");
+
  const handleChangePage = (event, newPage) => {
   setPage(newPage);
 };
   const getListLog = async () => {
     try {
-      const res = await logApi.getListLogBygenealogy(currentIdGenealogy);
+      const res = await logApi.getListLogBygenealogy(currentIdGenealogy,txtSearch?.trim());
       if(res.data.StatusCode === 200){
         setListLog(res.data.Data.Data || [])
       }
@@ -54,6 +58,25 @@ function LogManage() {
           text={"Quản lý log"}
           onClick={(e) => {}}
         />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+      >
+        <TextField
+         style={{
+          width: 300}}
+          label="Tên người thực hiện"
+          variant="outlined"
+          value={txtSearch}
+          onChange={(e) => setTxtSearch(e.target.value)}
+        />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListLog()} />
       </div>
       <TableContainer component={Paper}>
         <Table>

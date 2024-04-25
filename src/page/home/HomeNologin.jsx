@@ -211,9 +211,9 @@ const HomeNoLogin = () => {
                               <TableCell className="text-center">
                                  Admin
                               </TableCell>
-                              <TableCell className="text-center">
+                              {/* <TableCell className="text-center">
                                 Link gia phả
-                              </TableCell>
+                              </TableCell> */}
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -233,14 +233,14 @@ const HomeNoLogin = () => {
                                   <TableCell className="text-center">
                                     {row.ModifiedBy}
                                   </TableCell>
-                                  <TableCell className="text-center">
+                                  {/* <TableCell className="text-center">
                                     <Link
                                       to={`tree/${row.Id}`}
                                       
                                     >
                                       Xem gia phả
                                     </Link>
-                                  </TableCell>
+                                  </TableCell> */}
                                 </TableRow>
                               ))}
                           </TableBody>
