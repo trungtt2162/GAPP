@@ -25,6 +25,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpGet("")]
+        [AllowAnonymous]
         public async Task<ServiceResult> GetAll([FromQuery]int idGenealogy)
         {
             var serviceResult = new ServiceResult();
