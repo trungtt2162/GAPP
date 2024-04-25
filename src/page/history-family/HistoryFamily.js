@@ -211,8 +211,8 @@ const HistoryFamily = ({ list, desHis }) => {
           {curent?.Title}
         </div>
         <div>
-          <span className="bold">Ngày diễn ra : </span>
-          <span>{dateFormat(curent?.Date)}</span>
+          <span className="bold">Thời gian diễn ra : </span>
+          <span>{dateFormat3(curent?.Date)}</span>
         </div>
         <div>
           <span className="bold">Nội dung: </span>
@@ -225,14 +225,15 @@ const HistoryFamily = ({ list, desHis }) => {
           </span>{" "}
         </div>
         <Grid item xs={24}>
-          <img
+          {curent?.Image && <img
             src={curent?.Image}
             style={{
               width: 300,
               height: 300,
               objectFit:"contain"
             }}
-          />
+          /> }
+         
         </Grid>
       </CustomModal>
     </div>
