@@ -29,21 +29,21 @@ const ProfileManager = () => {
       component:ChangePasswordForm,
       show:true
     },
-    {
+    // {
  
-      key: 2.5,
-      name: "Vị trí trong gia phả",
-      component:CurrentPositionGene,
-      show:    isSiteAdmin 
-    },
+    //   key: 2.5,
+    //   name: "Vị trí trong gia phả",
+    //   component:CurrentPositionGene,
+    //   show:    isSiteAdmin 
+    // },
     
-    {
+    // {
  
-      key: 3,
-      name: "Yêu cầu vào gia phả",
-      component:RequestGele,
-      show:    (isUser || isPeopleAdmin || isSiteAdmin) 
-    },
+    //   key: 3,
+    //   name: "Yêu cầu vào gia phả",
+    //   component:RequestGele,
+    //   show:    (isUser || isPeopleAdmin || isSiteAdmin) 
+    // },
     
     
   ];

@@ -248,7 +248,7 @@ const HomeNoLogin = () => {
                       </TableContainer>
                       <TablePagination
                         component="div"
-                        count={rows.length}
+                        count={listSearch.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}

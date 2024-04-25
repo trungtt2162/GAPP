@@ -32,7 +32,7 @@ export const genealogyApi = {
     return API.post("/api/Genealogy/guest/paging", {
       PageSize: 0,
       PageNumber: -1,
-      Condition: `IsPublic = true and Name like '%${name}%'`,
+      Condition: `Name like '%${name}%'`,
       SortOrder: "",
       SearchKey: "",
     });
@@ -41,7 +41,7 @@ export const genealogyApi = {
     return API.post("/api/Genealogy/guest/paging", {
       PageSize: 0,
       PageNumber: -1,
-      Condition: `IsPublic = true and Id like '%${id}%'`,
+      Condition: `Id like '%${id}%'`,
       SortOrder: "",
       SearchKey: "",
     });

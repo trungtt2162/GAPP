@@ -31,7 +31,7 @@ function MemberLocation() {
   const getListMember = async () => {
     const IDGenealogy = userGenealogy[0]?.IdGenealogy;
     try {
-      const res = await genealogyApi.getListUserFromGenealogy(IDGenealogy,txtSearch?.trim());
+      const res = await genealogyApi.getListUserFromGenealogy(IDGenealogy || -1,txtSearch?.trim());
       if (res.data.StatusCode === 200) {
         setlistMember(res.data.Data.Data);
       }

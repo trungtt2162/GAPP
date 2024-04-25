@@ -86,6 +86,11 @@ const Navbar = () => {
       onClick: () => navigate("/create-gene"),
     },
     {
+      show: isLogin  && !isSupperAdmin,
+      name: "Yêu cầu vào gia phả",
+      onClick: () => navigate("/request-gene"),
+    },
+    {
       name: "Đăng xuất",
 
       onClick: () => {

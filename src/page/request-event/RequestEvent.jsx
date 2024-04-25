@@ -49,7 +49,7 @@ function RequestEvent({ item, updateItem }) {
   const { userGenealogy, currentIdGenealogy } = useAuthStore();
   const [limitMeber, setLimitMember] = useState(false);
   const [listMember, setlistMember] = useState([]);
-
+ 
   const originData = {
     IdGenealogy: 26,
     Name: "",
@@ -100,6 +100,10 @@ function RequestEvent({ item, updateItem }) {
   }, [currentIdGenealogy]);
   // SAVE
   const onSave = async () => {
+    if(userGenealogy.length ===0){
+      toast.warning("Không thể tạo request do bạn chưa thuộc gia phả nào, vui lòng tạo gia phả hoặc yêu cầu vào gia phả");
+      return ;
+    }
     try {
       const data = {
         ...formData,
