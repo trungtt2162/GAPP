@@ -108,7 +108,7 @@ function AdminLog() {
               page * rowsPerPage + rowsPerPage
             )?.reverse()?.map((user, index) => (
               <TableRow key={index}>
-                <TableCell className={classes.cellCenter}>{user.Date && moment(user.Date).format("DD-MM-YYYY hh:mm:ss")}</TableCell>
+                <TableCell className={classes.cellCenter}>{user.Date && moment(user.Date).format("DD/MM/YYYY hh:mm:ss")}</TableCell>
                 <TableCell className={classes.cellCenter}>{user.Description}</TableCell>
                 <TableCell className={classes.cellCenter}>{user.CreatedBy}</TableCell>
               </TableRow>
