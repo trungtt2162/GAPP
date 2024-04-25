@@ -26,6 +26,7 @@ import AddImage from "../../../../../components/common/addImage/AddImage";
 import {
   dateFormat,
   dateFormat2,
+  dateFormat3,
   handleError,
   uploadImageToFirebase,
 } from "../../../../../ultils/helper";
@@ -51,7 +52,7 @@ function AddHistory({ item, updateItem }) {
 
   const fileRef = useRef();
   const [formData, setFormData] = useState(
-    item ? {...item,Date: dateFormat2(item.Date)} : {
+    item ? {...item} : {
       IDGenealogy: "",
       Image: "",
       Description: "",
@@ -124,8 +125,8 @@ function AddHistory({ item, updateItem }) {
               required
             />
             <TextField
-              label="Ngày diễn ra"
-              type="date"
+              label="Thời gian diễn ra"
+              type="datetime-local"
               value={formData.Date}
               onChange={e =>setFormData({ ...formData, Date: e.target.value })}
               InputLabelProps={{ shrink: true }}

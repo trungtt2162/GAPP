@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   dateFormat,
+  dateFormat3,
   handleError,
   uploafFileBase64,
 } from "../../../../../ultils/helper";
@@ -84,7 +85,7 @@ const HisoryEventItem = ({
             
             }}
           >
-            {dateFormat(Date)}
+            {dateFormat3(Date)}
           </div>
         </div>
       </TableCell>

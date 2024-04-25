@@ -18,17 +18,23 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TablePagination,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import moment from "moment/moment";
 import { toast } from "react-toastify";
 import { eventApi } from "../../api/event.api";
 import AddImage from "../../components/common/addImage/AddImage";
-import { handleError, uploadImageToFirebase } from "../../ultils/helper";
+import {
+  dateFormat,
+  handleError,
+  uploadImageToFirebase,
+} from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import Navbar from "../../components/layout/Navbar";
 import { genealogyApi } from "../../api/genealogy.api";
 import Checkbox from "@mui/material/Checkbox";
+import InfoIconButton from "../../components/common/InfoIcon";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -49,7 +55,9 @@ function RequestEvent({ item, updateItem }) {
   const { userGenealogy, currentIdGenealogy } = useAuthStore();
   const [limitMeber, setLimitMember] = useState(false);
   const [listMember, setlistMember] = useState([]);
- 
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const originData = {
     IdGenealogy: 26,
     Name: "",
@@ -65,7 +73,9 @@ function RequestEvent({ item, updateItem }) {
     UserEvents: [],
   };
   const [formData, setFormData] = useState(originData);
-
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
   const handleChangeData = (key) => (e) => {
     const newValue = e?.target?.value;
     setFormData({ ...formData, [key]: newValue });
@@ -100,9 +110,11 @@ function RequestEvent({ item, updateItem }) {
   }, [currentIdGenealogy]);
   // SAVE
   const onSave = async () => {
-    if(userGenealogy.length ===0){
-      toast.warning("Không thể tạo request do bạn chưa thuộc gia phả nào, vui lòng tạo gia phả hoặc yêu cầu vào gia phả");
-      return ;
+    if (userGenealogy.length === 0) {
+      toast.warning(
+        "Không thể tạo request do bạn chưa thuộc gia phả nào, vui lòng tạo gia phả hoặc yêu cầu vào gia phả"
+      );
+      return;
     }
     try {
       const data = {
@@ -131,7 +143,7 @@ function RequestEvent({ item, updateItem }) {
   };
   return (
     <div>
-      <Container style={{marginTop:60}} maxWidth="md">
+      <Container style={{ marginTop: 60 }} maxWidth="md">
         <h4 style={{ marginTop: 30 }} className="bold">
           {"Yêu cầu sự kiện"}
         </h4>
@@ -184,7 +196,7 @@ function RequestEvent({ item, updateItem }) {
                     }}
                     component="legend"
                   >
-                   Hình thức tổ chức
+                    Hình thức tổ chức
                   </FormLabel>
                   <RadioGroup
                     row
@@ -242,7 +254,18 @@ function RequestEvent({ item, updateItem }) {
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
-                      label="Public"
+                      label={
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span> Public </span>
+                          <InfoIconButton infoText="Chế độ công khai sẽ hiển thị công khai với những người dùng bên ngoài gia phả" />
+                        </div>
+                      }
                     />
                   </RadioGroup>
                 </FormControl>
@@ -281,7 +304,10 @@ function RequestEvent({ item, updateItem }) {
                 </FormControl>
               </div>
               {limitMeber == "true" && (
-                <TableContainer component={Paper}>
+                <TableContainer
+                  style={{ width: "150%", marginLeft: "50%" }}
+                  component={Paper}
+                >
                   <Table>
                     <TableHead>
                       <TableRow>
@@ -295,35 +321,52 @@ function RequestEvent({ item, updateItem }) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {listMember.map((user, index) => (
-                        <TableRow key={index}>
-                          <TableCell>
-                            <Checkbox
-                              onChange={(e) => {
-                                const list = [...listMember];
-                                list[index].checked = e.target.checked;
-                                setlistMember(list);
-                              }}
-                              checked={user.checked}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            {user?.FirstName + " " + user?.LastName}
-                          </TableCell>
-                          <TableCell>{user.DateOfBirth}</TableCell>
-                          <TableCell>{user.Email}</TableCell>
-                          <TableCell>{user.Address}</TableCell>
-                          <TableCell>
-                            {user.Gender === 0 ? "Name" : "Nữ"}
-                          </TableCell>
-                          {/*  */}
-                        </TableRow>
-                      ))}
+                      {listMember
+                        ?.slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((user, index) => (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Checkbox
+                                onChange={(e) => {
+                                  const list = [...listMember];
+                                  list[index].checked = e.target.checked;
+                                  setlistMember(list);
+                                }}
+                                checked={user.checked}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {user?.FirstName + " " + user?.LastName}
+                            </TableCell>
+                            <TableCell>
+                              {dateFormat(user.DateOfBirth)}
+                            </TableCell>
+                            <TableCell>{user.Email}</TableCell>
+                            <TableCell>{user.Address}</TableCell>
+                            <TableCell>
+                              {user.Gender === 0 ? "Name" : "Nữ"}
+                            </TableCell>
+                            {/*  */}
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
               )}
+              {limitMeber == "true" && (
+                <TablePagination
+                  component="div"
+                  count={listMember?.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                />
+              )}
               <Button
+              style={{marginBottom:20}}
                 onClick={() => onSave()}
                 variant="contained"
                 color="primary"

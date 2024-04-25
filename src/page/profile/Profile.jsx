@@ -70,6 +70,7 @@ function Profile() {
         </Grid>
         <Grid item xs={12}>
           <TextField
+          disabled
             fullWidth
             label="Email"
             name="Email"

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import ButtonTab from "../../components/common/button/ButtonTab";
 import ListMember from "../family-tree/admin-family-tree/components/manage-member/ListMember";
 import { historyApi } from "../../api/history.api";
-import { checkEmptyData, dateFormat, handleError } from "../../ultils/helper";
+import { checkEmptyData, dateFormat, dateFormat3, handleError } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 import { genealogyApi } from "../../api/genealogy.api";
 import ListEvent from "../family-tree/admin-family-tree/components/manage-event/ListEvent";
@@ -159,11 +159,15 @@ const HomeMemberLogin = () => {
                     }}
                     className="item-history card-bg"
                   >
-                    <div className="item-history">
+                    <div style={{
+                      display:"flex",
+                      justifyContent:"space-between",
+                      width:"100%"
+                    }} className="item-history">
                       <div
                         className="flex-center"
                         style={{
-                          width: "100%",
+                          width: 500,
                           flexDirection: "column",
                           alignItems: "flex-start",
                           justifyContent: "center",
@@ -171,9 +175,24 @@ const HomeMemberLogin = () => {
                       >
                         <p className="title">{item.Title}</p>
                         <div style={{ textAlign: "start" }}>
-                          Ngày : {dateFormat(item.Date)}
+                          Thời gian : {dateFormat3(item.Date)}
                         </div>
                       </div>
+                      {item.Image && (
+                    <div style={{
+                      flex:1,
+                      display:"flex",
+                      justifyContent:"flex-end",
+                    }}>
+                        <Avatar
+                        style={{
+                          width: 70,
+                          height: 70,
+                        }}
+                        src={item.Image}
+                      />
+                    </div>
+                    )}
                     </div>
                   </div>
                   

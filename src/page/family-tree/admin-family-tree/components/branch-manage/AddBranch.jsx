@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 
 const AddBranch = ({ item, getListAllNode }) => {
   const [currentMember, setCurrentMember] = useState(null);
+  console.log(item)
   const [listNode, setListNode] = useState([]);
   const [listFamilyTree, setListFamilyTree] = useState([]);
   const { currentIdGenealogy } = useAuthStore();
@@ -131,6 +132,7 @@ const AddBranch = ({ item, getListAllNode }) => {
           >
             <InputLabel id="parent-id-label">Nhánh cha</InputLabel>
             <Select
+             disabled={item && (item.parentId =="000")}
               labelId="parent-id-label"
               id="parent-id-select"
               name="parentId"
@@ -139,7 +141,12 @@ const AddBranch = ({ item, getListAllNode }) => {
             >
               {/* Thay đổi MenuItem theo nhu cầu */}
               <MenuItem disabled={disalbedRoot} value={"000"}>Không có nhánh cha</MenuItem>
-              {listFamilyTree.map((i) => (
+              {listFamilyTree.filter(i => {
+                if(item){
+                  return item.Id != i.Id
+                }
+                return true
+              }).map((i) => (
                 <MenuItem value={i.Id}>{i.Name}</MenuItem>
               ))}
             </Select>

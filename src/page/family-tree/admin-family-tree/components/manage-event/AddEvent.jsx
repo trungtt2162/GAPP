@@ -18,6 +18,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TablePagination,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import moment from "moment/moment";
@@ -26,12 +27,15 @@ import Checkbox from "@mui/material/Checkbox";
 import { eventApi } from "../../../../../api/event.api";
 import useAuthStore from "../../../../../zustand/authStore";
 import {
+  dateFormat,
+  dateFormat2,
   handleError,
   uploadImageToFirebase,
 } from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 import AddImage from "../../../../../components/common/addImage/AddImage";
 import { list } from "firebase/storage";
+import InfoIconButton from "../../../../../components/common/InfoIcon";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -53,7 +57,8 @@ function AddEvent({ item, updateItem }) {
   const [limitMeber, setLimitMember] = useState(false);
   const [listMember, setlistMember] = useState([]);
   const [listUserAttend, setListUserAttend] = useState([]);
-
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const originData = {
     IdGenealogy: 26,
     Name: "",
@@ -100,7 +105,9 @@ function AddEvent({ item, updateItem }) {
       handleError(error);
     }
   };
-
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
   useEffect(() => {
     getListMember();
   }, [currentIdGenealogy]);
@@ -130,7 +137,7 @@ function AddEvent({ item, updateItem }) {
               : listMember;
           const listAdd = getListAdd(listUserAttend, listFinal);
           const lisDelete = getListDelete(listUserAttend, listFinal);
-          if(listAdd.length > 0){
+          if (listAdd.length > 0) {
             await eventApi.addListNewUserEvent(
               listAdd.map((i) => ({
                 IdGenealogy: i.IdGenealogy,
@@ -143,10 +150,10 @@ function AddEvent({ item, updateItem }) {
               }))
             );
           }
-          if(lisDelete.length > 0){
+          if (lisDelete.length > 0) {
             lisDelete.forEach((item) => {
-             eventApi.deleteUserEvent(item.Id,item.IdGenealogy)
-            })
+              eventApi.deleteUserEvent(item.Id, item.IdGenealogy);
+            });
           }
           updateItem(data);
         }
@@ -208,8 +215,7 @@ function AddEvent({ item, updateItem }) {
     const listFinalid = listFinal.map((i) => i.UserId + "");
     return listAttendOrigin.filter((i) => !listFinalid.includes(i.UserID + ""));
   };
- 
-   
+
   return (
     <div>
       <Container maxWidth="md">
@@ -243,8 +249,8 @@ function AddEvent({ item, updateItem }) {
                 fullWidth
                 required
                 inputProps={{
-                  min: '1900-01-01T00:00', // Ngày và giờ tối thiểu
-                  max: '2100-12-31T23:59', // Ngày và giờ tối đa
+                  min: "1900-01-01T00:00", // Ngày và giờ tối thiểu
+                  max: "2100-12-31T23:59", // Ngày và giờ tối đa
                   step: 3600, // Bước thời gian là 1 giờ
                 }}
               />
@@ -328,7 +334,18 @@ function AddEvent({ item, updateItem }) {
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
-                      label="Public"
+                      label={
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span> Public </span>
+                          <InfoIconButton infoText="Chế độ công khai sẽ hiển thị công khai với những người dùng bên ngoài gia phả" />
+                        </div>
+                      }
                     />
                   </RadioGroup>
                 </FormControl>
@@ -367,7 +384,10 @@ function AddEvent({ item, updateItem }) {
                 </FormControl>
               </div>
               {limitMeber == "true" && (
-                <TableContainer component={Paper}>
+                <TableContainer
+                  style={{ width: "150%", marginLeft: "50%" }}
+                  component={Paper}
+                >
                   <Table>
                     <TableHead>
                       <TableRow>
@@ -381,35 +401,51 @@ function AddEvent({ item, updateItem }) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {listMember.map((user, index) => {
-                        return (
-                          <TableRow key={index}>
-                            <TableCell>
-                              <Checkbox
-                                onChange={(e) => {
-                                  const list = [...listMember];
-                                  list[index].checked = e.target.checked;
-                                  setlistMember(list);
-                                }}
-                                checked={user.checked == true}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              {user?.FirstName + " " + user?.LastName}
-                            </TableCell>
-                            <TableCell>{user.DateOfBirth}</TableCell>
-                            <TableCell>{user.Email}</TableCell>
-                            <TableCell>{user.Address}</TableCell>
-                            <TableCell>
-                              {user.Gender === 0 ? "Name" : "Nữ"}
-                            </TableCell>
-                            {/*  */}
-                          </TableRow>
-                        );
-                      })}
+                      {listMember
+                        ?.slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((user, index) => {
+                          return (
+                            <TableRow key={index}>
+                              <TableCell>
+                                <Checkbox
+                                  onChange={(e) => {
+                                    const list = [...listMember];
+                                    list[index].checked = e.target.checked;
+                                    setlistMember(list);
+                                  }}
+                                  checked={user.checked == true}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                {user?.FirstName + " " + user?.LastName}
+                              </TableCell>
+                              <TableCell>
+                                {dateFormat(user.DateOfBirth)}
+                              </TableCell>
+                              <TableCell>{user.Email}</TableCell>
+                              <TableCell>{user.Address}</TableCell>
+                              <TableCell>
+                                {user.Gender === 0 ? "Nam" : "Nữ"}
+                              </TableCell>
+                              {/*  */}
+                            </TableRow>
+                          );
+                        })}
                     </TableBody>
                   </Table>
                 </TableContainer>
+              )}
+              {limitMeber == "true" && (
+                <TablePagination
+                  component="div"
+                  count={listMember?.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                />
               )}
               <Button
                 onClick={() => onSave()}

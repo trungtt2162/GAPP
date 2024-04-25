@@ -203,7 +203,7 @@ function ListMember({ list, action = true, isExport = true }) {
         marginBottom: 10,
       }}
     >
-      <div
+     {action &&  <div
         style={{
           display: "flex",
           alignItems: "center",
@@ -221,7 +221,7 @@ function ListMember({ list, action = true, isExport = true }) {
           onChange={(e) => setTxtSearch(e.target.value)}
         />
         <PrimaryButton title={"Tìm kiếm"} event={() => getListMember()} />
-      </div>
+      </div>}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

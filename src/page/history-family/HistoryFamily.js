@@ -5,7 +5,7 @@ import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
 import "./History.scss";
 import { historyApi } from "../../api/history.api";
-import { checkEmptyData, dateFormat, handleError } from "../../ultils/helper";
+import { checkEmptyData, dateFormat, dateFormat3, handleError } from "../../ultils/helper";
 
 import useAuthStore from "../../zustand/authStore";
 import CustomModal from "../../components/common/modal/CustomModal";
@@ -174,7 +174,7 @@ const HistoryFamily = ({ list, desHis }) => {
                     >
                       <div className="title">{item.Title}</div>
                       <div style={{ textAlign: "start" }}>
-                        Ngày : {dateFormat(item.Date)}
+                        Thời gian : {dateFormat3(item.Date)}
                       </div>
                     </div>
                     {item.Image && (

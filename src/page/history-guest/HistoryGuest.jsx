@@ -263,7 +263,6 @@ const HistoryGuest = () => {
         }}> 
         
         <HistoryFamily  list={listHistory} desHis={des} />
-        {checkEmptyData(listHistory)}
 
         </div>
         </Box>

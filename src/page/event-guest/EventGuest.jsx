@@ -4,7 +4,7 @@ import { useTheme } from "@emotion/react";
 import "./../history-family/History.scss";
 import { eventApi } from "../../api/event.api";
 import { theme } from "../../theme";
-import { handleError } from "../../ultils/helper";
+import { dateFormat3, handleError } from "../../ultils/helper";
 import Navbar from "../../components/layout/Navbar";
 
 import {
@@ -139,8 +139,8 @@ const EventGuest = () => {
                         marginTop: 10,
                       }}
                     >
-                      <span className="bold">Ngày diễn ra : </span>
-                      <span>{currentEvent?.OrganizationDate}</span>
+                      <span className="bold">Thời gian diễn ra : </span>
+                      <span>{dateFormat3(currentEvent?.OrganizationDate)}</span>
                     </div>
                     <div
                       style={{
@@ -166,7 +166,7 @@ const EventGuest = () => {
                         marginTop: 10,
                       }}
                     >
-                      <img src={currentEvent?.Background} />
+                     {currentEvent?.Background && <img src={currentEvent?.Background} />}
                     </div>
                   </>
                 )}
@@ -236,14 +236,14 @@ const EventGuest = () => {
                         className="item-history"
                       >
                         <p>{item.Name}</p>
-                        <img
+                       {item.Background &&  <img
                           style={{
                             width: 70,
                             height: 70,
                             objectFit: "cover",
                           }}
                           src={item.Background}
-                        />
+                        />}
                       </div>
                     </div>
                   ))

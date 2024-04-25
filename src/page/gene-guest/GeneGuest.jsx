@@ -136,7 +136,7 @@ const GeneGuest = () => {
                     ))}
                   </Select>
                 </FormControl>
-                <Button
+                {/* <Button
                   variant="contained"
                   onClick={async () => {
                     // if(id){
@@ -146,7 +146,7 @@ const GeneGuest = () => {
                   }}
                 >
                   Tìm kiếm
-                </Button>
+                </Button> */}
               </div>
             </Grid>
           </Grid>

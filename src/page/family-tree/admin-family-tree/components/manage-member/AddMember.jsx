@@ -11,7 +11,7 @@ import {
   FormControlLabel,
   FormLabel,
   RadioGroup,
-  Radio
+  Radio,
 } from "@mui/material";
 import AddImage from "../../../../../components/common/addImage/AddImage";
 import {
@@ -41,7 +41,7 @@ function AddMemberForm({ item, refreshData }) {
     Address: "",
     Gender: "",
     DateOfBirth: null,
-    DateOfDeath:null,
+    DateOfDeath: null,
     Avatar: "",
     Type: 0,
     HomeTown: "",
@@ -85,13 +85,15 @@ function AddMemberForm({ item, refreshData }) {
         ? await genealogyApi.addNewMember({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
-            IsMartyrs:true
+            IsMartyrs: true,
           })
         : await genealogyApi.updateUsergene({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
             Name: "sss",
-            IsMartyrs:JSON.parse(memberData.IsMartyrs)
+            IsMartyrs: JSON.parse(memberData.IsMartyrs),
+            DateOfDeath:memberData.DateOfDeath||null,
+            DateOfBirth:memberData.DateOfBirth||null
           });
       if (res.data.StatusCode === 200) {
         if (!item) {
@@ -130,11 +132,23 @@ function AddMemberForm({ item, refreshData }) {
   return (
     <Container>
       <form>
+        {item && (
+          <h4
+            style={{
+              textAlign: "center",
+              marginBottom: 15,
+              fontWeight: "bold",
+            }}
+          >
+            Sửa thông tin thành viên
+          </h4>
+        )}
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <TextField
+                  required
                   fullWidth
                   label="Họ"
                   variant="outlined"
@@ -146,8 +160,9 @@ function AddMemberForm({ item, refreshData }) {
 
               <Grid item xs={6}>
                 <TextField
+                  required
                   fullWidth
-                  label="Tên"
+                  label="Tên đệm và tên"
                   variant="outlined"
                   name="LastName"
                   value={memberData.LastName}
@@ -156,6 +171,7 @@ function AddMemberForm({ item, refreshData }) {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  disabled={item}
                   fullWidth
                   label="Email"
                   variant="outlined"
@@ -207,8 +223,9 @@ function AddMemberForm({ item, refreshData }) {
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel>Giới tính</InputLabel>
+                  <InputLabel>Giới tính *</InputLabel>
                   <Select
+                    required
                     name="Gender"
                     value={memberData.Gender}
                     onChange={handleChange}
@@ -278,8 +295,9 @@ function AddMemberForm({ item, refreshData }) {
               </Grid>
               <Grid item xs={6}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel>Chi - nhánh</InputLabel>
+                  <InputLabel>Chi - nhánh *</InputLabel>
                   <Select
+                    required
                     name="IdFamilyTree"
                     value={memberData.IdFamilyTree}
                     onChange={handleChange}
@@ -292,45 +310,62 @@ function AddMemberForm({ item, refreshData }) {
                 </FormControl>
               </Grid>
               <Grid item xs={6}>
-              <div
-                style={{
-                  width: "100%",
-                }}
-                className="flex-start"
-              >
-                <FormControl component="fieldset">
-                  <FormLabel
-                    style={{
-                      textAlign: "start",
-                    }}
-                    component="legend"
-                  >
-                   Là liệt sỹ
-                  </FormLabel>
-                  <RadioGroup
-                    row
-                    value={memberData.IsMartyrs}
-                    onChange={handleChange}
-                    name="IsMartyrs"
-                  >
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label="Phải"
-                    />
-                    <FormControlLabel
-                      value={false}
-                      control={<Radio />}
-                      label="Không"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
+                <div
+                  style={{
+                    width: "100%",
+                  }}
+                  className="flex-start"
+                >
+                  <FormControl component="fieldset">
+                    <FormLabel
+                      style={{
+                        textAlign: "start",
+                      }}
+                      component="legend"
+                    >
+                      Là liệt sỹ
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      value={memberData.IsMartyrs}
+                      onChange={handleChange}
+                      name="IsMartyrs"
+                    >
+                      <FormControlLabel
+                        value={true}
+                        control={<Radio />}
+                        label="Phải"
+                      />
+                      <FormControlLabel
+                        value={false}
+                        control={<Radio />}
+                        label="Không"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </div>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Button onClick={() => onAdd()} variant="contained" color="primary">
+          <Grid
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+            item
+            xs={12}
+          >
+            <Button
+              disabled={
+                !memberData.FirstName ||
+                !memberData.LastName ||
+                memberData.Gender ===""||
+                !memberData.IdFamilyTree
+              }
+              onClick={() => onAdd()}
+              variant="contained"
+              color="primary"
+            >
               {!item ? " Thêm Thành Viên" : "Cập nhật"}
             </Button>
           </Grid>
