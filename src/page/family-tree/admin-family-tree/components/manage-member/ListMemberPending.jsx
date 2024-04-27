@@ -124,7 +124,7 @@ function ListMemberPending() {
       >
         <TextField
          style={{
-          width: 300}}
+          width: 300, marginLeft: "30%"}}
           label="Họ tên"
           variant="outlined"
           value={txtSearch}

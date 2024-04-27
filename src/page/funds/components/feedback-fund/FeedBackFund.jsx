@@ -155,11 +155,11 @@ function FeedBackFund({ setNewList, item }) {
             gap: 20,
           }}
         >
-          <label htmlFor="image-upload">
+          {/* <label htmlFor="image-upload">
             <Button variant="outlined" component="span">
               Tải ảnh lên
             </Button>
-          </label>
+          </label> */}
           <Button disabled={!formData.IdInstance || !formData.Description || !formData.Name} onClick={() => onAdd()} variant="contained" color="primary">
             Gửi
           </Button>
