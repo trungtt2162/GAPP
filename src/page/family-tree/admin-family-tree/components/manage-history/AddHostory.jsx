@@ -126,7 +126,7 @@ function AddHistory({ item, updateItem }) {
             />
             <TextField
               label="Thời gian diễn ra"
-              type="datetime-local"
+              type="date"
               value={formData.Date}
               onChange={e =>setFormData({ ...formData, Date: e.target.value })}
               InputLabelProps={{ shrink: true }}
