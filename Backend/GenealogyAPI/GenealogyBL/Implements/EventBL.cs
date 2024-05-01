@@ -50,11 +50,11 @@ namespace GenealogyBL.Implements
 
         public async Task<PageResult<Event>> GetPagingDataGuest(PageRequest pagingRequest,int idGenealogy)
         {
-            //var gen = await _genealogyBL.GetById(idGenealogy);
-            //if (gen == null || !gen.IsPublic )
-            //{
-            //    return new PageResult<Event>();
-            //}
+            var gen = await _genealogyBL.GetById(idGenealogy);
+            if (gen == null || !gen.IsPublic)
+            {
+                return new PageResult<Event>();
+            }
             if (string.IsNullOrWhiteSpace(pagingRequest.Condition))
             {
                 pagingRequest.Condition = $" 1 = 1 and IdGenealogy = {idGenealogy} ";
