@@ -59,7 +59,7 @@ namespace GenealogyBL.Implements
             {
                 pagingRequest.Condition = $" 1 = 1 and IdGenealogy = {idGenealogy} ";
             }
-            pagingRequest.Condition += " IsPublic = true ";
+            pagingRequest.Condition += " and IsPublic = true ";
 
             if (!string.IsNullOrWhiteSpace(pagingRequest.SearchKey))
             {
