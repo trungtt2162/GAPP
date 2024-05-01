@@ -153,7 +153,7 @@ function RequestEvent({ item, updateItem }) {
               <TextField
                 label="Tên sự kiện"
                 value={formData.Name}
-                onChange={handleChangeData("Name")}
+                onChange={handleChangeData("Nam")}
                 fullWidth
                 required
               />
@@ -347,7 +347,7 @@ function RequestEvent({ item, updateItem }) {
                             <TableCell>{user.Email}</TableCell>
                             <TableCell>{user.Address}</TableCell>
                             <TableCell>
-                              {user.Gender === 0 ? "Name" : "Nữ"}
+                              {user.Gender === 0 ? "Nam" : "Nữ"}
                             </TableCell>
                             {/*  */}
                           </TableRow>
