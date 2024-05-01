@@ -101,10 +101,10 @@ namespace GenealogyBL.Implements
             var email = $"<div>"+
                 $"<h2> THƯ MỜI THAM GIA SỰ KIỆN </h2>"+
                 $"<p><strong> Tên sự kiện:</strong> {eventParam.Name} </p>"+
-                $"<p><strong> Mô tả:</strong>{eventParam.Name} </p>"+
+                $"<p><strong> Mô tả:</strong> {eventParam.Name} </p>"+
                 $"<p><strong> Thời gian:</strong> {eventParam.OrganizationDate.ToString("MM:HH dd/MM/yy")} </p>"+
                 $"<p><strong> Địa điểm tổ chức:</strong> {eventParam.Location} </p>"+
-                $"<p><strong> Link tham gia sự kiện:</strong>{eventParam.LinkStream}</p>" +
+                $"<p><strong> Link tham gia sự kiện:</strong> {eventParam.LinkStream}</p>" +
                 $"</div>";
             return email;
         }
