@@ -245,6 +245,7 @@ const EventGuest = () => {
                           src={item.Background}
                         />}
                       </div>
+                      <div style={{textAlign:"start"}}>Thời gian : {dateFormat3(item.OrganizationDate)}</div>
                     </div>
                   ))
                 ) : (

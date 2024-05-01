@@ -47,6 +47,7 @@ const handleAdd = async () => {
       <h4 className="bold">Thêm Quỹ Mới</h4>
       <form>
         <TextField
+        required
           fullWidth
           label="Tên quỹ"
           name="Name"
@@ -55,6 +56,7 @@ const handleAdd = async () => {
           margin="normal"
         />
         <TextField
+        required
           fullWidth
           label="Số tiền dự tính"
           name="EstimatedMoney"
@@ -64,6 +66,7 @@ const handleAdd = async () => {
           margin="normal"
         />
         <TextField
+        required
           fullWidth
           label="Nội dung"
           name="SpendPurpose"
@@ -73,7 +76,7 @@ const handleAdd = async () => {
           rows={4}
           margin="normal"
         />
-        <Button  onClick = {() => handleAdd()} variant="contained" color="primary">
+        <Button disabled={!fundInfo.Name|| !fundInfo.EstimatedMoney || !fundInfo.SpendPurpose}  onClick = {() => handleAdd()} variant="contained" color="primary">
           Thêm
         </Button>
       </form>

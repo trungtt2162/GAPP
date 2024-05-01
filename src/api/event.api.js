@@ -38,10 +38,10 @@ export const eventApi = {
     });
   },
   getListEventGuest: (id, query) => {
-    return API.post("api/Event/guest/paging?idGenealogy=" + id, {
+    return API.post("api/Event/guest/paging", {
       PageSize: 1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and Inactive=false` + (query || ""),
+      Condition: `IdGenealogy=${id} and Inactive=false and IsPublic=true` + (query || ""),
       SortOrder: "",
       SearchKey: "",
     });

@@ -104,6 +104,7 @@ function AddSpend({item,setNewList}) {
           onChange={handleChange}
           margin="normal"
           select
+          required
         >
           {listFund.map((option) => (
             <MenuItem value={option.Id}>{option.Name}</MenuItem>
@@ -121,6 +122,7 @@ function AddSpend({item,setNewList}) {
           rows={1}
           margin="normal"
           type={"number"}
+          required
         />
         
         <TextField
@@ -133,9 +135,10 @@ function AddSpend({item,setNewList}) {
           multiline
           rows={4}
           margin="normal"
+          required
         />
         
-        <Button onClick={() => onAdd()} variant="contained" color="primary">
+        <Button disabled={!memberDonate.Money || !memberDonate.Description || !memberDonate.IdFund} onClick={() => onAdd()} variant="contained" color="primary">
           {item ? "Sửa" :"Thêm"}
         </Button>
       </form>

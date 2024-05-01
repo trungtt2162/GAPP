@@ -122,6 +122,7 @@ function AddDonateMember({ setNewList, item }) {
           onChange={handleChange}
           margin="normal"
           select
+          required
         >
           {listFund.map((option) => (
             <MenuItem value={option.Id}>{option.Name}</MenuItem>
@@ -135,6 +136,7 @@ function AddDonateMember({ setNewList, item }) {
           onChange={handleChange}
           margin="normal"
           select
+          required
         >
           {listMember.map((option) => (
             <MenuItem value={option.Id}>
@@ -153,6 +155,7 @@ function AddDonateMember({ setNewList, item }) {
           rows={1}
           margin="normal"
           type={"number"}
+          required
         />
         <TextField
           style={{
@@ -169,8 +172,9 @@ function AddDonateMember({ setNewList, item }) {
           InputLabelProps={{
             shrink: true,
           }}
+          required
         />
-        <Button onClick={() => onAdd()} variant="contained" color="primary">
+        <Button disabled={!memberDonate.Money || !memberDonate.PaymentDate || !memberDonate.UserID || !memberDonate.IdFund} onClick={() => onAdd()} variant="contained" color="primary">
           {!item ? "Thêm" : "Cập nhật"}
         </Button>
       </form>
