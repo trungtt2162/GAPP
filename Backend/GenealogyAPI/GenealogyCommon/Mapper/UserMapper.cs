@@ -14,7 +14,8 @@ namespace GenealogyCommon.Mapper
     {
         public CommonMapper() { 
             CreateMap<UserRegister, User>()
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Username));
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Username))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender ? 0 : 1));
             CreateMap<UserRegister, Credential>();
             CreateMap<UserAdmin, User>();
             CreateMap<UserAdmin, Genealogy>();

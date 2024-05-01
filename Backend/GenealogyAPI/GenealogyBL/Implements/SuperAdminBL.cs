@@ -120,7 +120,7 @@ namespace GenealogyBL.Implements
                 con.Append(" -1 ) ");
                 pagingRequest.Condition += con.ToString() ;
             }else {
-                pagingRequest.Condition += " Id is null ";
+                pagingRequest.Condition += "and Id is null ";
             }
             
         }

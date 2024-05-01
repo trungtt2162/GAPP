@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,11 +50,11 @@ namespace GenealogyBL.Implements
 
         public async Task<PageResult<Event>> GetPagingDataGuest(PageRequest pagingRequest,int idGenealogy)
         {
-            var gen = await _genealogyBL.GetById(idGenealogy);
-            if (gen == null || !gen.IsPublic )
-            {
-                return new PageResult<Event>();
-            }
+            //var gen = await _genealogyBL.GetById(idGenealogy);
+            //if (gen == null || !gen.IsPublic )
+            //{
+            //    return new PageResult<Event>();
+            //}
             if (string.IsNullOrWhiteSpace(pagingRequest.Condition))
             {
                 pagingRequest.Condition = $" 1 = 1 and IdGenealogy = {idGenealogy} ";
@@ -90,9 +91,22 @@ namespace GenealogyBL.Implements
 
             }
             await _emailSender.SendEmailAsync(receips, $"Thư mời tham gia sự kiện {eventInfo.Name}",
-                $"<div>Link tham giá sự kiên {eventInfo.LinkStream}</div><div>Thời gian diễn ra: {eventInfo.OrganizationDate.ToString("MM:HH dd/MM/yy")}</div>",
-                $"<div>Link tham giá sự kiên {eventInfo.LinkStream}</div><div>Thời gian diễn ra: {eventInfo.OrganizationDate.ToString("MM:HH dd/MM/yy")}</div>");
+               GetTemplateEmailEvent(eventInfo),
+               GetTemplateEmailEvent(eventInfo));
             return true;
+        }
+
+        private string GetTemplateEmailEvent(Event eventParam)
+        {
+            var email = $"<div>"+
+                $"<h2> THƯ MỜI THAM GIA SỰ KIỆN </h2>"+
+                $"<p><strong> Tên sự kiện:</strong> {eventParam.Name} </p>"+
+                $"<p><strong> Mô tả:</strong>{eventParam.Name} </p>"+
+                $"<p><strong> Thời gian:</strong> {eventParam.OrganizationDate.ToString("MM:HH dd/MM/yy")} </p>"+
+                $"<p><strong> Địa điểm tổ chức:</strong> {eventParam.Location} </p>"+
+                $"<p><strong> Link tham gia sự kiện:</strong>{eventParam.LinkStream}</p>" +
+                $"</div>";
+            return email;
         }
     }
 
