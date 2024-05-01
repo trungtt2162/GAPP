@@ -145,12 +145,7 @@ function RequestGele() {
                           text={"Tìm theo tên"}
                           onClick={(e) => setValue(1)}
                         />
-                        <ButtonTab
-                          index={2}
-                          value={value}
-                          text={"Tìm theo mã"}
-                          onClick={(e) => setValue(2)}
-                        />
+                      
                       </div>
                       <Container maxWidth="md">
                         <div
@@ -162,7 +157,7 @@ function RequestGele() {
                           <TextField
                             fullWidth
                             label={`Tìm kiếm ${
-                              value == 1 ? "Tìm theo tên" : "Tìm theo mã"
+                              "Tìm theo tên" 
                             }`}
                             value={txtSearch}
                             onChange={(e) => setTxtSearch(e.target.value)}
@@ -190,7 +185,7 @@ function RequestGele() {
                         <Table>
                           <TableHead>
                             <TableRow>
-                              <TableCell className="text-center">Mã</TableCell>
+
                               <TableCell className="text-center">Tên gia phả</TableCell>
                               <TableCell className="text-center">
                                  Admin
@@ -211,9 +206,7 @@ function RequestGele() {
                               )
                               .map((row) => (
                                 <TableRow key={row.Id}>
-                                  <TableCell className="text-center">
-                                    {row.Id}
-                                  </TableCell>
+
                                   <TableCell className="text-center">
                                     {row.Name}
                                   </TableCell>

@@ -70,8 +70,8 @@ function LogManage() {
       >
         <TextField
          style={{
-          width: 300}}
-          label="Tên người thực hiện"
+          width: 300, marginLeft: "30%"}}
+          label="Tên email thực hiện"
           variant="outlined"
           value={txtSearch}
           onChange={(e) => setTxtSearch(e.target.value)}

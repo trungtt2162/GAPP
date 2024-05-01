@@ -83,7 +83,7 @@ function OtherLocation() {
       >
         <TextField
          style={{
-          width: 300}}
+          width: 300, marginLeft: "30%"}}
           label="Tên địa điểm"
           variant="outlined"
           value={txtSearch}

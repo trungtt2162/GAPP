@@ -106,7 +106,7 @@ function ListEventPending({ list, action = true }) {
       >
         <TextField
          style={{
-          width: 300}}
+          width: 300, marginLeft: "30%"}}
           label="Tên sự kiện"
           variant="outlined"
           value={txtSearch}

@@ -57,7 +57,7 @@ function MemberLocation() {
       >
         <TextField
          style={{
-          width: 300}}
+          width: 300, marginLeft: "30%"}}
           label="Tên thành viên"
           variant="outlined"
           value={txtSearch}
