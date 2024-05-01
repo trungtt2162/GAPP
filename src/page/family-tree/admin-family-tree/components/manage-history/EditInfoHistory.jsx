@@ -46,7 +46,7 @@ const EditInfoHistory = () => {
   const handleChange = (v) => {
     setData({...data,Description:v});
   };
-  const { userGenealogy } = useAuthStore();
+  const { userGenealogy,currentIdGenealogy } = useAuthStore();
 
   const [data, setData] = useState({
     IDGenealogy: 0,
@@ -67,7 +67,7 @@ const EditInfoHistory = () => {
   };
   const onSave = async() => {
     try {
-      const res = await historyApi.updateDescriptionHistorufamily({...data,IDGenealogy:userGenealogy[0]?.IdGenealogy});
+      const res = await historyApi.updateDescriptionHistorufamily({...data,IDGenealogy:currentIdGenealogy});
       if (res.data.StatusCode === 200) {
         toast.success("Lưu thành công")
       }
@@ -77,8 +77,8 @@ const EditInfoHistory = () => {
   };
   
   useEffect(() => {
-    getDes(userGenealogy[0]?.IdGenealogy);
-  }, [userGenealogy]);
+    getDes(currentIdGenealogy);
+  }, [currentIdGenealogy]);
   return (
     <div>
       <div>

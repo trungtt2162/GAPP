@@ -20,7 +20,7 @@ import PrimaryButton from "../../../../../components/common/button/PrimaryButton
 
 function MemberLocation() {
   const [txtSearch, setTxtSearch] = useState("");
-  const { userGenealogy } = useAuthStore();
+  const { userGenealogy,currentIdGenealogy } = useAuthStore();
   const [listMember, setlistMember] = useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -29,7 +29,7 @@ function MemberLocation() {
  };
   // get List member
   const getListMember = async () => {
-    const IDGenealogy = userGenealogy[0]?.IdGenealogy;
+    const IDGenealogy = currentIdGenealogy;
     try {
       const res = await genealogyApi.getListUserFromGenealogy(IDGenealogy || -1,txtSearch?.trim());
       if (res.data.StatusCode === 200) {

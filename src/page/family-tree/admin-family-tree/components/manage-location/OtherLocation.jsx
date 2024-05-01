@@ -25,7 +25,7 @@ import PrimaryButton from "../../../../../components/common/button/PrimaryButton
 function OtherLocation() {
  
  const [listAddress,setListAddress] = useState([]);
- const {userGenealogy } = useAuthStore();
+ const {userGenealogy,currentIdGenealogy } = useAuthStore();
  const [currentId,setCurrentId] = useState(null)
  const [page, setPage] = React.useState(0);
  const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -45,7 +45,7 @@ function OtherLocation() {
  }
  const handleDelete = async (id) => {
   try {
-    const res = await addressApi.deleteAddress(id,userGenealogy[0]?.IdGenealogy)
+    const res = await addressApi.deleteAddress(id,currentIdGenealogy)
     if(res.data.StatusCode===200){
       toast.success("Xóa thành công")
      setListAddress(listAddress.filter(i => i.Id !== id))
@@ -56,10 +56,10 @@ function OtherLocation() {
  }
  
  useEffect(() => {
-  if(userGenealogy?.length > 0){
-    getListAddress(userGenealogy[0].IdGenealogy)
+  if(currentIdGenealogy){
+    getListAddress(currentIdGenealogy)
   }
- },[userGenealogy])
+ },[currentIdGenealogy])
 
  //update
  const updateNewItem = (item) => {
@@ -89,7 +89,7 @@ function OtherLocation() {
           value={txtSearch}
           onChange={(e) => setTxtSearch(e.target.value)}
         />
-        <PrimaryButton title={"Tìm kiếm"} event={() => getListAddress(userGenealogy[0].IdGenealogy)} />
+        <PrimaryButton title={"Tìm kiếm"} event={() => getListAddress(currentIdGenealogy)} />
       </div>
     <TableContainer component={Paper}>
       <Table>

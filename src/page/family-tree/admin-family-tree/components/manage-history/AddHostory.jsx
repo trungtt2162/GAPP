@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 function AddHistory({ item, updateItem }) {
   const classes = useStyles();
-  const { userGenealogy } = useAuthStore();
+  const { userGenealogy,currentIdGenealogy } = useAuthStore();
 
   const fileRef = useRef();
   const [formData, setFormData] = useState(
@@ -74,7 +74,7 @@ function AddHistory({ item, updateItem }) {
 
   const handleAdd = async () => {
     try {
-      const data = { ...formData, IDGenealogy: userGenealogy[0]?.IdGenealogy };
+      const data = { ...formData, IDGenealogy: currentIdGenealogy };
       const res = !item
         ? await historyApi.addHistory(data)
         : await historyApi.updateHistory(data);

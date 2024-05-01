@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import { handleError } from "../../../../../ultils/helper";
 
 function AddLocationForm({item,onClose,updateNewItem}) {
-  const {userGenealogy } = useAuthStore();
+  const {userGenealogy,currentIdGenealogy } = useAuthStore();
 
   const [locationData, setLocationData] = useState(item || {
     IDGenealogy: 0,
@@ -46,7 +46,7 @@ function AddLocationForm({item,onClose,updateNewItem}) {
    try {
     const res = !item ?  await addressApi.addAdress({
       ...locationData,
-      IDGenealogy:userGenealogy[0]?.IdGenealogy
+      IDGenealogy:currentIdGenealogy
     }) : await addressApi.updateAdress(locationData)
     if(res.data.StatusCode===200){
      toast.success(item? "Sửa thành công":"Thêm thành công")

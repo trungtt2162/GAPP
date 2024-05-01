@@ -24,8 +24,8 @@ import PrimaryButton from "../../../../../components/common/button/PrimaryButton
 function ListEventPending({ list, action = true }) {
   const [txtSearch, setTxtSearch] = useState("");
   const [listEvent, setListEvent] = useState();
-  const { userGenealogy } = useAuthStore();
-  const geId = userGenealogy[0]?.IdGenealogy;
+  const { userGenealogy,currentIdGenealogy } = useAuthStore();
+  const geId = currentIdGenealogy;
   const [currentEvent, setCurrentEvent] = useState(null);
   const currentList = list || listEvent;
   const [page, setPage] = React.useState(0);
