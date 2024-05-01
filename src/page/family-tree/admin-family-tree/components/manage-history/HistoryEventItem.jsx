@@ -85,7 +85,7 @@ const HisoryEventItem = ({
             
             }}
           >
-            {Date}
+            {dateFormat(Date)}
           </div>
         </div>
       </TableCell>

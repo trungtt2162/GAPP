@@ -175,7 +175,7 @@ const HomeMemberLogin = () => {
                       >
                         <p className="title">{item.Title}</p>
                         <div style={{ textAlign: "start" }}>
-                          Thời gian : {dateFormat3(item.Date)}
+                          Thời gian : {dateFormat(item.Date)}
                         </div>
                       </div>
                       {item.Image && (

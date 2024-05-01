@@ -174,7 +174,7 @@ const HistoryFamily = ({ list, desHis }) => {
                     >
                       <div className="title">{item.Title}</div>
                       <div style={{ textAlign: "start" }}>
-                        Thời gian : {dateFormat3(item.Date)}
+                        Thời gian : {dateFormat(item.Date)}
                       </div>
                     </div>
                     {item.Image && (
@@ -212,7 +212,7 @@ const HistoryFamily = ({ list, desHis }) => {
         </div>
         <div>
           <span className="bold">Thời gian diễn ra : </span>
-          <span>{dateFormat3(curent?.Date)}</span>
+          <span>{dateFormat(curent?.Date)}</span>
         </div>
         <div>
           <span className="bold">Nội dung: </span>

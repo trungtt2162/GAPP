@@ -52,7 +52,7 @@ function AddHistory({ item, updateItem }) {
 
   const fileRef = useRef();
   const [formData, setFormData] = useState(
-    item ? {...item} : {
+    item ? {...item,Date:dateFormat2(item.Date)} : {
       IDGenealogy: "",
       Image: "",
       Description: "",
