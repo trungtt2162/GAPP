@@ -316,7 +316,6 @@ const [repassword,setRePass] = useState("");
                   label="Ngày sinh nhật"
                   name="DateOfBirth"
                   value={formData.DateOfBirth}
-                  required
                   onChange={handleChange}
                   InputLabelProps={{
                     shrink: true,
@@ -325,7 +324,7 @@ const [repassword,setRePass] = useState("");
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  disabled={!formData.FirstName || !formData.LastName || !formData.Gender || !formData.Password || !formData.Username}
+                  disabled={!formData.FirstName || !formData.LastName || formData.Gender === "" || !formData.Password || !formData.Username}
                   onClick={() => handlleRegister()}
                   variant="contained"
                   color="primary"
