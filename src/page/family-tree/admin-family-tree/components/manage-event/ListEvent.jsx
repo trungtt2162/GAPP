@@ -37,7 +37,7 @@ function ListEvent({list,action = true}) {
     try {
            const res = await eventApi.getListEventAdmin(id,query);
            if(res.data.StatusCode === 200){
-            setListEvent(res.data.Data.Data)
+            setListEvent(res?.data?.Data?.Data || [])
            }
         } catch (error) {
           handleError(error)
