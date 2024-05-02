@@ -35,6 +35,7 @@ const Login = (props) => {
         userName:email,
         password,
       });
+      toast.dismiss()
       navigate("/")
    } catch (error) {
     handleError(error)

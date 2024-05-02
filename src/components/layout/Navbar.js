@@ -24,6 +24,7 @@ import {
 import { theme } from "../../theme";
 import { USER_ROLE, listNoHero } from "../../constant/common";
 import useAuthStore from "../../zustand/authStore";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [anchor, setAnchor] = useState(false);
@@ -94,6 +95,7 @@ const Navbar = () => {
       name: "Đăng xuất",
 
       onClick: () => {
+        toast.dismiss()
         logOutAction(false);
 
         navigate("/login");

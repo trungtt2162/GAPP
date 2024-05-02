@@ -24,7 +24,7 @@ import useAuthStore from "../../../../../zustand/authStore";
 import { toast } from "react-toastify";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 
-function AddMemberForm({ item, refreshData }) {
+function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
   const { currentIdGenealogy } = useAuthStore();
 
   const originData = {
@@ -48,7 +48,7 @@ function AddMemberForm({ item, refreshData }) {
     InActive: false,
     IsBlock: false,
     TypeRole: 0,
-    IdFamilyTree: "",
+    IdFamilyTree: idTree,
     IdGenealogy: "",
     UserId: 0,
     JobTitle: "",
@@ -99,6 +99,9 @@ function AddMemberForm({ item, refreshData }) {
         if (!item) {
           setMemberData(originData);
           toast.success("Thêm thành công");
+          if(idTree){
+            onCloseModal()
+          }
         } else {
           await refreshData();
           toast.success("Sửa thành công");
@@ -132,7 +135,7 @@ function AddMemberForm({ item, refreshData }) {
   return (
     <Container>
       <form>
-        {item && (
+       
           <h4
             style={{
               textAlign: "center",
@@ -140,9 +143,9 @@ function AddMemberForm({ item, refreshData }) {
               fontWeight: "bold",
             }}
           >
-            Sửa thông tin thành viên
+            {item ?" Sửa thông tin thành viên" : "Thêm thành viên"}
           </h4>
-        )}
+       
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Grid container spacing={2}>

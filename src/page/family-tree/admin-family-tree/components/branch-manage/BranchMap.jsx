@@ -5,12 +5,13 @@ import { useCallback, useState } from "react";
 import useAuthStore from "../../../../../zustand/authStore";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
 import { buildTree, checkEmptyData, handleError } from "../../../../../ultils/helper";
-import { Avatar } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { toast } from "react-toastify";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddBranch from "./AddBranch";
+import AddMemberForm from "../manage-member/AddMember";
 
 const orgChartJson = {
   name: "CEO",
@@ -99,6 +100,7 @@ const orgChartJson = {
 };
 const NodeItem = ({ nodeDatum, getListAllNode }) => {
   console.log(nodeDatum)
+  const [currentIdTree,setCurrentIdTree] = useState(null)
   const isDelete = !nodeDatum?.children.length && !nodeDatum?.Users?.length;
   const [currentItem, setCurrentItem] = useState(null);
   const handleDelete = async (idGene, id) => {
@@ -115,8 +117,22 @@ const NodeItem = ({ nodeDatum, getListAllNode }) => {
 
   return (
     <g>
-      <foreignObject width="150" height="100" x="-50" y="0">
+      <foreignObject width="160" height="100" x="-60" y="0">
         <div style={{ display: "flex", background: "white", gap: 5 }}>
+          <div 
+          onClick={() => setCurrentIdTree(nodeDatum.Id)}
+           style={{
+            width:20,
+            height:20,
+            border:"1px solid gray",
+            borderRadius:10,
+            display:"flex",
+            justifyContent:'center',
+            alignItems:'center',
+            fontWeight:"bold",
+            fontSize:18,
+            marginTop:10
+          }}>+</div>
           <div
             style={{
               position: "relative",
@@ -139,6 +155,7 @@ const NodeItem = ({ nodeDatum, getListAllNode }) => {
               justifyContent: "center",
             }}
           >
+            
             {isDelete && (
               <DeleteIcon
                 onClick={() =>
@@ -167,8 +184,14 @@ const NodeItem = ({ nodeDatum, getListAllNode }) => {
                 fontSize: 20,
               }}
             />
+         
           </div>
         </div>
+        <CustomModal open={currentIdTree} onClose={() => setCurrentIdTree(null)}>
+          <AddMemberForm onCloseModal={() => {
+            setCurrentIdTree(null)
+          }} idTree={currentIdTree} />
+        </CustomModal>
         <CustomModal open={currentItem} onClose={() => setCurrentItem(null)}>
           <AddBranch getListAllNode={() => {
             getListAllNode();
