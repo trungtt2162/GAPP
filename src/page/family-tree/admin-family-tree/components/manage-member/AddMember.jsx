@@ -15,8 +15,12 @@ import {
 } from "@mui/material";
 import AddImage from "../../../../../components/common/addImage/AddImage";
 import {
+  checkValidEmail,
   handleError,
   uploadImageToFirebase,
+  validateAddress,
+  validateIDCard,
+  validatePhoneNumber,
 } from "../../../../../ultils/helper";
 import { genderOptions2 } from "../../../../../constant/common";
 import { familyTreeApi } from "../../../../../api/familyTree.api";
@@ -81,6 +85,22 @@ function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
   // Add
   const onAdd = async () => {
     try {
+      if(!checkValidEmail(memberData.Email)){
+        toast.error("Email sai định dạng");
+      return;
+      }
+      if(validatePhoneNumber(memberData.Phone) ===false){
+        toast.error("Định dạng điện thoại không chính xác. Yêu cầu 10 số");
+        return;
+      }
+      if(validateIDCard(memberData.Indentification)===false){
+        toast.error("Định dạng CCCD không chính xác. Yêu cầu 9- 12 số");
+        return;
+      }
+      if(validateAddress(memberData.Address)===false){
+        toast.error("Địa chỉ cần cụ thể hơn.");
+        return;
+      }
       const res = !item
         ? await genealogyApi.addNewMember({
             ...memberData,

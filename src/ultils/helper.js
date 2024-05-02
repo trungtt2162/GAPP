@@ -186,9 +186,9 @@ export const splitText = (txt="") => {
 }
 
 
-export const formatMoney = (amount) => {
-
-  const parts = amount.trim().toString().split('.');
+export const formatMoney = (amount="") => {
+  amount = amount + ""
+  const parts = amount?.trim().toString().split('.');
   const integerPart = parts[0];
   let decimalPart = parts.length > 1 ? `.${parts[1]}` : '';
   let formattedInteger = '';
@@ -203,7 +203,7 @@ export const formatMoney = (amount) => {
 }
 
 export const validatePhoneNumber = (phoneNumber) => {
-
+  if(!phoneNumber)return true;
   const phoneRegex = /^[0-9]{10}$/; 
 
   return phoneRegex.test(phoneNumber.trim());
@@ -211,7 +211,9 @@ export const validatePhoneNumber = (phoneNumber) => {
 
 
 export const validateIDCard = (idCard) => {
-
+ if(!idCard){
+  return ;
+ }
   const idCardRegex = /^[0-9]{9}$|^[0-9]{12}$/;
 
 
@@ -220,6 +222,9 @@ export const validateIDCard = (idCard) => {
 
 
 export const validateAddress = (address) => {
+  if(!address){
+return true;
+  }
  
   const addressRegex = /.{5,}/;
 
@@ -250,4 +255,12 @@ export const validateBirthday = (birthday) => {
     birthDate.getDate() === day &&
     birthDate < today
   );
+};
+
+export const checkValidEmail = (email = "") => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
 };

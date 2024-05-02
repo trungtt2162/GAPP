@@ -33,7 +33,7 @@ const Register = (props) => {
     Phone: "",
     Address: "",
     Gender: "",
-    DateOfBirth: "",
+    DateOfBirth: null,
     HomeTown: "",
     Indentification: "",
     Avatar: "string",
@@ -269,7 +269,7 @@ const [repassword,setRePass] = useState("");
                   name="Phone"
                   value={formData.Phone}
                   onChange={handleChange}
-                  required
+                  // required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -279,7 +279,7 @@ const [repassword,setRePass] = useState("");
                   name="Indentification"
                   value={formData.Indentification}
                   onChange={handleChange}
-                  required
+                  // required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -289,7 +289,7 @@ const [repassword,setRePass] = useState("");
                   name="Address"
                   value={formData.Address}
                   onChange={handleChange}
-                  required
+                  // required
                 />
               </Grid>
               <Grid item xs={6}>
@@ -325,6 +325,7 @@ const [repassword,setRePass] = useState("");
               </Grid>
               <Grid item xs={12}>
                 <Button
+                  disabled={!formData.FirstName || !formData.LastName || !formData.Gender || !formData.Password || !formData.Username}
                   onClick={() => handlleRegister()}
                   variant="contained"
                   color="primary"

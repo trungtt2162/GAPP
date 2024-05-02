@@ -68,7 +68,7 @@ const FeedBackItem = ({
       </div>
       <div style={{ fontWeight: "bold", textAlign: "start", color: "white" }}>{Name}</div>
 
-      <div style={{ textAlign: "start" }}>{Description}</div>
+      <div style={{ textAlign: "start",color:"white" }}>{Description}</div>
       {Image && (
         <div style={{ fontWeight: "bold", textAlign: "start" }}>
           <img
