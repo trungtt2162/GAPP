@@ -153,7 +153,7 @@ function RequestEvent({ item, updateItem }) {
               <TextField
                 label="Tên sự kiện"
                 value={formData.Name}
-                onChange={handleChangeData("Nam")}
+                onChange={handleChangeData("Name")}
                 fullWidth
                 required
               />
