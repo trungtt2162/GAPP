@@ -178,7 +178,9 @@ const EventMember = () => {
             {currentEvent && (
               <>
                 {" "}
-                <h4 className="bold">{currentEvent?.Name}</h4>
+                <h4 className="bold " style={{
+                  textAlign:'center'
+                }}>{currentEvent?.Name}</h4>
                 <div
                   style={{
                     textAlign: "start",
@@ -224,7 +226,7 @@ const EventMember = () => {
                   }}
                 >
                   <span className="bold">Ngày diễn ra : </span>
-                  <span>{dateFormat(currentEvent?.OrganizationDate)}</span>
+                  <span>{dateFormat3(currentEvent?.OrganizationDate)}</span>
                 </div>
                 <div
                   style={{
@@ -245,15 +247,15 @@ const EventMember = () => {
                   <span>{splitText(currentEvent?.Description)}</span>
                 </div>
                 <div
-                  style={{
+                 
+                >
+                { currentEvent?.Background &&  <img  style={{
                     textAlign: "start",
                     marginTop: 10,
                     width: 300,
                     height: 300,
                     objectFit: "contain",
-                  }}
-                >
-                  <img src={currentEvent?.Background} />
+                  }} src={currentEvent?.Background} />}
                 </div>
               </>
             )}

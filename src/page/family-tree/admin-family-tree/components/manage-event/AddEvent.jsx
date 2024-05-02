@@ -113,18 +113,24 @@ function AddEvent({ item, updateItem }) {
   }, [currentIdGenealogy]);
   // SAVE
   const onSave = async () => {
+    console.log(formData)
     try {
       if(formData.Name.trim()===""){
         toast.error("Vui lòng nhập tên sự kiện.");
+        return ;
+
       }
       if(formData.Description.trim()===""){
         toast.error("Vui lòng nhập mô tả sự kiện.");
+        return ;
       }
       if(formData.OrganizationDate===""){
         toast.error("Vui lòng nhập ngày sự kiện.");
+        return;
       }
       if(formData.Location===""){
-        toast.error("Vui lòng nhập ngày sự kiện.");
+        toast.error("Vui lòng nhập địa điểm.");
+        return ;
       }
       const data = {
         ...formData,
