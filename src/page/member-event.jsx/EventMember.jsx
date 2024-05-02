@@ -222,8 +222,8 @@ const EventMember = () => {
                     marginTop: 10,
                   }}
                 >
-                  <span className="bold">Ngày diễn ra : </span>
-                  <span>{currentEvent?.OrganizationDate}</span>
+                  <span className="bold">Thời gian diễn ra : </span>
+                  <span>{dateFormat3(currentEvent?.OrganizationDate)}</span>
                 </div>
                 <div
                   style={{
