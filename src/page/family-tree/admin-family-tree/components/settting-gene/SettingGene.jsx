@@ -65,6 +65,7 @@ function SettingGene() {
     <h4 className="bold">Cài đặt gia phả</h4>
       <form onSubmit={handleSubmit}>
       <TextField
+      required
         label="Tên gia phả"
         name="Name"
         variant="outlined"

@@ -353,14 +353,6 @@ const NodeItem = ({ nodeDatum }) => {
     setAnchorElList(newAnchorElList);
   };
 
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-  // const open = Boolean(anchorEl);
   const count = nodeDatum?.Users?.length;
   const isMutilpe = count >= 2;
   return (

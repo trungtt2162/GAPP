@@ -12,6 +12,7 @@ import {
   import React, { useState } from "react";
   import "./../list-fund-member/ListFund.scss";
   import PrimaryButton from "../../../../components/common/button/PrimaryButton";
+  import { getQuery, handleError,formatMoney } from "../../../../ultils/helper";
   const DonateDetail = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -105,7 +106,7 @@ import {
                         {row.birthdate}
                       </TableCell>
                       <TableCell className="text-center">{row.gender}</TableCell>
-                      <TableCell className="text-center">{row.fund}</TableCell>
+                      <TableCell className="text-center">{formatMoney(row.fund)}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

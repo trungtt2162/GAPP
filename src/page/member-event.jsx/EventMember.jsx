@@ -60,7 +60,7 @@ const EventMember = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <div style={{ paddingTop: 30 }}>
-                <p className="title">Danh sách các sự kiện cũ và sắp tới</p>
+                <p className="title">Danh sách các sự kiện</p>
                 <Grid
                   style={{ marginTop: 10 }}
                   container
@@ -129,6 +129,7 @@ const EventMember = () => {
                             padding: 10,
                             width: "calc(50% - 10px)",
                             marginBottom: "20px",
+                            height: "90%",
                             background: past && "rgb(70 21 17)",
                           }}
                         >
@@ -223,7 +224,7 @@ const EventMember = () => {
                   }}
                 >
                   <span className="bold">Ngày diễn ra : </span>
-                  <span>{currentEvent?.OrganizationDate}</span>
+                  <span>{dateFormat(currentEvent?.OrganizationDate)}</span>
                 </div>
                 <div
                   style={{

@@ -177,7 +177,7 @@ const EventGuest = () => {
                 style={{ paddingTop: 30 }}
                 className="content-card card-item"
               >
-                <h4 className="bold">Danh sách các sự kiện cũ và sắp tới</h4>
+                <h4 className="bold">Danh sách các sự kiện</h4>
                 <Grid style={{marginTop:20}} container spacing={2} alignItems="center">
                   <Grid item>
                     <TextField

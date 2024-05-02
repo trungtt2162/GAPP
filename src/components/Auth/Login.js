@@ -23,11 +23,11 @@ const Login = (props) => {
     //validate
     const isValidateEmail = validateEmail(email);
     if (!isValidateEmail) {
-        toast.error("Invalid Email !!!");
+        toast.error("Vui lòng nhập lại email !!!");
       return;
     }
     if (!password) {
-        toast.error("Invalid Password !!!");
+        toast.error("Sai mật khẩu của tài khoản !!!");
       return;
     }
    try {
@@ -87,21 +87,25 @@ const Login = (props) => {
         <div className="form-group">
           <label>Email</label>
           <input
+          
             type={"email"}
             className="form-control"
             placeholder="Email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            required
           />
         </div>
         <div className="form-group">
           <label>Password</label>
           <input
+          
             placeholder="Password"
             type={"password"}
             className="form-control"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            required
           />
         </div>
         <span

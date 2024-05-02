@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useState } from "react";
 import "./../list-fund-member/ListFund.scss";
 import PrimaryButton from "../../../../components/common/button/PrimaryButton";
-import { getQuery, handleError } from "../../../../ultils/helper";
+import { getQuery, handleError,formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "../../../../zustand/authStore";
@@ -69,17 +69,17 @@ const FundAdminDetail = () => {
 
       <Card className="funddetail-wrap">
         <p className="title bold">Số tiền dự tính</p>
-        <p className="content">{detailFund.EstimatedMoney} VND</p>
+        <p className="content">{formatMoney(detailFund.EstimatedMoney)} VND</p>
       </Card>
 
       <Card className="funddetail-wrap">
         <p className="title bold">Số tiền đã thu</p>
-        <p className="content">{totalContributor} VND</p>
+        <p className="content">{formatMoney(totalContributor)} VND</p>
       </Card>
 
       <Card className="funddetail-wrap">
         <p className="title bold">Số tiền đã chi</p>
-        <p className="content">{totalSend} VND</p>
+        <p className="content">{formatMoney(totalSend)} VND</p>
       </Card>
       <Card className="funddetail-wrap">
         <p className="title bold">Nội dung</p>
@@ -91,7 +91,7 @@ const FundAdminDetail = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell className="text-center">Tên công việc</TableCell>
+                <TableCell className="text-center">Nội Dung</TableCell>
                 <TableCell className="text-center">Số tiền đã chi</TableCell>
                 <TableCell className="text-center">Thời gian</TableCell>
               </TableRow>
@@ -104,7 +104,7 @@ const FundAdminDetail = () => {
                     <TableCell className="text-center">
                       {row.Description}
                     </TableCell>
-                    <TableCell className="text-center">{row.Money}</TableCell>
+                    <TableCell className="text-center">{formatMoney(row.Money)}</TableCell>
 
                     <TableCell className="text-center">
                       {row.CreatedDate &&
@@ -145,7 +145,7 @@ const FundAdminDetail = () => {
                     </TableCell>
                     <TableCell className="text-center">{row.Email}</TableCell>
 
-                    <TableCell className="text-center">{row.Money}</TableCell>
+                    <TableCell className="text-center">{formatMoney(row.Money)}</TableCell>
                     <TableCell className="text-center">
                       {row.CreatedDate &&
                         moment(row.CreatedDate).format("DD-MM-YYYY")}

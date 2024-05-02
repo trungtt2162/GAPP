@@ -1,6 +1,6 @@
 import { Button, Container, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { handleError } from "../../../../ultils/helper";
+import { handleError,formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
 import { toast } from "react-toastify";
@@ -61,7 +61,7 @@ const handleAdd = async () => {
           label="Số tiền dự tính"
           name="EstimatedMoney"
           type="number"
-          value={fundInfo.EstimatedMoney}
+          value={formatMoney(fundInfo.EstimatedMoney)}
           onChange={handleChange}
           margin="normal"
         />

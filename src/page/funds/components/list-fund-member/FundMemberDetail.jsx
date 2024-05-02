@@ -11,6 +11,7 @@ import {
     TablePagination,
     Button,
   } from "@mui/material";import "./ListFund.scss";
+import { formatMoney } from "../../../../ultils/helper";
 const FundDetail = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -94,7 +95,7 @@ const FundDetail = () => {
                 {row.gender}
                 </TableCell>
                 <TableCell className='text-center'>
-                {row.fund}
+                {formatMoney(row.fund)}
                 </TableCell>
               </TableRow>
             ))}

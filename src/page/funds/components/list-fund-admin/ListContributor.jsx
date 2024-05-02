@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { checkEmptyData, handleError } from "../../../../ultils/helper";
+import { checkEmptyData, handleError,formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import {
   Card,
@@ -154,7 +154,7 @@ const ListContributor = () => {
                     </TableCell>
                     <TableCell className="text-center">{row.Email}</TableCell>
 
-                    <TableCell className="text-center">{row.Money}</TableCell>
+                    <TableCell className="text-center">{formatMoney(row.Money)}</TableCell>
                     <TableCell className="text-center">
                       {row.CreatedDate &&
                         moment(row.CreatedDate).format("DD-MM-YYYY")}

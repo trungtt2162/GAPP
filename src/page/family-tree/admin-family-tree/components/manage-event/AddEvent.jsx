@@ -114,6 +114,18 @@ function AddEvent({ item, updateItem }) {
   // SAVE
   const onSave = async () => {
     try {
+      if(formData.Name.trim()===""){
+        toast.error("Vui lòng nhập tên sự kiện.");
+      }
+      if(formData.Description.trim()===""){
+        toast.error("Vui lòng nhập mô tả sự kiện.");
+      }
+      if(formData.OrganizationDate===""){
+        toast.error("Vui lòng nhập ngày sự kiện.");
+      }
+      if(formData.Location===""){
+        toast.error("Vui lòng nhập ngày sự kiện.");
+      }
       const data = {
         ...formData,
         IDGenealogy: currentIdGenealogy,

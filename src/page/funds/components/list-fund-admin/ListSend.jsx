@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { checkEmptyData, handleError } from "../../../../ultils/helper";
+import { checkEmptyData, handleError,formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import {
   Card,
@@ -140,7 +140,7 @@ const ListSend = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell className="text-center">Tên công việc</TableCell>
+              <TableCell className="text-center">Nội Dung</TableCell>
               <TableCell className="text-center">Số tiền đã chi</TableCell>
               <TableCell className="text-center">Thời gian</TableCell>
               {isSiteAdmin && (
@@ -155,7 +155,7 @@ const ListSend = () => {
             ).map((row) => (
               <TableRow key={row.id}>
                 <TableCell className="text-center">{row.Description}</TableCell>
-                <TableCell className="text-center">{row.Money}</TableCell>
+                <TableCell className="text-center">{formatMoney(row.Money)}</TableCell>
 
                 <TableCell className="text-center">
                   {row.CreatedDate &&

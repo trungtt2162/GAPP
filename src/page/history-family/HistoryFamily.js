@@ -157,6 +157,7 @@ const HistoryFamily = ({ list, desHis }) => {
                   style={{
                     cursor: "pointer",
                     width: "100%",
+                    height: "90%",
                     background: "rgb(242, 184, 79)",
                   }}
                   onClick={() => setCurrent(item)}

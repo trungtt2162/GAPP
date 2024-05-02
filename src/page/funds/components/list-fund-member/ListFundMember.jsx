@@ -2,7 +2,7 @@ import { Card } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "./ListFund.scss";
 import { useLocation, useNavigate } from "react-router-dom";
-import { handleError } from "../../../../ultils/helper";
+import { handleError,formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
 const ListFundMember = () => {
@@ -48,9 +48,9 @@ useEffect(() => {
               }}
               className="border-right w100"
             >
-              {item.EstimatedMoney} VND
+              {formatMoney(item.EstimatedMoney)} VND
             </div>
-            <div className="w100">{item.SpendPurpose}</div>
+            {/* <div className="w100">{item.SpendPurpose}</div> */}
             <div style={{color:"white"}}  onClick={() => navigate(location.pathname + "?id="+item.Id)} className="button-more">Xem thêm</div>
           </div>
         );

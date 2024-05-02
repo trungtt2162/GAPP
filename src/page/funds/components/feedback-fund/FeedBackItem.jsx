@@ -17,6 +17,7 @@ import moment from "moment";
 import useAuthStore from "../../../../zustand/authStore";
 import { handleError } from "../../../../ultils/helper";
 import { feedbackApi } from "../../../../api/feedback.api";
+import { blue } from "@mui/material/colors";
 
 const FeedBackItem = ({
   Name,
@@ -47,7 +48,7 @@ const FeedBackItem = ({
         minHeight: 150,
         padding: 10,
        
-        color: "#fff",
+        color: "red",
         position: "relative",
       }}
       className="card-bg"
@@ -62,10 +63,10 @@ const FeedBackItem = ({
       >
         {CreatedBy}
       </div>
-      <div style={{ fontWeight: "", textAlign: "start", fontSize: 12 }}>
+      <div style={{ fontWeight: "", textAlign: "start", fontSize: 12, color: "blue" }}>
         {ModifiedDate && moment(ModifiedDate).format("DD-MM-YYYY")}
       </div>
-      <div style={{ fontWeight: "bold", textAlign: "start" }}>{Name}</div>
+      <div style={{ fontWeight: "bold", textAlign: "start", color: "white" }}>{Name}</div>
 
       <div style={{ textAlign: "start" }}>{Description}</div>
       {Image && (

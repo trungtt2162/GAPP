@@ -19,12 +19,11 @@ import { toast } from "react-toastify";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { genderOptions } from "../../constant/common";
 import { authApi } from "../../api/auth.api";
-import { handleError } from "../../ultils/helper";
+import { handleError,validatePhoneNumber,validateIDCard, validateAddress,validateBirthday } from "../../ultils/helper";
 import useAuthStore from "../../zustand/authStore";
 
 const Register = (props) => {
   const { login, logOutAction } = useAuthStore();
-
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     Username: "",
@@ -62,14 +61,56 @@ const [repassword,setRePass] = useState("");
       );
   };
   const handlleRegister = async () => {
+    if(formData.FirstName.trim()===""){
+      toast.error("Vui lòng nhập họ.");
+      return;
+    }
+    if(formData.LastName.trim() === "" ){
+      toast.error("Vui lòng nhập tên.");
+      return;
+    }
     if (!validateusername()) {
-      toast.error("Invalid Email");
+      toast.error("Email sai định dạng");
       return;
     }
     if(formData.Password !== repassword){
       toast.error("Xác nhận mật khẩu không trùng khớp");
       return;
     }
+    if(validatePhoneNumber(formData.Phone) ===false){
+      toast.error("Định dạng điện thoại không chính xác. Yêu cầu 10 số");
+      return;
+    }
+    if(validateIDCard(formData.Indentification)===false){
+      toast.error("Định dạng CCCD không chính xác. Yêu cầu 9- 12 số");
+      return;
+    }
+    if(validateAddress(formData.Address)===false){
+      toast.error("Địa chỉ cần cụ thể hơn.");
+      return;
+    }
+
+    if(validateAddress(formData.Address)===false){
+      toast.error("Địa chỉ cần cụ thể hơn.");
+      return;
+    }
+    if(formData.Gender===""){
+      toast.error("Vui lòng chọn giới tính.");
+      return;
+    }
+    if(validateBirthday(formData.DateOfBirth) === "" ){
+      toast.error("Ngày sinh nhật không hợp lệ.");
+      return;
+    }
+    if ( formData.DateOfBirth !== null){
+      const selectedDate = new Date(formData.DateOfBirth);
+      const currentDate = new Date();
+      if (selectedDate >= currentDate) {
+        toast.error("Ngày sinh không hợp lệ.");
+        return;
+      }
+    }
+    
     try {
       const res = await authApi.register({
         ...formData,
@@ -176,6 +217,7 @@ const [repassword,setRePass] = useState("");
                   name="FirstName"
                   value={formData.FirstName}
                   onChange={handleChange}
+                  required
                 />
               </Grid>
               <Grid item xs={6}>
@@ -185,6 +227,7 @@ const [repassword,setRePass] = useState("");
                   name="LastName"
                   value={formData.LastName}
                   onChange={handleChange}
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -195,6 +238,7 @@ const [repassword,setRePass] = useState("");
                   name="Username"
                   value={formData.Username}
                   onChange={handleChange}
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -205,6 +249,7 @@ const [repassword,setRePass] = useState("");
                   value={formData.Password}
                   type="password"
                   onChange={handleChange}
+                  required
                 />
                   </Grid>
                  <Grid item xs={12}>
@@ -214,6 +259,7 @@ const [repassword,setRePass] = useState("");
                   value={repassword}
                   type="password"
                   onChange={e => setRePass(e.target.value)}
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -223,6 +269,7 @@ const [repassword,setRePass] = useState("");
                   name="Phone"
                   value={formData.Phone}
                   onChange={handleChange}
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -232,6 +279,7 @@ const [repassword,setRePass] = useState("");
                   name="Indentification"
                   value={formData.Indentification}
                   onChange={handleChange}
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -241,6 +289,7 @@ const [repassword,setRePass] = useState("");
                   name="Address"
                   value={formData.Address}
                   onChange={handleChange}
+                  required
                 />
               </Grid>
               <Grid item xs={6}>
@@ -251,6 +300,7 @@ const [repassword,setRePass] = useState("");
                   value={formData.Gender}
                   onChange={handleChange}
                   fullWidth
+                  required
                 >
                   {genderOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -266,6 +316,7 @@ const [repassword,setRePass] = useState("");
                   label="Ngày sinh nhật"
                   name="DateOfBirth"
                   value={formData.DateOfBirth}
+                  required
                   onChange={handleChange}
                   InputLabelProps={{
                     shrink: true,

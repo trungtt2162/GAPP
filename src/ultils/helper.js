@@ -48,7 +48,7 @@ export function getQuery() {
 export const handleError = (error, isshowToast = true) => {
   let mess = "";
   if (axios.isAxiosError(error)) {
-    mess = error.response?.data?.Message || "Something went wrong";
+    mess = error.response?.data?.Message || "Có lỗi xảy ra";
     const errorObj = error.response?.data?.errors;
     if (errorObj) {
       const listKey = Object.keys(errorObj);
@@ -60,7 +60,7 @@ export const handleError = (error, isshowToast = true) => {
       }
     }
   } else {
-    mess = error.message || "Something went wrong";
+    mess = error.message || "Có lỗi xảy ra";
   }
   if (isshowToast) {
     toast.dismiss()
@@ -184,3 +184,70 @@ export function sortArrByDate(arr, key) {
 export const splitText = (txt="") => {
   return txt.split("\n").map(i => <div>{i}</div>)
 }
+
+
+export const formatMoney = (amount) => {
+
+  const parts = amount.trim().toString().split('.');
+  const integerPart = parts[0];
+  let decimalPart = parts.length > 1 ? `.${parts[1]}` : '';
+  let formattedInteger = '';
+  for (let i = integerPart.length - 1, j = 0; i >= 0; i--, j++) {
+    if (j > 0 && j % 3 === 0) {
+      formattedInteger = ',' + formattedInteger;
+    }
+    formattedInteger = integerPart[i] + formattedInteger;
+  }
+
+  return  formattedInteger + decimalPart;
+}
+
+export const validatePhoneNumber = (phoneNumber) => {
+
+  const phoneRegex = /^[0-9]{10}$/; 
+
+  return phoneRegex.test(phoneNumber.trim());
+}
+
+
+export const validateIDCard = (idCard) => {
+
+  const idCardRegex = /^[0-9]{9}$|^[0-9]{12}$/;
+
+
+  return idCardRegex.test(idCard.trim());
+};
+
+
+export const validateAddress = (address) => {
+ 
+  const addressRegex = /.{5,}/;
+
+  return addressRegex.test(address.trim());
+};
+
+export const validateBirthday = (birthday) => {
+
+  const birthdayRegex = /^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[0-2])[/](19|20)\d{2}$/;
+
+  
+  if (!birthdayRegex.test(birthday)) {
+    return false; // Ngày sinh nhật không đúng định dạng
+  }
+
+  // Kiểm tra xem ngày sinh nhật có hợp lệ không
+  const parts = birthday.split('/');
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  const year = parseInt(parts[2], 10);
+
+  const today = new Date();
+  const birthDate = new Date(year, month - 1, day);
+
+  return (
+    birthDate.getFullYear() === year &&
+    birthDate.getMonth() === month - 1 &&
+    birthDate.getDate() === day &&
+    birthDate < today
+  );
+};

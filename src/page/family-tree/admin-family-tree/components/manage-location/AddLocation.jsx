@@ -42,7 +42,6 @@ function AddLocationForm({item,onClose,updateNewItem}) {
   };
 
   const handleAdd = async() => {
-
    try {
     const res = !item ?  await addressApi.addAdress({
       ...locationData,
@@ -80,6 +79,7 @@ function AddLocationForm({item,onClose,updateNewItem}) {
               variant="outlined"
               name="Name"
               value={locationData.Name}
+              required
               onChange={handleChange}
             />
           </Grid>
@@ -90,6 +90,7 @@ function AddLocationForm({item,onClose,updateNewItem}) {
               variant="outlined"
               name="Location"
               value={locationData.Location}
+              required
               onChange={handleChange}
             />
           </Grid>
@@ -99,6 +100,7 @@ function AddLocationForm({item,onClose,updateNewItem}) {
               <Select
                 name="Type"
                 value={locationData.Type}
+                required
                 onChange={handleChange}
                 label="Loại địa điểm"
               >
