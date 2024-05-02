@@ -128,7 +128,7 @@ namespace GenealogyBL.Implements
             if (userRegister != null)
             {
                 await _emailSender.SendEmailAsync(new JArray() { recip },
-                "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb:{appUrl}</div>",
+                "Tài khoản login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb:{appUrl}</div>",
                 $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: {appUrl}</div>");
             }
 
@@ -149,7 +149,7 @@ namespace GenealogyBL.Implements
             if (userRegister != null)
             {
                 await _emailSender.SendEmailAsync(new JArray() { recip },
-                "Tài login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb:{appUrl}</div>",
+                "Tài khoản login cây gia phả", $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb:{appUrl}</div>",
                 $"<div>UserName: {userRegister.Username}</div> <div>password: {userRegister.Password}</div><div>LinkWeb: {appUrl}</div>");
             }
             return true;
@@ -173,6 +173,30 @@ namespace GenealogyBL.Implements
         public async Task<IEnumerable<UserGenealogy>> GetAllByUserId(int userID)
         {
             return await _userGenealogyDL.GetAllByUserID(userID);
+        }
+
+
+        public async Task<bool> SendMailRejectAccount(UserGenealogy user)
+        {
+            var recip = new JObject {
+                                {
+                                    "Email",
+                                    user.Email
+                                }, {
+                                    "Name",
+                                   user.FirstName
+                                }
+                                };
+            var gen = await _genealogyDL.GetById(user.IdGenealogy);
+            if (gen != null)
+            {
+                await _emailSender.SendEmailAsync(new JArray() { recip },
+               "Thông báo từ chương trình cây phả hệ", $"<div>Bạn bị từ chối tham gia vào cây phả hệ <strong>{gen.Name}</strong></div>",
+               $"<div>Bạn bị từ chối tham gia vào cây phả hệ <strong>{gen.Name}</strong></div>");
+
+            }
+            
+            return true;
         }
 
         public async Task<string> ExportUser(int idGenealogy)

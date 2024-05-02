@@ -4,6 +4,7 @@ using GenealogyCommon.Constant;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
 using GenealogyCommon.Models.Param;
+using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -222,6 +223,11 @@ namespace GenealogyAPI.Controllers
             if (!check)
             {
                 return serviceResult.OnUnauthorized("Không có quyền");
+            }
+            var user = await _userGenealogyBL.GetById(id);
+            if (user != null && user.InActive)
+            {
+                await _userGenealogyBL.SendMailRejectAccount(user);
             }
             await _userGenealogyBL.DeleteByID(id, idGenealogy);
 

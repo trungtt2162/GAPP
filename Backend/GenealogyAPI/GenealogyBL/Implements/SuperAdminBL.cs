@@ -5,6 +5,7 @@ using GenealogyCommon.Implements;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Authen;
+using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -37,6 +38,16 @@ namespace GenealogyBL.Implements
             _familyHistoryDL = familyHistoryDL;
             _userGenealogyDL = userGenealogyDL;
             _mapper = mapper;
+        }
+        public async Task<bool> DeleteByID(int Id)
+        {
+            _ = InsertLog(LogAction.Delete, Id);
+            var user = await _userDL.GetById(Id);
+            if (!string.IsNullOrWhiteSpace(user.Email))
+            {
+                await _userDL.DeleteAdmin(user.Email);
+            }
+            return await _userDL.DeleteById(Id);
         }
 
         public async Task<object> Create(User user, Genealogy genealogy)

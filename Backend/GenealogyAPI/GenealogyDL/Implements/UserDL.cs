@@ -162,6 +162,21 @@ namespace GenealogyDL.Implements
             return await this.QueryFirstOrDefaultAsync<int>(proc, param);
         }
 
+        public async Task<bool> DeleteAdmin(string userName)
+        {
+
+            string sql = $"delete from user_password WHERE UserName = @UserName;";
+            var param = new Dictionary<string, object>()
+            {
+                ["@UserName"] = userName
+            };
+            using (var dbContext = _context.CreateDatabaseContext(ConnectionString))
+            {
+                return (await dbContext.ExecuteAsync(sql, param)) > 0;
+            }
+            return true;
+        }
+
 
         #endregion
 
