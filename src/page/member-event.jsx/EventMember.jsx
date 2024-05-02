@@ -247,13 +247,17 @@ const EventMember = () => {
                   <span>{splitText(currentEvent?.Description)}</span>
                 </div>
                 <div
-                 
+                 style={{
+                  display:'flex',
+                  justifyContent:'center',
+                  alignItems:"center"
+                 }}
                 >
                 { currentEvent?.Background &&  <img  style={{
                     textAlign: "start",
                     marginTop: 10,
-                    width: 300,
-                    height: 300,
+                    width: 400,
+                    height: 400,
                     objectFit: "contain",
                   }} src={currentEvent?.Background} />}
                 </div>

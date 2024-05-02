@@ -225,12 +225,17 @@ const HistoryFamily = ({ list, desHis }) => {
             {curent?.Description}
           </span>{" "}
         </div>
-        <Grid item xs={24}>
+        <Grid style={{
+          display:"flex",
+          justifyContent:"center",
+          alignItems:"center",
+          marginTop:20
+        }} item xs={24}>
           {curent?.Image && <img
             src={curent?.Image}
             style={{
-              width: 300,
-              height: 300,
+              width: 400,
+              height: 400,
               objectFit:"contain"
             }}
           /> }
