@@ -60,8 +60,7 @@ const handleAdd = async () => {
           fullWidth
           label="Số tiền dự tính"
           name="EstimatedMoney"
-          type="number"
-          value={formatMoney(fundInfo.EstimatedMoney)}
+          value={fundInfo.EstimatedMoney}
           onChange={handleChange}
           margin="normal"
         />

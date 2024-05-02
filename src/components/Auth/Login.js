@@ -117,7 +117,7 @@ const Login = (props) => {
           <button
             className="btn-submit"
             onClick={() => handlleLogin()}
-            disabled={isLoading}
+            disabled={!email || !password}
             style={{
               background:"rgb(242, 184, 79)",
               border:"none"

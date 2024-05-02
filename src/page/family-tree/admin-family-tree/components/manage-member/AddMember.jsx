@@ -85,7 +85,7 @@ function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
   // Add
   const onAdd = async () => {
     try {
-      if(!checkValidEmail(memberData.Email)){
+      if(memberData?.Email?.trim() && !checkValidEmail(memberData.Email)){
         toast.error("Email sai định dạng");
       return;
       }
