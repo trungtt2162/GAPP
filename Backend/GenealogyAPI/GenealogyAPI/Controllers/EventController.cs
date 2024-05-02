@@ -139,10 +139,10 @@ namespace GenealogyAPI.Controllers
 
         [HttpPost("guest/paging")]
         [AllowAnonymous]
-        public async Task<ServiceResult> GetPagingDataGuest(PageRequest pagingRequest, [FromQuery] int idGenealogy)
+        public async Task<ServiceResult> GetPagingDataGuest(PageRequest pagingRequest)
         {
             var serviceResult = new ServiceResult();
-            serviceResult.Data = await _eventBL.GetPagingDataGuest(pagingRequest, idGenealogy);
+            serviceResult.Data = await _eventBL.GetPagingDataGuest(pagingRequest, -1);
             return serviceResult;
         }
 
