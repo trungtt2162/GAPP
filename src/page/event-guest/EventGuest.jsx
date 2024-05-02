@@ -36,7 +36,7 @@ const EventGuest = () => {
     try {
       const res = await eventApi.getListEventGuest(id,query);
       if (res.data.StatusCode === 200) {
-        setListEvent(res.data.Data.Data);
+        setListEvent(res.data.Data.Data || []);
         if (res.data?.Data?.Data?.length > 0) {
           setCurrentEvent(res.data.Data.Data[0]);
         }
@@ -209,7 +209,7 @@ const EventGuest = () => {
                     </Button>
                   </Grid>
                   <Grid item flex={1}>
-                    <div style={{textAlign:"end"}}>Có {listEvent.length} sự kiện</div>
+                    <div style={{textAlign:"end"}}>Có {listEvent?.length || 0} sự kiện</div>
                   </Grid>
                 </Grid>
                 {listEvent?.length > 0 ? (
