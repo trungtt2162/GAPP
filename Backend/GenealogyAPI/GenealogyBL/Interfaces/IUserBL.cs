@@ -40,5 +40,6 @@ namespace GenealogyBL.Interfaces
         Task<bool> RecoverPass(RecoverPass param);
 
         Task<bool> UpdateEmail(int userID, string email);
+        Task<bool> CheckActionFamilytree(int idGenealogy, int idFamilyTree);
     }
 }

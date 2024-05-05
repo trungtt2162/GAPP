@@ -200,6 +200,17 @@ namespace GenealogyDL.Implements
             return false;
         }
 
+        public async Task<bool> CheckActionFamilytree(int idGenealogy, int idFamilyTree, int idUserID)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                ["p_UserID"] = idUserID,
+                ["p_IdGenealogy"] = idGenealogy,
+                ["p_IdFamilyTree"] = idFamilyTree
+            };
+            return await this.QueryFirstOrDefaultAsync<int>("Proc_CheckAction_Familytree", param) > 0;
+        }
+
         public async Task<PermissionClient> GetAllPermission(int? idGenealogy, int userID)
         {
             var param = new 

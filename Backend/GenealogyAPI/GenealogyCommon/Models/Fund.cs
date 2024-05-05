@@ -19,6 +19,8 @@ namespace GenealogyCommon.Models
         public string SpendPurpose { get; set; }
         
         public long EstimatedMoney { get; set; }
+
+        
                 
         
     }
@@ -37,6 +39,7 @@ namespace GenealogyCommon.Models
 
         public string Email { get; set; }
         public bool Confirmed { get; set; }
+        public string? BillImage { get; set; }
     }
 
     [Table("fund_send")]
@@ -46,6 +49,7 @@ namespace GenealogyCommon.Models
         public string Description {get; set;}
 
         public long Money { get; set; }
+        public string? BillImage { get; set; }
     }
 
     [Table("fund_feedback")]

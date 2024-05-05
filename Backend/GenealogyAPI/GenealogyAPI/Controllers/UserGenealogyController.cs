@@ -79,8 +79,22 @@ namespace GenealogyAPI.Controllers
             var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Add, userGenealogyParam.IdGenealogy);
             if (!check)
             {
-                return serviceResult.OnUnauthorized("Không có quyền");
+                var check1 = await _userBL.CheckActionFamilytree(userGenealogyParam.IdGenealogy, userGenealogyParam.IdFamilyTree);
+                if (!check1)
+                {
+                    return serviceResult.OnUnauthorized("Không có quyền");
+                }
             }
+            var user = await _userBL.GetById(userGenealogyParam.UserID);
+            if (user != null)
+            {
+                var checkOld = await _userGenealogyBL.CheckOldChild(user.DateOfBirth, userGenealogyParam.IdFamilyTree, userGenealogyParam.IdGenealogy);
+                if (!checkOld)
+                {
+                    return serviceResult.OnBadRequest("Tuổi của con phải nhỏ hơn cha, me 18 tuổi");
+                }
+            }
+            
             await _userGenealogyBL.Create(_mapper.Map<UserGenealogy>(userGenealogyParam));
 
             return serviceResult.OnSuccess("Created");
@@ -97,7 +111,20 @@ namespace GenealogyAPI.Controllers
             var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Update, userGenealogyParam.IdGenealogy);
             if (!check)
             {
-                return serviceResult.OnUnauthorized("Không có quyền");
+                var check1 = await _userBL.CheckActionFamilytree(userGenealogyParam.IdGenealogy, userGenealogyParam.IdFamilyTree);
+                if (!check1)
+                {
+                    return serviceResult.OnUnauthorized("Không có quyền");
+                }
+            }
+            var user = await _userBL.GetById(userGenealogyParam.UserID);
+            if (user != null)
+            {
+                var checkOld = await _userGenealogyBL.CheckOldChild(user.DateOfBirth, userGenealogyParam.IdFamilyTree, userGenealogyParam.IdGenealogy);
+                if (!checkOld)
+                {
+                    return serviceResult.OnBadRequest("Tuổi của con phải nhỏ hơn cha, me 18 tuổi");
+                }
             }
             await _userGenealogyBL.ApproveRegister(_mapper.Map<UserGenealogy>(userGenealogyParam));
             return serviceResult.OnSuccess("Approved");
@@ -112,10 +139,22 @@ namespace GenealogyAPI.Controllers
                 return serviceResult.OnBadRequest("Invalid Param");
             }
             var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Update, userGenealogy.IdGenealogy);
+            
             if (!check)
             {
-                return serviceResult.OnUnauthorized("Không có quyền");
+                var check1 = await _userBL.CheckActionFamilytree(userGenealogy.IdGenealogy, userGenealogy.IdFamilyTree);
+                if (!check1)
+                {
+                    return serviceResult.OnUnauthorized("Không có quyền");
+                }
             }
+
+            var checkOld = await _userGenealogyBL.CheckOldChild(userGenealogy.DateOfBirth, userGenealogy.IdFamilyTree, userGenealogy.IdGenealogy);
+            if (!checkOld)
+            {
+                return serviceResult.OnBadRequest("Tuổi của con phải nhỏ hơn cha, me 18 tuổi");
+            }
+            
             await _userGenealogyBL.Update(userGenealogy);
             return serviceResult.OnSuccess("Approved");
         }
@@ -145,6 +184,11 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Invalid Param");
             }
+            var checkOld = await _userGenealogyBL.CheckOldChild(userGenealogyParam.DateOfBirth, userGenealogyParam.IdFamilyTree, userGenealogyParam.IdGenealogy);
+            if (!checkOld)
+            {
+                return serviceResult.OnBadRequest("Tuổi của con phải nhỏ hơn cha, me 18 tuổi");
+            }
             // case Email null
             if (string.IsNullOrWhiteSpace(userGenealogyParam.Email))
             {
@@ -157,7 +201,11 @@ namespace GenealogyAPI.Controllers
             var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Add, userGenealogyParam.IdGenealogy);
             if (!check)
             {
-                return serviceResult.OnUnauthorized("Không có quyền");
+                var check1 = await _userBL.CheckActionFamilytree(userGenealogyParam.IdGenealogy, userGenealogyParam.IdFamilyTree);
+                if (!check1)
+                {
+                    return serviceResult.OnUnauthorized("Không có quyền");
+                }
             }
             var userRegister = _mapper.Map<UserRegister>(userGenealogyParam);
             var isExist = await _userBL.CheckExistUser(userRegister.Username);
@@ -189,10 +237,20 @@ namespace GenealogyAPI.Controllers
             {
                 return serviceResult.OnBadRequest("Email null");
             }
+            var checkOld = await _userGenealogyBL.CheckOldChild(userGenealogyParam.DateOfBirth, userGenealogyParam.IdFamilyTree, userGenealogyParam.IdGenealogy);
+            if (!checkOld)
+            {
+                return serviceResult.OnBadRequest("Tuổi của con phải nhỏ hơn cha, me 18 tuổi");
+            }
             var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Add, userGenealogyParam.IdGenealogy);
             if (!check)
             {
-                return serviceResult.OnUnauthorized("Không có quyền");
+                var check1 = await _userBL.CheckActionFamilytree(userGenealogyParam.IdGenealogy, userGenealogyParam.IdFamilyTree);
+                if (!check1)
+                {
+                    return serviceResult.OnUnauthorized("Không có quyền");
+                }
+                
             }
             var userRegister = _mapper.Map<UserRegister>(userGenealogyParam);
             var isExist = await _userBL.CheckExistUser(userRegister.Username);
@@ -219,10 +277,20 @@ namespace GenealogyAPI.Controllers
             {
                 return BadRequest();
             }
+            var usergen = await _userGenealogyBL.GetById(id);
             var check = await _userBL.CheckPermissionSubSystem(SubSystem.UserGenealogy, PermissionCode.Delete, idGenealogy);
             if (!check)
             {
-                return serviceResult.OnUnauthorized("Không có quyền");
+                if (usergen == null)
+                {
+                    return serviceResult.OnUnauthorized("Không có quyền");
+                }
+                var check1 = await _userBL.CheckActionFamilytree(idGenealogy, usergen.IdFamilyTree);
+                if (!check1)
+                {
+                    return serviceResult.OnUnauthorized("Không có quyền");
+                }
+
             }
             var user = await _userGenealogyBL.GetById(id);
             if (user != null && user.InActive)

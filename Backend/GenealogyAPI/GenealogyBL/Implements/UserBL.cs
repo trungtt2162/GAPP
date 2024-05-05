@@ -199,6 +199,12 @@ namespace GenealogyBL.Implements
             return await _userDL.CheckPermissionSubSystem(int.Parse(_authService.GetUserID()), subSystemcode, permissionCode, idGenealogy);
         }
 
+        public async Task<bool> CheckActionFamilytree(int idGenealogy, int idFamilyTree)
+        {
+            return await _userDL.CheckActionFamilytree(idGenealogy, idFamilyTree, int.Parse(_authService.GetUserID()) );
+        }
+
+
         public async Task<object> GetAllPermission(int? idGenealogy = null)
         {
             var permission = await _userDL.GetAllPermission(idGenealogy, int.Parse(_authService.GetUserID()));

@@ -78,6 +78,7 @@ namespace GenealogyBL.Implements
             var receips = new JArray();
             foreach (var user in users)
             {
+                
                 var recip = new JObject {
                                 {
                                     "Email",

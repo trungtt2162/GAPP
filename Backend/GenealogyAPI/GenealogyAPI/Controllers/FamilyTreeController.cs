@@ -26,10 +26,10 @@ namespace GenealogyAPI.Controllers
 
         [HttpGet("")]
         [AllowAnonymous]
-        public async Task<ServiceResult> GetAll([FromQuery]int idGenealogy)
+        public async Task<ServiceResult> GetAll([FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
-            serviceResult.Data =  await _familyTreeBL.GetTrees(idGenealogy);
+            serviceResult.Data = await _familyTreeBL.GetTrees(idGenealogy);
             return serviceResult;
         }
 
@@ -46,13 +46,13 @@ namespace GenealogyAPI.Controllers
             //{
             //    return serviceResult.OnUnauthorized("Không có quyền");
             //}
-            await _familyTreeBL.Create(_mapper.Map<FamilyTree>(familytreeParam));
+            serviceResult.Data =  await _familyTreeBL.Create(_mapper.Map<FamilyTree>(familytreeParam));
 
             return serviceResult.OnSuccess("Created");
         }
 
         [HttpGet("export")]
-        public async Task<ServiceResult> ExportFamilyTree([FromQuery]int idGenealogy)
+        public async Task<ServiceResult> ExportFamilyTree([FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
             serviceResult.Data = await _familyTreeBL.ExportTree(idGenealogy);
@@ -79,7 +79,7 @@ namespace GenealogyAPI.Controllers
         }
 
         [HttpDelete("")]
-        public async Task<ActionResult<object>> DeleteFamilyTree([FromQuery] int id, [FromQuery]int idGenealogy)
+        public async Task<ActionResult<object>> DeleteFamilyTree([FromQuery] int id, [FromQuery] int idGenealogy)
         {
             var serviceResult = new ServiceResult();
             if (!ModelState.IsValid)
@@ -94,6 +94,15 @@ namespace GenealogyAPI.Controllers
             await _familyTreeBL.DeleteByID(id, idGenealogy);
 
             return serviceResult.OnSuccess("Deleted");
+        }
+
+        [HttpGet("CheckAction")]
+        public async Task<ActionResult<object>> CheckAction([FromQuery] int idGenealogy, [FromQuery] int idFamilyTree)
+        {
+            var serviceResult = new ServiceResult();
+            var check = await _userBL.CheckActionFamilytree(idGenealogy, idFamilyTree);
+            serviceResult.Data = check;
+            return serviceResult;
         }
     }
 }

@@ -20,5 +20,7 @@ namespace GenealogyBL.Interfaces
         Task<string> ExportUser(int idGenealogy);
         Task<bool> SendMailCreateAccount(UserGenealogy user, UserRegister userRegister = null);
         Task<bool> SendMailRejectAccount(UserGenealogy user);
+
+        Task<bool> CheckOldChild(DateTime? DateOfBirdChild, int idFamilyTree, int idGenealogy);
     }
 }

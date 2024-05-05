@@ -22,6 +22,7 @@ namespace GenealogyCommon.Models.Param
         public long EstimatedMoney { get; set; }
 
         public int Id { get; set; }
+
     }
 
     public class FundContributorParam
@@ -44,6 +45,8 @@ namespace GenealogyCommon.Models.Param
         public bool Confirmed { get; set; }
 
         public int Id { get; set; }
+
+        public string? BillImage { get; set; }
     }
 
     public class FundSendParam
@@ -55,5 +58,7 @@ namespace GenealogyCommon.Models.Param
         public int Id { get; set; }
 
         public long Money { get; set; }
+
+        public string? BillImage { get; set; }
     }
 }

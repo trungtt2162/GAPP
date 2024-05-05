@@ -17,6 +17,8 @@ namespace GenealogyCommon.Models
         public int UserId { get; set; }
         public int TypeRole { get; set; }
 
+        public string? Description { get; set; }
+
     }
     [Table("view_usergenealogy_role")]
     public class UserGenealogyView : UserGenealogy

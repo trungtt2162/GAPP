@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,9 +27,10 @@ namespace GenealogyBL.Implements
         private readonly IEmailSender _emailSender;
         private readonly IGenealogyDL _genealogyDL;
         private readonly IExportService _exportService;
+        private readonly IFamilyTreeDL _familyTreeDL;
         private string appUrl = string.Empty;
 
-        public UserGenealogyBL(IExportService exportService, IGenealogyDL genealogyDL, IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userGenealogyDL, logDL, authService)
+        public UserGenealogyBL(IFamilyTreeDL familyTreeDL,IExportService exportService, IGenealogyDL genealogyDL, IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userGenealogyDL, logDL, authService)
         {
             _userGenealogyDL = userGenealogyDL;
             _userBL = userBL;
@@ -37,6 +39,7 @@ namespace GenealogyBL.Implements
             _emailSender = emailSender;
             _genealogyDL = genealogyDL;
             _exportService = exportService;
+            _familyTreeDL = familyTreeDL;
             appUrl = _configuration.GetValue<string>("AppSettings:APPURL");
         }
 
@@ -215,6 +218,48 @@ namespace GenealogyBL.Implements
             return _exportService.ExportUserGenealogy(userGenealogies, gen);
         }
 
+        public async Task<bool> CheckOldChild(DateTime? dateOfBirdChild, int idFamilyTree, int idGenealogy)
+        {
+            if (dateOfBirdChild == null)
+            {
+                return false;
+            }
+
+            var tree = await _familyTreeDL.GetById(idFamilyTree);
+            if (tree == null || tree.ParentID == null)
+            {
+                return true;
+            }
+            var usergens = await _userGenealogyDL.GetAll(idGenealogy);
+
+            if (!usergens.Any())
+            {
+                return true;
+            }
+            var userFams = usergens.Where(u => u.IdFamilyTree == tree.ParentID);
+            if (!userFams.Any())
+            {
+                return true;
+            }
+            foreach ( var u in usergens)
+            {
+                if (u.DateOfBirth == null)
+                {
+                    continue;
+                }
+                if (!IsAtLeast18YearsApart( dateOfBirdChild.Value, u.DateOfBirth.Value))
+                {
+                    return false;
+                }
+            }
+            return true;
+
+        }
+        private bool IsAtLeast18YearsApart(DateTime date1, DateTime date2)
+        {
+            int yearsApart = date1.Year - date2.Year;
+            return yearsApart >= 18;
+        }
 
     }
 }
