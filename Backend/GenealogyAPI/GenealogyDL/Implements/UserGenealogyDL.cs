@@ -123,6 +123,15 @@ namespace GenealogyDL.Implements
             return true;
         }
 
+        public async Task<IEnumerable<UserGenealogy>> GetUserAdminNotify(int idGenealogy)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                ["p_IDGenealogy"] = idGenealogy
+            };
+            var proc = "Proc_GetUserAdminNotify";
+            return await this.Query<UserGenealogy>(proc, param);
+        }
 
     }
 }

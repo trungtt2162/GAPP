@@ -13,7 +13,7 @@ namespace GenealogyBL.Implements
 {
     internal class LogBL : BaseBL<Log>, ILogBL
     {
-        public LogBL( IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, logDL,logDL, authService)
+        public LogBL( IWebHostEnvironment env, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService) : base(env, logDL, logDL, authService, notificationDL, notificationService)
         {
         }
 

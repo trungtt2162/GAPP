@@ -19,11 +19,13 @@ namespace GenealogyAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IAuthService _authService;
         private readonly ILogBL _logBL;
-        public UserController(ILogBL logBL, IAuthService authService, IUserBL userBL, IMapper mapper) { 
+        private readonly IBaseBL<Notification> _notificationBL;
+        public UserController(ILogBL logBL, IAuthService authService, IUserBL userBL, IMapper mapper, IBaseBL<Notification> notificationBL) { 
             _userBL = userBL;
             _mapper = mapper;
             _authService = authService;
             _logBL = logBL;
+            _notificationBL = notificationBL;
         }
         [HttpGet]
         public async Task<ServiceResult> GetUserInfo()
@@ -133,7 +135,21 @@ namespace GenealogyAPI.Controllers
             return serviceResult;
         }
 
-
+        [HttpGet("notification")]
+        public async Task<ServiceResult> GetNotification()
+        {
+            var serviceResult = new ServiceResult();
+            PageRequest paggingRequest = new PageRequest()
+            {
+                PageNumber = -1,
+                PageSize = -1,
+                SearchKey = "",
+                SortOrder = " CreatedDate Desc ",
+                Condition = $" ReceiveID = {int.Parse(_authService.GetUserID())}"
+            };
+            serviceResult.Data = await _notificationBL.GetPagingData(paggingRequest);
+            return serviceResult;
+        }
 
     }
 }

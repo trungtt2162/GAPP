@@ -16,7 +16,7 @@ namespace GenealogyBL.Implements
     internal class GenealogyBL : BaseBL<Genealogy>, IGenealogyBL
     {
         private readonly IGenealogyDL _genealogyDL;
-        public GenealogyBL(IGenealogyDL genealogyDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, genealogyDL, logDL, authService)
+        public GenealogyBL(IGenealogyDL genealogyDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService) : base(env, genealogyDL, logDL, authService, notificationDL, notificationService)
         {
             _genealogyDL = genealogyDL;
         }

@@ -15,7 +15,7 @@ namespace GenealogyBL.Implements
     internal class FamilyAddressBL : BaseBL<FamilyAddress>, IFamilyAddressBL
     {
         private readonly IFamilyAddressDL _familyAddressDL;
-        public FamilyAddressBL(IFamilyAddressDL familyAddressDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, familyAddressDL, logDL, authService)
+        public FamilyAddressBL(IFamilyAddressDL familyAddressDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService) : base(env, familyAddressDL, logDL, authService, notificationDL, notificationService)
         {
             _familyAddressDL = familyAddressDL;
         }

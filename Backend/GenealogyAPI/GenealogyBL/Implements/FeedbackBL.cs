@@ -14,7 +14,7 @@ namespace GenealogyBL.Implements
     internal class FeedbackBL: BaseBL<FeedBack>, IFeedbackBL
     {
         private readonly IFeedbackDL _feedbackDL;
-        public FeedbackBL(IFeedbackDL feedbackDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, feedbackDL, logDL, authService)
+        public FeedbackBL(IFeedbackDL feedbackDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService) : base(env, feedbackDL, logDL, authService, notificationDL, notificationService)
         {
             _feedbackDL = feedbackDL;
         }

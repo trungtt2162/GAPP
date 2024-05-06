@@ -19,5 +19,7 @@ namespace GenealogyDL.Interfaces
         Task<bool> ResetUserGenealogy(int idFamilyTree, int idGenealogy);
         Task<IEnumerable<UserGenealogy>> GetAllByUserID(int userID);
         Task<UserGenealogy> GetUserByUserID(int userId, int idGenealogy);
+
+        Task<IEnumerable<UserGenealogy>> GetUserAdminNotify(int idGenealogy);
     }
 }

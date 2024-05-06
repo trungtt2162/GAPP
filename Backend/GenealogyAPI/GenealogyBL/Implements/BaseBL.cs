@@ -23,12 +23,16 @@ namespace GenealogyBL.Implements
         private readonly IBaseDL<T> _baseDL;
         protected readonly ILogDL _logDL;
         protected readonly IAuthService _authService;
-        public BaseBL(IWebHostEnvironment env, IBaseDL<T> baseDL, ILogDL logDL, IAuthService authService)
+        protected readonly INotificationDL _notificationDL;
+        private readonly INotificationService _notificationService;
+        public BaseBL(IWebHostEnvironment env, IBaseDL<T> baseDL, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService)
         {
             _configuration = ConfigService.GetConfiguration(env);
             _baseDL = baseDL;
             _logDL = logDL;
             _authService = authService;
+            _notificationDL = notificationDL;
+            _notificationService = notificationService;
         }
 
         public async Task<object> Create(T obj)
@@ -116,6 +120,13 @@ namespace GenealogyBL.Implements
             await _logDL.Create(log);
             return true;
             
+        }
+
+        public async Task<bool> PushNotification(Notification notification)
+        {
+            await _notificationDL.Create(notification);
+            _ = _notificationService.PushNotification(notification);
+            return true;
         }
     }
 }

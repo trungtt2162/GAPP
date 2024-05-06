@@ -12,6 +12,7 @@ using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Data;
@@ -28,10 +29,11 @@ namespace GenealogyBL.Implements
         private readonly IMapper _mapper;
         private readonly IUserGenealogyDL _userGenealogyDL;
         private readonly IEmailSender _emailSender;
+        private readonly IGenealogyDL _genealogyDL;
         private string appUrl = string.Empty;
-        public UserBL(IEmailSender emailSender, IUserGenealogyDL userGenealogyDL, IMapper mapper, IAuthService authService,
+        public UserBL(IGenealogyDL genealogyDL,IEmailSender emailSender, IUserGenealogyDL userGenealogyDL, IMapper mapper, IAuthService authService,
             IPermissionDL permissionDL, IUserDL userDL,
-            IPasswordHasher passwordHasher, IWebHostEnvironment env, ILogDL logDL) : base(env, userDL, logDL, authService)
+            IPasswordHasher passwordHasher, IWebHostEnvironment env, ILogDL logDL, INotificationDL notificationDL, INotificationService notificationService) : base(env, userDL, logDL, authService, notificationDL, notificationService)
         {
             _userDL = userDL;
             _permissionDL = permissionDL;
@@ -39,6 +41,7 @@ namespace GenealogyBL.Implements
             _mapper = mapper;
             _userGenealogyDL = userGenealogyDL;
             _emailSender = emailSender;
+            _genealogyDL = genealogyDL;
             appUrl = _configuration.GetValue<string>("AppSettings:APPURL");
         }
 
@@ -162,6 +165,28 @@ namespace GenealogyBL.Implements
             userRegister.IdGenealogy = idGenealogy;
 
             await _userGenealogyDL.InsertUserRegister(userRegister);
+            var userAdmins = await _userGenealogyDL.GetUserAdminNotify(idGenealogy);
+            if (userAdmins.Any())
+            {
+                var gen = await _genealogyDL.GetById(idGenealogy);
+                foreach (var userAdmin in userAdmins)
+                {
+                    var notification = new Notification()
+                    {
+                        ReceiveID = userAdmin.UserId,
+                        Type = "Member_Request_Genealogy",
+                        RawData = JsonConvert.SerializeObject(new
+                        {
+                            IdGenealogy = idGenealogy,
+                            GenealogyName = gen.Name
+                        }),
+                        SenderID = int.Parse(_authService.GetUserID()),
+                        SenderName = _authService.GetFullName()
+                    };
+                    _ = PushNotification(notification);
+                }
+            }
+
             return true;
 
         }

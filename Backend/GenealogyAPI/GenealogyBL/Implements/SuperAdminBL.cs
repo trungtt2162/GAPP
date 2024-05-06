@@ -28,7 +28,9 @@ namespace GenealogyBL.Implements
         private readonly IFamilyHistoryDL _familyHistoryDL;
         private readonly IUserGenealogyDL _userGenealogyDL;
         private readonly IMapper _mapper;
-        public SuperAdminBL(IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService, IFamilyHistoryDL familyHistoryDL, IEmailSender emailSender, IPasswordHasher passwordHasher, IPermissionDL permissionDL, IUserDL userDL, IGenealogyDL genealDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userDL, logDL, authService)
+        public SuperAdminBL(IMapper mapper, IUserGenealogyDL userGenealogyDL, IAuthService authService, IFamilyHistoryDL familyHistoryDL, 
+            IEmailSender emailSender, IPasswordHasher passwordHasher, IPermissionDL permissionDL, IUserDL userDL,
+            IGenealogyDL genealDL, IWebHostEnvironment env, ILogDL logDL, INotificationDL notificationDL, INotificationService notificationService ) : base(env, userDL, logDL, authService, notificationDL, notificationService)
         {
             _userDL = userDL;
             _genealDL = genealDL;

@@ -23,6 +23,7 @@ namespace GenealogyDL
             services.AddScoped<IFundDL, FundDL>();
             services.AddScoped<IEventDL, EventDL>();
             services.AddScoped<IFeedbackDL, FeedbackDL>();
+            services.AddScoped<INotificationDL, NotificationDL>();
         }
 
     }

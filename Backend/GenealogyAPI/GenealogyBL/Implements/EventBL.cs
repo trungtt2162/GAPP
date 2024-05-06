@@ -21,7 +21,7 @@ namespace GenealogyBL.Implements
         private readonly IEventDL _eventDL;
         public readonly IGenealogyBL _genealogyBL;
         private readonly IEmailSender _emailSender;
-        public EventBL(IEmailSender emailSender, IGenealogyBL genealogyBL, IEventDL eventDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, eventDL, logDL, authService)
+        public EventBL(IEmailSender emailSender, IGenealogyBL genealogyBL, IEventDL eventDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService) : base(env, eventDL, logDL, authService, notificationDL, notificationService)
         {
             _eventDL = eventDL;
             _genealogyBL = genealogyBL;

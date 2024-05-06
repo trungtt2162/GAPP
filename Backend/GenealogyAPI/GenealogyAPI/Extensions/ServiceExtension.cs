@@ -20,6 +20,7 @@ namespace GenealogyAPI.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IExportService, ExportService>();
+            services.AddTransient<INotificationService, NotificationService>();
         }
     }
 }

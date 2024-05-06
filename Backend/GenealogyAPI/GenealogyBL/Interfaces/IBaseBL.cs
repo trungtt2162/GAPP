@@ -16,5 +16,7 @@ namespace GenealogyBL.Interfaces
         Task<bool> DeleteByID(int Id);
         Task<bool> DeleteByID(int Id, int IdGenealogy);
         Task<PageResult<T>> GetPagingData(PageRequest pagingRequest);
+
+        Task<bool> PushNotification(Notification notification);
     }
 }

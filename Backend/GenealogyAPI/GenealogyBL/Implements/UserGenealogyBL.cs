@@ -7,10 +7,13 @@ using GenealogyCommon.Models;
 using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -30,7 +33,9 @@ namespace GenealogyBL.Implements
         private readonly IFamilyTreeDL _familyTreeDL;
         private string appUrl = string.Empty;
 
-        public UserGenealogyBL(IFamilyTreeDL familyTreeDL,IExportService exportService, IGenealogyDL genealogyDL, IEmailSender emailSender, IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env, ILogDL logDL) : base(env, userGenealogyDL, logDL, authService)
+        public UserGenealogyBL(IFamilyTreeDL familyTreeDL,IExportService exportService, IGenealogyDL genealogyDL, IEmailSender emailSender, 
+            IPermissionDL permissionDL, IAuthService authService, IMapper mapper, IUserBL userBL, 
+            IUserGenealogyDL userGenealogyDL, IWebHostEnvironment env, ILogDL logDL, INotificationDL notificationDL, INotificationService notificationService) : base(env, userGenealogyDL, logDL, authService, notificationDL, notificationService)
         {
             _userGenealogyDL = userGenealogyDL;
             _userBL = userBL;
@@ -101,6 +106,24 @@ namespace GenealogyBL.Implements
                                 }
                                 };
             await _emailSender.SendEmailAsync(new JArray() { recip}, "Đã phê duyệt", "Bạn đã được phê duyệt vào cây gia phả", "Bạn đã được phê duyệt vào cây gia phả");
+            var gen = await _genealogyDL.GetById(user.IdGenealogy);
+            if (gen != null)
+            {
+                var notification = new Notification()
+                {
+                    ReceiveID = user.UserId,
+                    Type = "Admin_Approve_Genealogy",
+                    RawData = JsonConvert.SerializeObject(new
+                    {
+                        IdGenealogy = user.IdGenealogy,
+                        GenealogyName = gen.Name
+                    }),
+                    SenderID = int.Parse(_authService.GetUserID()),
+                    SenderName = _authService.GetFullName()
+                };
+                _ = PushNotification(notification);
+            }
+
             return null;
         }
 
@@ -193,6 +216,20 @@ namespace GenealogyBL.Implements
             var gen = await _genealogyDL.GetById(user.IdGenealogy);
             if (gen != null)
             {
+                var notification = new Notification()
+                {
+                    ReceiveID = user.UserId,
+                    Type = "Admin_Reject_Genealogy",
+                    RawData = JsonConvert.SerializeObject(new
+                    {
+                        IdGenealogy = user.IdGenealogy,
+                        GenealogyName = gen.Name
+                    }),
+                    SenderID = int.Parse(_authService.GetUserID()),
+                    SenderName = _authService.GetFullName()
+                };
+                _ = PushNotification(notification);
+                
                 await _emailSender.SendEmailAsync(new JArray() { recip },
                "Thông báo từ chương trình cây phả hệ", $"<div>Bạn bị từ chối tham gia vào cây phả hệ <strong>{gen.Name}</strong></div>",
                $"<div>Bạn bị từ chối tham gia vào cây phả hệ <strong>{gen.Name}</strong></div>");

@@ -14,7 +14,7 @@ namespace GenealogyBL.Implements
     internal class FundBL : BaseBL<Fund>, IFundBL
     {
         private readonly IFundDL _fundDL;
-        public FundBL(IFundDL fundDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService) : base(env, fundDL, logDL, authService)
+        public FundBL(IFundDL fundDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService) : base(env, fundDL, logDL, authService, notificationDL, notificationService)
         {
             _fundDL = fundDL;
         }
