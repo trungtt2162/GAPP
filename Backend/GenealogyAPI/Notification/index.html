@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User1</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" />
+
+    <script>
+        // lấy userid từ thoogn tin login
+        const userID = 80;
+        // gen random dạng guid với mỗi ng dùng
+        const connectionID = "03a5c292-7027-494c-88a4-e884c099261f";
+        // register user 
+        // url socket + authen token : đặt trong file env
+        const url = `http://localhost:3000/api/${userID}/register?connectionId=${connectionID}`;
+        // thông tin token cấu hình như dưới
+        const authToken = 'VH8c5X1iI8Zm+Y4aFDCDCWSyKpOBzBVPtt0rtzC';
+
+        // B1: đăng ký ng dùng nhận socket
+        // B2: Đăng ký thành công thì khởi tạo socket
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-AUTH-TOKEN': authToken
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        })
+        .then(data => {
+            const socket = io('http://localhost:3000');
+
+            socket.on('connect', () => {
+                console.log('Connected to server');
+                socket.emit('register', userID, connectionID);
+            });
+            // nhận thông báo từ ng dùng
+            socket.on('message', message => {
+                console.log(message);
+            });
+
+        })
+        .catch(error => {
+            console.error('Error registering user:', error);
+        });
+
+    </script>
+</body>
+</html>
