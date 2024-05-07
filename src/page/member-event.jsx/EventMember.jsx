@@ -113,7 +113,129 @@ const EventMember = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  {sortArrByDate(listEvent, "OrganizationDate").map(
+                  <div
+                    style={{
+                      width: "calc(50% - 10px)",
+                    }}
+                  >
+                    {sortArrByDate(listEvent, "OrganizationDate")
+                      .filter((item) => {
+                        const now = new Date();
+                        return  now >= new Date(item.OrganizationDate);
+                      })
+                      .map((item, index) => {
+                        return (
+                          <div
+                            className="card-bg"
+                            onClick={() => {
+                              setCurrentEvent(item);
+                            }}
+                            style={{
+                              marginTop: 10,
+                              cursor: "pointer",
+                              padding: 10,
+
+                              marginBottom: "20px",
+
+                              background: "rgb(70 21 17)",
+                            }}
+                          >
+                            <div
+                              style={{
+                                border: "none !important",
+                              }}
+                              className="item-history"
+                            >
+                              <div className="" style={{ textAlign: "start" }}>
+                                <div
+                                  style={{
+                                    fontSize: 20,
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {item.Name}
+                                </div>
+                                <div>
+                                  Thời gian :{" "}
+                                  {dateFormat3(item.OrganizationDate)}
+                                </div>
+                              </div>
+                              {item.Background && (
+                                <Avatar
+                                  style={{
+                                    width: 60,
+                                    height: 60,
+                                  }}
+                                  src={item.Background}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                  <div
+                    style={{
+                      width: "calc(50% - 10px)",
+                    }}
+                  >
+                   {sortArrByDate(listEvent, "OrganizationDate")
+                      .filter((item) => {
+                        const now = new Date();
+                        return  now < new Date(item.OrganizationDate);
+                      })
+                      .map((item, index) => {
+                        return (
+                          <div
+                            className="card-bg"
+                            onClick={() => {
+                              setCurrentEvent(item);
+                            }}
+                            style={{
+                              marginTop: 10,
+                              cursor: "pointer",
+                              padding: 10,
+
+                              marginBottom: "20px",
+
+                            }}
+                          >
+                            <div
+                              style={{
+                                border: "none !important",
+                              }}
+                              className="item-history"
+                            >
+                              <div className="" style={{ textAlign: "start" }}>
+                                <div
+                                  style={{
+                                    fontSize: 20,
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {item.Name}
+                                </div>
+                                <div>
+                                  Thời gian :{" "}
+                                  {dateFormat3(item.OrganizationDate)}
+                                </div>
+                              </div>
+                              {item.Background && (
+                                <Avatar
+                                  style={{
+                                    width: 60,
+                                    height: 60,
+                                  }}
+                                  src={item.Background}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+
+                  {/* {sortArrByDate(listEvent, "OrganizationDate").map(
                     (item, index) => {
                       const now = new Date();
                       const past = now > new Date(item.OrganizationDate);
@@ -159,7 +281,7 @@ const EventMember = () => {
                         </div>
                       );
                     }
-                  )}
+                  )} */}
                 </div>
               </div>
             </Grid>
@@ -178,9 +300,14 @@ const EventMember = () => {
             {currentEvent && (
               <>
                 {" "}
-                <h4 className="bold " style={{
-                  textAlign:'center'
-                }}>{currentEvent?.Name}</h4>
+                <h4
+                  className="bold "
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  {currentEvent?.Name}
+                </h4>
                 <div
                   style={{
                     textAlign: "start",
@@ -247,19 +374,24 @@ const EventMember = () => {
                   <span>{splitText(currentEvent?.Description)}</span>
                 </div>
                 <div
-                 style={{
-                  display:'flex',
-                  justifyContent:'center',
-                  alignItems:"center"
-                 }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
-                { currentEvent?.Background &&  <img  style={{
-                    textAlign: "start",
-                    marginTop: 10,
-                    width: 400,
-                    height: 400,
-                    objectFit: "contain",
-                  }} src={currentEvent?.Background} />}
+                  {currentEvent?.Background && (
+                    <img
+                      style={{
+                        textAlign: "start",
+                        marginTop: 10,
+                        width: 400,
+                        height: 400,
+                        objectFit: "contain",
+                      }}
+                      src={currentEvent?.Background}
+                    />
+                  )}
                 </div>
               </>
             )}

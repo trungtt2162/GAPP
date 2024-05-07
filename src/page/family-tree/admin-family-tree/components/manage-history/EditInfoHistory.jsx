@@ -67,6 +67,7 @@ const EditInfoHistory = () => {
   };
   const onSave = async() => {
     try {
+      console.log(data)
       const res = await historyApi.updateDescriptionHistorufamily({...data,IDGenealogy:currentIdGenealogy});
       if (res.data.StatusCode === 200) {
         toast.success("Lưu thành công")

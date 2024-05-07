@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { handleError,formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
+import Checkbox from "@mui/material/Checkbox";
 const ListFundMember = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -34,6 +35,9 @@ useEffect(() => {
       {listFund.map((item, index) => {
         return (
           <div className="fund-wrap card-bg">
+            <div>
+              <Checkbox />
+            </div>
             <div
               style={{
                 paddingRight: 10,
@@ -46,7 +50,7 @@ useEffect(() => {
               style={{
                 paddingRight: 10,
               }}
-              className="border-right w100"
+              className="w100"
             >
               {formatMoney(item.EstimatedMoney)} VND
             </div>

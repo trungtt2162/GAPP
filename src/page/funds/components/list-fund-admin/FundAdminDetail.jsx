@@ -82,6 +82,10 @@ const FundAdminDetail = () => {
         <p className="content">{formatMoney(totalSend)} VND</p>
       </Card>
       <Card className="funddetail-wrap">
+        <p className="title bold">Số tiền hiện có</p>
+        <p className="content">{formatMoney(totalContributor-totalSend)} VND</p>
+      </Card>
+      <Card className="funddetail-wrap">
         <p className="title bold">Nội dung</p>
         <p className="content">{detailFund.SpendPurpose}</p>
       </Card>

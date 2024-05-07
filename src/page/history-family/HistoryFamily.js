@@ -1,20 +1,70 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Card, Grid, Avatar, TextField } from "@mui/material";
+import { Box, Card, Grid, Avatar, TextField, Button } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { theme } from "../../theme";
 import Navbar from "../../components/layout/Navbar";
 import "./History.scss";
 import { historyApi } from "../../api/history.api";
-import { checkEmptyData, dateFormat, dateFormat3, handleError } from "../../ultils/helper";
-
+import { toast } from "react-toastify";
+import {
+  checkEmptyData,
+  dateFormat,
+  dateFormat3,
+  handleError,
+} from "../../ultils/helper";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import useAuthStore from "../../zustand/authStore";
 import CustomModal from "../../components/common/modal/CustomModal";
+import { USER_ROLE } from "../../constant/common";
+import EditIcon from "@mui/icons-material/Edit";
+import PrimaryButton from "../../components/common/button/PrimaryButton";
+import { Description } from "@mui/icons-material";
+const modules = {
+  toolbar: [
+    [{ header: "1" }, { header: "2" }, { font: [] }],
+    [{ size: [] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
+  clipboard: {
+    matchVisual: false,
+  },
+};
+const formats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+  "video",
+];
 const HistoryFamily = ({ list, desHis }) => {
   const { palette } = useTheme(theme);
   const [des, setDes] = useState("");
+  const [txtEdit, setTxtEdit] = useState("");
   const { currentIdGenealogy } = useAuthStore();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const { isLogin, roleCode } = useAuthStore();
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const [isEdit, setIsEdit] = useState(false);
+  const [data,setData] = useState({})
   const modifyInitialValue = (value) => {
     const modifiedValue = value?.replace(
       /<img/g,
@@ -54,6 +104,8 @@ const HistoryFamily = ({ list, desHis }) => {
       const res = await historyApi.getDescriptionHistorufamily(id);
       if (res.data.StatusCode === 200) {
         setDes(res.data?.Data?.Description);
+        setTxtEdit(res.data?.Data?.Description);
+        setData(res.data?.Data)
       }
     } catch (error) {
       handleError(error);
@@ -65,6 +117,28 @@ const HistoryFamily = ({ list, desHis }) => {
       getDes(currentIdGenealogy);
     }
   }, [currentIdGenealogy]);
+
+  // Change Des
+  const onChangeDes = async () => {
+    const dataPost = {
+     ...data,
+     Description:txtEdit
+    };
+    try {
+      const res = await historyApi.updateDescriptionHistorufamily({
+        ...dataPost,
+        IDGenealogy: currentIdGenealogy,
+      });
+      if (res.data.StatusCode === 200) {
+        setIsEdit(false)
+        setDes(txtEdit)
+        toast.success("Lưu thành công");
+        
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
   return (
     <div>
       <div className="how-work">
@@ -79,14 +153,62 @@ const HistoryFamily = ({ list, desHis }) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <div className="">
-                <p className="title">Giới thiệu lịch sử</p>
-                <p style={{ textAlign: "start" }}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: modifyInitialValue(desFinal),
-                    }}
-                  />
+                <p className="title">
+                  Giới thiệu lịch sử{" "}
+                  {isSiteAdmin && (
+                    <EditIcon
+                      onClick={() => setIsEdit(true)}
+                      style={{
+                        cursor: "pointer",
+                        marginLeft: 5,
+                        fontSize: 20,
+                      }}
+                    />
+                  )}
                 </p>
+                {!isEdit ? (
+                  <p style={{ textAlign: "start" }}>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: modifyInitialValue(desFinal),
+                      }}
+                    />
+                  </p>
+                ) : (
+                  <div>
+                    <ReactQuill
+                      theme="snow"
+                      onChange={(v) => setTxtEdit(v)}
+                      value={txtEdit}
+                      modules={modules}
+                      formats={formats}
+                      bounds={".app"}
+                      style={{
+                        height: 300,
+                      }}
+                    />
+                    <div
+                      style={{
+                        marginTop: 50,
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <PrimaryButton
+                        event={() => onChangeDes()}
+                        title={"Lưu"}
+                      />
+                      <Button
+                        onClick={() => {
+                          setIsEdit(false);
+                          setTxtEdit(des);
+                        }}
+                      >
+                        Hủy
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </Grid>
             <Grid item xs={12}>
@@ -225,21 +347,26 @@ const HistoryFamily = ({ list, desHis }) => {
             {curent?.Description}
           </span>{" "}
         </div>
-        <Grid style={{
-          display:"flex",
-          justifyContent:"center",
-          alignItems:"center",
-          marginTop:20
-        }} item xs={24}>
-          {curent?.Image && <img
-            src={curent?.Image}
-            style={{
-              width: 400,
-              height: 400,
-              objectFit:"contain"
-            }}
-          /> }
-         
+        <Grid
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 20,
+          }}
+          item
+          xs={24}
+        >
+          {curent?.Image && (
+            <img
+              src={curent?.Image}
+              style={{
+                width: 400,
+                height: 400,
+                objectFit: "contain",
+              }}
+            />
+          )}
         </Grid>
       </CustomModal>
     </div>
