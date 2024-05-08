@@ -20,9 +20,11 @@ namespace GenealogyCommon.Models
         
         public long EstimatedMoney { get; set; }
 
-        
-                
-        
+        public bool IsCheck { get; set; } 
+
+
+
+
     }
 
     [Table("fund_contributor")]
@@ -40,6 +42,8 @@ namespace GenealogyCommon.Models
         public string Email { get; set; }
         public bool Confirmed { get; set; }
         public string? BillImage { get; set; }
+
+        public bool IsCheck { get; set; }
     }
 
     [Table("fund_send")]
