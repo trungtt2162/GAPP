@@ -267,7 +267,16 @@ namespace GenealogyBL.Implements
             {
                 return true;
             }
-            var usergens = await _userGenealogyDL.GetAll(idGenealogy);
+            PageRequest paggingRequest = new PageRequest()
+            {
+                PageNumber = -1,
+                PageSize = -1,
+                SearchKey = "",
+                SortOrder = "",
+                Condition = $" IdGenealogy = {idGenealogy} and (InActive = false or InActive is null) and IsBlock = false"
+            };
+            var data = await this.GetPagingData(paggingRequest);
+            var usergens = data.Data;
 
             if (!usergens.Any())
             {
@@ -278,7 +287,7 @@ namespace GenealogyBL.Implements
             {
                 return true;
             }
-            foreach ( var u in usergens)
+            foreach ( var u in userFams)
             {
                 if (u.DateOfBirth == null)
                 {
