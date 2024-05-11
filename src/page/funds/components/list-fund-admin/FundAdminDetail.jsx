@@ -17,13 +17,14 @@ import { fundApi } from "../../../../api/fund.api";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "../../../../zustand/authStore";
 import moment from "moment/moment";
+import CustomModal from "../../../../components/common/modal/CustomModal";
 const FundAdminDetail = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const location = useLocation();
   const { id } = getQuery();
   const { currentIdGenealogy } = useAuthStore();
-
+const [currentImage,setCurrentImage] = useState(null);
   // Hàm xử lý thay đổi trang
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -98,6 +99,7 @@ const FundAdminDetail = () => {
                 <TableCell className="text-center">Nội Dung</TableCell>
                 <TableCell className="text-center">Số tiền đã chi</TableCell>
                 <TableCell className="text-center">Thời gian</TableCell>
+                <TableCell className="text-center">Hóa đơn</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -113,6 +115,12 @@ const FundAdminDetail = () => {
                     <TableCell className="text-center">
                       {row.CreatedDate &&
                         moment(row.CreatedDate).format("DD-MM-YYYY")}
+                    </TableCell>
+                    <TableCell className="text-center">
+                    {row.BillImage &&   <div onClick={() => setCurrentImage(row.BillImage)} style={{
+                        cursor:"pointer",
+                        color:"rgb(242, 184, 79)"
+                       }}>Xem hóa đơn</div>}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -137,6 +145,7 @@ const FundAdminDetail = () => {
                 <TableCell className="text-center">Email</TableCell>
                 <TableCell className="text-center">Số tiền đóng góp</TableCell>
                 <TableCell className="text-center">Ngày đóng góp</TableCell>
+                <TableCell className="text-center">Hóa đơn</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -151,8 +160,14 @@ const FundAdminDetail = () => {
 
                     <TableCell className="text-center">{formatMoney(row.Money)}</TableCell>
                     <TableCell className="text-center">
-                      {row.CreatedDate &&
-                        moment(row.CreatedDate).format("DD-MM-YYYY")}
+                      {row.PaymentDate &&
+                        moment(row.PaymentDate).format("DD-MM-YYYY")}
+                    </TableCell>
+                    <TableCell className="text-center">
+                     {row.BillImage &&   <div onClick={() => setCurrentImage(row.BillImage)} style={{
+                        cursor:"pointer",
+                        color:"rgb(242, 184, 79)"
+                       }}>Xem hóa đơn</div>}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -167,6 +182,17 @@ const FundAdminDetail = () => {
           onPageChange={handleChangePage}
         />
       </div>
+      <CustomModal open={currentImage} onClose={() => setCurrentImage(null)}>
+       <div style={{
+        display:"flex",
+        justifyContent:'center'
+       }}>
+       <img src={currentImage} style={{
+          width:500,
+          height:"auto"
+        }}  />
+       </div>
+      </CustomModal>
      
     </div>
   );

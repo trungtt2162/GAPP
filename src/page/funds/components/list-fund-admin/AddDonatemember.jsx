@@ -5,8 +5,8 @@ import {
   Typography,
   MenuItem,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { handleError } from "../../../../ultils/helper";
+import { useEffect, useRef, useState } from "react";
+import { handleError, uploadImageToFirebase } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
 import { genealogyApi } from "../../../../api/genealogy.api";
@@ -17,6 +17,7 @@ function AddDonateMember({ setNewList, item }) {
   console.log(setNewList)
   const [listFund, setListFund] = useState([]);
   const { currentIdGenealogy } = useAuthStore();
+  const fileRef  = useRef();
   const originData = {
     IdFund: "",
     IdGenealogy: 0,
@@ -28,6 +29,7 @@ function AddDonateMember({ setNewList, item }) {
     Email: "string",
     Confirmed: true,
     Id: 0,
+    BillImage:"",
   };
   const [memberDonate, setmemberDonate] = useState(item ? {...item,PaymentDate:moment(item.PaymentDate).format("YYYY-MM-DD")}: originData);
   const [listMember, setListMember] = useState([]);
@@ -108,6 +110,13 @@ function AddDonateMember({ setNewList, item }) {
     }
   };
 
+  // Change image
+  const handleChangeFile = async (event) => {
+    const file = event.target.files[0];
+    const url = await uploadImageToFirebase(file);
+    setmemberDonate({ ...memberDonate, BillImage: url });
+  };
+
   return (
     <Container maxWidth="sm">
       <h4 className="bold">
@@ -174,6 +183,22 @@ function AddDonateMember({ setNewList, item }) {
           }}
           required
         />
+        <div style={{
+          display:"flex",
+          justifyContent:"flex-start",
+          alignItems:"flex-start",
+          marginBottom:20,
+          flexDirection:"column"
+        }}>
+          <input style={{display:"none"}} type="file" ref={fileRef} onChange={handleChangeFile} />
+        <Button onClick={() => fileRef.current.click()} variant="outlined">Thêm ảnh</Button>
+        {memberDonate.BillImage && <img  src={memberDonate.BillImage} style={{
+          width:70,
+          height:70,
+          objectFit:"contain",
+          marginTop:10
+        }} />}
+        </div>
         <Button disabled={!memberDonate.Money || !memberDonate.PaymentDate || !memberDonate.UserID || !memberDonate.IdFund} onClick={() => onAdd()} variant="contained" color="primary">
           {!item ? "Thêm" : "Cập nhật"}
         </Button>

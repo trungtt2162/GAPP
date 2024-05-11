@@ -5,8 +5,8 @@ import {
   Typography,
   MenuItem,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { handleError } from "../../../../ultils/helper";
+import { useEffect, useRef, useState } from "react";
+import { handleError, uploadImageToFirebase } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
 import { genealogyApi } from "../../../../api/genealogy.api";
@@ -20,9 +20,12 @@ function AddSpend({item,setNewList}) {
     IdGenealogy: "",
     Description: "",
     Money: "",
+    BillImage:"",
+
   };
   const [memberDonate, setmemberDonate] = useState(item || originData);
   const [listMember, setListMember] = useState([]);
+  const fileRef  = useRef();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -91,6 +94,12 @@ function AddSpend({item,setNewList}) {
       handleError(error);
     }
   };
+  // Change image
+  const handleChangeFile = async (event) => {
+    const file = event.target.files[0];
+    const url = await uploadImageToFirebase(file);
+    setmemberDonate({ ...memberDonate, BillImage: url });
+  };
 
   return (
     <Container maxWidth="sm">
@@ -137,6 +146,22 @@ function AddSpend({item,setNewList}) {
           margin="normal"
           required
         />
+            <div style={{
+          display:"flex",
+          justifyContent:"flex-start",
+          alignItems:"flex-start",
+          marginBottom:20,
+          flexDirection:"column"
+        }}>
+          <input style={{display:"none"}} type="file" ref={fileRef} onChange={handleChangeFile} />
+        <Button onClick={() => fileRef.current.click()} variant="outlined">Thêm ảnh</Button>
+        {memberDonate.BillImage && <img  src={memberDonate.BillImage} style={{
+          width:70,
+          height:70,
+          objectFit:"contain",
+          marginTop:10
+        }} />}
+        </div>
         
         <Button disabled={!memberDonate.Money || !memberDonate.Description || !memberDonate.IdFund} onClick={() => onAdd()} variant="contained" color="primary">
           {item ? "Sửa" :"Thêm"}
