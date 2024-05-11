@@ -16,8 +16,8 @@ export const fundApi = {
   },
 
   // PUT /api/Fund
-  updateFund: (id, data) => {
-    return API.put(`/api/Fund?id=${id}`, data);
+  updateFund: (data) => {
+    return API.put(`/api/Fund`, data);
   },
 
   // POST /api/Fund/paging

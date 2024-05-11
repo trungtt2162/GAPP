@@ -13,6 +13,7 @@ function AddFundForm() {
     SpendPurpose: "",
     EstimatedMoney: "",
     Id: 0,
+    IsCheck:false
   });
 
   const {currentIdGenealogy} = useAuthStore()

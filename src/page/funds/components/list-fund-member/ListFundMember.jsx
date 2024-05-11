@@ -6,6 +6,7 @@ import { handleError,formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
 import Checkbox from "@mui/material/Checkbox";
+import { toast } from "react-toastify";
 const ListFundMember = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -29,14 +30,30 @@ useEffect(() => {
   }
   },[currentIdGenealogy])
 
+  const handleToggleCheck  = async(value,item) =>{
+    try {
+      const res = await fundApi.updateFund({...item,isCheck:value});
+      if(res.data.StatusCode === 200){
+        await getListFund();
+        toast.success(value  ? "Đã đóng quỹ" : "Đã  mở lại quỹ")
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
+  const listFundCheck = listFund.filter(i => i.IsCheck);
+  const lisFundNotCheck = listFund.filter(i => !i.IsCheck);
+  const list = [...lisFundNotCheck,...listFundCheck]
   return (
     <div>
       <h4 className="bold">Danh sách quỹ</h4>
-      {listFund.map((item, index) => {
+      {list.map((item, index) => {
         return (
-          <div className="fund-wrap card-bg">
+          <div className="fund-wrap card-bg" style={{
+            background:item.IsCheck && "rgb(70 21 17)"
+          }}>
             <div>
-              <Checkbox />
+              <Checkbox checked={item.IsCheck} onChange={(v) => handleToggleCheck(v.target.checked,item)} />
             </div>
             <div
               style={{
