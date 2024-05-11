@@ -1,11 +1,11 @@
 import { API } from ".";
 
 export const genealogyApi = {
-  getListUserFromGenealogy: (id, txtSearch = "") => {
+  getListUserFromGenealogy: (id, txtSearch = "",query="") => {
     return API.post("/api/UserGenealogy/paging", {
       PageSize: -1,
       PageNumber: -1,
-      Condition: `IdGenealogy=${id} and (Inactive=false or Inactive is null) and (LastName like '%${txtSearch}%' or FirstName like '%${txtSearch}%')`,
+      Condition: `IdGenealogy=${id} and (Inactive=false or Inactive is null) and (LastName like '%${txtSearch}%' or FirstName like '%${txtSearch}%') ${query}`,
       SortOrder: "",
       SearchKey: "",
     });

@@ -94,7 +94,7 @@ function AddEvent({ item, updateItem }) {
   const getListMember = async () => {
     try {
       const res = await genealogyApi.getListUserFromGenealogy(
-        currentIdGenealogy
+        currentIdGenealogy,""," and DateOfDeath is null"
       );
       if (res.data.StatusCode === 200) {
         setlistMember(

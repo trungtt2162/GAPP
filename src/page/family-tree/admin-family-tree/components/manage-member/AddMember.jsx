@@ -57,6 +57,7 @@ function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
     UserId: 0,
     JobTitle: "",
     IsMartyrs: false,
+    Description:""
   };
 
   const [memberData, setMemberData] = useState(item || originData);
@@ -129,7 +130,7 @@ function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
         getListFamilyTree();
       }
       if (res.data.StatusCode === 400) {
-        toast.error("Email đã tồn tại", {
+        toast.error(res.data.Data || "Email đã tồn tại", {
           autoClose: 500,
         });
       }
@@ -189,6 +190,17 @@ function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
                   variant="outlined"
                   name="LastName"
                   value={memberData.LastName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                
+                  fullWidth
+                  label="Mô tả"
+                  variant="outlined"
+                  name="Description"
+                  value={memberData.Description}
                   onChange={handleChange}
                 />
               </Grid>
