@@ -16,6 +16,8 @@ import { Avatar, Popover } from "@mui/material";
 import "./Tree.scss";
 import { BASE_URL_DOWNLOAD } from "../../../../../api";
 import { toPng } from "html-to-image";
+import CustomModal from "../../../../../components/common/modal/CustomModal";
+import AddMemberForm from "../manage-member/AddMember";
 
 // import "./styles.css";
 
@@ -133,11 +135,15 @@ const InfoItem = ({ item, geneName }) => {
   return (
     <div
       style={{
-        width: 400,
-        height: 500,
-        padding: 10,
+        // width: 400,
+        // height: 500,
+        // padding: 10,
       }}
     >
+      <h4 style={{
+        color:"black",
+        textAlign:"center"
+      }}>Thông tin thành viên</h4>
       <div
         style={{
           marginBottom: 10,
@@ -164,7 +170,7 @@ const InfoItem = ({ item, geneName }) => {
         >
           Tên :{" "}
         </span>
-        <span>{item.FirstName + " " + item.LastName}</span>
+        <span>{item.FirstName + " " + item.LastName} {item.Description && ` (${item.Description}) `}</span>
       </div>
       <div
         style={{
@@ -334,7 +340,81 @@ const InfoItem = ({ item, geneName }) => {
     </div>
   );
 };
-const NodeItem = ({ nodeDatum }) => {
+const SelectInfo = ({ item, geneName,getListAllNode }) => {
+  console.log(item)
+  const OPTION = { 
+    VIEW:1,
+    EDIT:2,
+    ADD_CK:3,
+    ADD_CHILD:4,
+    VIEW_CHILD_TREE:5
+  }
+  const [modeModal,setModeModal] = useState(null);
+  const listOption = [
+    {
+      key:OPTION.VIEW,
+      name:"Xem"
+    },
+    {
+      key:OPTION.EDIT,
+      name:"Sửa"
+    },
+    {
+      key:OPTION.ADD_CK,
+      name:"Thêm vợ chồng"
+    },
+    {
+      key:OPTION.ADD_CHILD,
+      name:"Thêm con"
+    },
+    {
+      key:OPTION.VIEW_CHILD_TREE,
+      name:"Xem riêng nhánh này"
+    },
+    
+  ]
+  let conntentModal = <></>
+    switch(modeModal){
+      case  OPTION.VIEW :{
+        conntentModal =  <InfoItem item={item} geneName={geneName} />
+        break;
+      }
+      case  OPTION.EDIT :{
+        conntentModal =  <AddMemberForm refreshData={() => {
+          getListAllNode();
+          setModeModal(null)
+        }} item={item} />
+        break;
+      }
+      default:{
+        conntentModal=  null;
+      }
+     
+    }
+  
+  return <>
+  <div style={{
+    width: 200,
+  }}>
+    {
+      listOption.map((item,index) => <div onClick={() => setModeModal(item.key)} className="hover-gray" style={{
+        padding:10,
+        textAlign:"start",
+        cursor:"pointer",
+        textDecoration:"none",
+        borderBottom:index!== listOption.length - 1 && "1px solid lightgray"
+      
+      }} key={index}>
+        {item.name}
+      </div>)
+    }
+  </div>
+  <CustomModal open={modeModal && conntentModal} onClose={() => setModeModal(null)}>
+    {conntentModal}
+  </CustomModal>
+  </>
+}
+const NodeItem = ({ nodeDatum,getListAllNode }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorElList, setAnchorElList] = React.useState(
     Array(nodeDatum?.Users.length).fill(null)
@@ -428,7 +508,8 @@ const NodeItem = ({ nodeDatum }) => {
                   }}
                 >
                   <div>
-                    <InfoItem geneName={nodeDatum?.Name} item={item} />
+                    {/* <InfoItem geneName={nodeDatum?.Name} item={item} /> */}
+                    <SelectInfo getListAllNode={getListAllNode}  geneName={nodeDatum?.Name} item={item} />
                   </div>
                 </Popover>
                 <span
@@ -450,8 +531,8 @@ const NodeItem = ({ nodeDatum }) => {
     </g>
   );
 };
-const RenderRectSvgNode = ({ nodeDatum, toggleNode }) => {
-  return <NodeItem nodeDatum={nodeDatum} />;
+const RenderRectSvgNode = (getListAllNode) => ({ nodeDatum, toggleNode }) => {
+  return <NodeItem nodeDatum={nodeDatum} getListAllNode={getListAllNode} />;
 };
 
 export default function Tree1({ isGuest, idTree }) {
@@ -460,21 +541,6 @@ export default function Tree1({ isGuest, idTree }) {
     saveSvgAsPng(document.getElementsByClassName("svgClass")[0], "familyTree", {
       backgroundColor: "white",
     });
-    // if (elementRef.current) {
-    //   toPng(elementRef.current)
-    //     .then((imgDataUrl) => {
-    //       // Tạo một thẻ a để tải xuống
-    //       const link = document.createElement("a");
-    //       link.href = imgDataUrl;
-    //       link.download = "captured_element.png"; // Đặt tên file
-    //       link.click();
-    //     })
-    //     .catch((error) => {
-    //       console.error("Không thể chụp phần tử:", error);
-    //     });
-    // } else {
-    //   console.error("Không tìm thấy phần tử để chụp");
-    // }
   };
 
   const [dimensions, translate, containerRef] = useCenteredTree();
@@ -631,7 +697,7 @@ export default function Tree1({ isGuest, idTree }) {
             data={buildTree(listFilter)}
             dimensions={dimensions}
             translate={translate}
-            renderCustomNodeElement={RenderRectSvgNode}
+            renderCustomNodeElement={RenderRectSvgNode(getListAllNode)}
             orientation="vertical"
             pathFunc={"step"}
             zoomable={false}

@@ -16,6 +16,8 @@ import {
 import AddImage from "../../../../../components/common/addImage/AddImage";
 import {
   checkValidEmail,
+  dateFormat,
+  dateFormat2,
   handleError,
   uploadImageToFirebase,
   validateAddress,
@@ -28,7 +30,7 @@ import useAuthStore from "../../../../../zustand/authStore";
 import { toast } from "react-toastify";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 
-function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
+function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
   const { currentIdGenealogy } = useAuthStore();
 
   const originData = {
@@ -60,7 +62,12 @@ function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
     Description:""
   };
 
-  const [memberData, setMemberData] = useState(item || originData);
+  const [memberData, setMemberData] = useState({
+    ...item,
+    DateOfBirth:dateFormat2(item.DateOfBirth),
+    DateOfDeath:dateFormat2(item.DateOfDeath),
+  } || originData);
+  console.log(memberData)
   const [listFamilyTree, setListFamilyTree] = useState([]);
 
   const fileRef = useRef();
@@ -135,6 +142,8 @@ function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
         });
       }
     } catch (error) {
+      console.log(error)
+      console.log("day 1")
       handleError(error);
     }
   };
@@ -146,6 +155,7 @@ function AddMemberForm({ item, refreshData ,idTree,onCloseModal}) {
         setListFamilyTree(res.data.Data || []);
       }
     } catch (error) {
+      console.log("day 2")
       handleError(error);
     }
   };
