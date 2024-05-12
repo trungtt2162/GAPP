@@ -19,8 +19,11 @@ import { toast } from "react-toastify";
 
 import PrimaryButton from "../../../../../components/common/button/PrimaryButton";
 import {
+  buildTree,
+  checkUserExistence,
   dateFormat,
   dateFormat2,
+  extractUserDataFromFamilyTree,
   handleError,
 } from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
@@ -36,6 +39,8 @@ function ListMember({ list, action = true, isExport = true }) {
   const [listMember, setlistMember] = useState([]);
   const { userGenealogy, currentIdGenealogy, roleCode, user } = useAuthStore();
   const isSiteAdmin = roleCode === USER_ROLE.SiteAdmin;
+  const isPeopleAdmin = roleCode === USER_ROLE.PeopleAdmin;
+  const isAdmin = isSiteAdmin || isPeopleAdmin;
   const curremtList = list || listMember;
   const [currentMember, setCurrentMember] = useState(null);
   const [listNode, setListNode] = useState([]);
@@ -197,31 +202,44 @@ function ListMember({ list, action = true, isExport = true }) {
     await getListMember();
     setCurrentMember(null);
   };
+
+  // Const list Node
+  const listmemberFamily = buildTree(listNode, user.Id);
+  const listFinalMemberFamily = extractUserDataFromFamilyTree(
+    listmemberFamily,
+    checkUserExistence(listmemberFamily, user.Id)
+  );
+  const isDeleteAndEdit = (id) => checkUserExistence(listFinalMemberFamily, id);
+  const idUserCurrent = user.Id;
   return (
     <div
       style={{
         marginBottom: 10,
       }}
     >
-     {action &&  <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          marginTop: 10,
-          marginBottom: 10,
-        }}
-      >
-        <TextField
-         style={{
-          width: 300, marginLeft: "30%"}}
-          label="Họ tên"
-          variant="outlined"
-          value={txtSearch}
-          onChange={(e) => setTxtSearch(e.target.value)}
-        />
-        <PrimaryButton title={"Tìm kiếm"} event={() => getListMember()} />
-      </div>}
+      {action && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+        >
+          <TextField
+            style={{
+              width: 300,
+              marginLeft: "30%",
+            }}
+            label="Họ tên"
+            variant="outlined"
+            value={txtSearch}
+            onChange={(e) => setTxtSearch(e.target.value)}
+          />
+          <PrimaryButton title={"Tìm kiếm"} event={() => getListMember()} />
+        </div>
+      )}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -238,91 +256,102 @@ function ListMember({ list, action = true, isExport = true }) {
           <TableBody>
             {curremtList
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((user, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    {user?.FirstName + " " + user?.LastName}
-                  </TableCell>
-                  <TableCell>{dateFormat(user.DateOfBirth)}</TableCell>
-                  <TableCell>{user.Email}</TableCell>
-                  <TableCell>{user.Gender === 0 ? "Nam" : "Nữ"}</TableCell>
-                  {isSiteAdmin &&
-                  user.RoleCode !== USER_ROLE.SiteAdmin &&
-                  action ? (
-                    <>
-                      <FormControl
-                        style={{
-                          marginTop: 10,
-                          marginBottom: 10,
-                          marginRight: 10,
-                          width: 120,
-                        }}
-                      >
-                        <InputLabel id="demo-simple-select-label">
-                          Quyền
-                        </InputLabel>
-                        <Select
-                          style={{
-                            padding: 0,
-                            height: 40,
-                          }}
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={user.RoleCode}
-                          label="Quyền"
-                          onChange={handleChange(user, index)}
-                        >
-                          {LIST_ROLE.map((item) => (
-                            <MenuItem value={item.RoleCode}>
-                              {item.RoleCode === "Account"
-                                ? "User"
-                                : item.RoleCode}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </>
-                  ) : (
-                    <TableCell>{user.RoleCode}</TableCell>
-                  )}
-                  {action && (
+              .map((user, index) => {
+                console.log(user);
+                return (
+                  <TableRow key={index}>
                     <TableCell>
-                      <Button
-                        onClick={() => setCurrentMember(user)}
-                        style={{
-                          marginRight: 10,
-                        }}
-                        variant="contained"
-                        color="success"
-                      >
-                        Sửa
-                      </Button>
-                      {isSiteAdmin && user.RoleCode !== USER_ROLE.SiteAdmin && (
-                        <Button
+                      {user?.FirstName + " " + user?.LastName}
+                    </TableCell>
+                    <TableCell>{dateFormat(user.DateOfBirth)}</TableCell>
+                    <TableCell>{user.Email}</TableCell>
+                    <TableCell>{user.Gender === 0 ? "Nam" : "Nữ"}</TableCell>
+                    {isSiteAdmin &&
+                    user.RoleCode !== USER_ROLE.SiteAdmin &&
+                    action ? (
+                      <>
+                        <FormControl
+                          style={{
+                            marginTop: 10,
+                            marginBottom: 10,
+                            marginRight: 10,
+                            width: 120,
+                          }}
+                        >
+                          <InputLabel id="demo-simple-select-label">
+                            Quyền
+                          </InputLabel>
+                          <Select
+                            style={{
+                              padding: 0,
+                              height: 40,
+                            }}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={user.RoleCode}
+                            label="Quyền"
+                            onChange={handleChange(user, index)}
+                          >
+                            {LIST_ROLE.map((item) => (
+                              <MenuItem value={item.RoleCode}>
+                                {item.RoleCode === "Account"
+                                  ? "User"
+                                  : item.RoleCode}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </>
+                    ) : (
+                      <TableCell>{user.RoleCode}</TableCell>
+                    )}
+                    {action && (
+                      <TableCell>
+                       {((isSiteAdmin &&
+                          user.RoleCode !== USER_ROLE.SiteAdmin) ||
+                          (isPeopleAdmin &&
+                            isDeleteAndEdit(user.UserId) )) &&  <Button
+                          onClick={() => setCurrentMember(user)}
                           style={{
                             marginRight: 10,
                           }}
-                          onClick={() => handleDelete(user)}
                           variant="contained"
-                          color="error"
+                          color="success"
                         >
-                          Xóa
+                          Sửa
                         </Button>
-                      )}
-                      {!user.Email && (
-                        <Button
-                          onClick={() => setUserNoAcc(user)}
-                          variant="contained"
-                          color="warning"
-                        >
-                          Cấp tài khoản
-                        </Button>
-                      )}
-                    </TableCell>
-                  )}
-                  {/*  */}
-                </TableRow>
-              ))}
+              }
+                        {((isSiteAdmin &&
+                          user.RoleCode !== USER_ROLE.SiteAdmin) ||
+                          (isPeopleAdmin &&
+                            isDeleteAndEdit(user.UserId) &&
+                            user.UserId != idUserCurrent)) && (
+                          <Button
+                            style={{
+                              marginRight: 10,
+                            }}
+                            onClick={() => handleDelete(user)}
+                            variant="contained"
+                            color="error"
+                          >
+                            Xóa
+                          </Button>
+                        )}
+                        {(!user.Email && isSiteAdmin) && (
+                          <Button
+                            onClick={() => setUserNoAcc(user)}
+                            variant="contained"
+                            color="warning"
+                          >
+                            Cấp tài khoản
+                          </Button>
+                        )}
+                      </TableCell>
+                    )}
+                    {/*  */}
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>

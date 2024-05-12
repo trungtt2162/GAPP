@@ -297,3 +297,26 @@ export function extractUserDataFromFamilyTree(data, idFamilyTree) {
   // Trả về kết quả đã trích xuất
   return result;
 }
+export function checkUserExistence(data, idUser) {
+   // Hàm đệ quy để duyệt qua tất cả các node trong cây genealogy
+   function traverse(node) {
+    // Kiểm tra nếu node hiện tại chứa thông tin user và có idUser trùng khớp
+    if (node?.Users && node?.Users.some(user => user.UserId === idUser)) {
+        // Trả về idFamilyTree của user tương ứng
+        return node?.Users.find(user => user.UserId === idUser).IdFamilyTree;
+    }
+    // Duyệt qua tất cả các con của node hiện tại
+    if (node?.children) {
+        for (let i = 0; i < node?.children.length; i++) {
+            const familyTreeId = traverse(node?.children[i]);
+            if (familyTreeId !== null) {
+                return familyTreeId; // Trả về idFamilyTree nếu tìm thấy
+            }
+        }
+    }
+    return null; // Trả về null nếu không tìm thấy user có idUser tương ứng trong cây genealogy
+}
+
+// Bắt đầu duyệt từ node gốc của cây genealogy
+return traverse(data);
+}

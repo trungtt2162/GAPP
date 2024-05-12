@@ -6,6 +6,7 @@ import { saveSvgAsPng } from "save-svg-as-png";
 import {
   buildTree,
   checkEmptyData,
+  checkUserExistence,
   dateFormat,
   extractUserDataFromFamilyTree,
   handleError,
@@ -19,6 +20,7 @@ import { BASE_URL_DOWNLOAD } from "../../../../../api";
 import { toPng } from "html-to-image";
 import CustomModal from "../../../../../components/common/modal/CustomModal";
 import AddMemberForm from "../manage-member/AddMember";
+import { USER_ROLE } from "../../../../../constant/common";
 
 // import "./styles.css";
 
@@ -135,16 +137,22 @@ const containerStyles = {
 const InfoItem = ({ item, geneName }) => {
   return (
     <div
-      style={{
-        // width: 400,
-        // height: 500,
-        // padding: 10,
-      }}
+      style={
+        {
+          // width: 400,
+          // height: 500,
+          // padding: 10,
+        }
+      }
     >
-      <h4 style={{
-        color:"black",
-        textAlign:"center"
-      }}>Thông tin thành viên</h4>
+      <h4
+        style={{
+          color: "black",
+          textAlign: "center",
+        }}
+      >
+        Thông tin thành viên
+      </h4>
       <div
         style={{
           marginBottom: 10,
@@ -171,7 +179,10 @@ const InfoItem = ({ item, geneName }) => {
         >
           Tên :{" "}
         </span>
-        <span>{item.FirstName + " " + item.LastName} {item.Description && ` (${item.Description}) `}</span>
+        <span>
+          {item.FirstName + " " + item.LastName}{" "}
+          {item.Description && ` (${item.Description}) `}
+        </span>
       </div>
       <div
         style={{
@@ -341,103 +352,152 @@ const InfoItem = ({ item, geneName }) => {
     </div>
   );
 };
-const SelectInfo = ({ item, geneName,getListAllNode }) => {
-  console.log(item)
-  const OPTION = { 
-    VIEW:1,
-    EDIT:2,
-    ADD_CK:3,
-    ADD_CHILD:4,
-    VIEW_CHILD_TREE:5
-  }
-  const [modeModal,setModeModal] = useState(null);
+const SelectInfo = ({ item, geneName, getListAllNode,listNode }) => {
+  console.log(item);
+  const { userGenealogy, currentIdGenealogy, roleCode, user } = useAuthStore();
+  const listmemberFamily = buildTree(listNode, user.Id);
+  const listFinalMemberFamily = extractUserDataFromFamilyTree(
+    listmemberFamily,
+    checkUserExistence(listmemberFamily, user.Id)
+  );
+  const isDeleteAndEdit = () => checkUserExistence(listFinalMemberFamily, item.UserId);
+  const isSiteAdmin = roleCode === USER_ROLE.SiteAdmin;
+  const isPeopleAdmin = roleCode === USER_ROLE.PeopleAdmin;
+  const isUser = !isSiteAdmin && !isPeopleAdmin;
+  const isAdmin = isSiteAdmin || isPeopleAdmin;
+  const OPTION = {
+    VIEW: 1,
+    EDIT: 2,
+    ADD_CK: 3,
+    ADD_CHILD: 4,
+    VIEW_CHILD_TREE: 5,
+  };
+  const [modeModal, setModeModal] = useState(null);
   const listOption = [
     {
-      key:OPTION.VIEW,
-      name:"Xem"
+      key: OPTION.VIEW,
+      name: "Xem",
+      show: true,
     },
     {
-      key:OPTION.EDIT,
-      name:"Sửa"
+      key: OPTION.EDIT,
+      name: "Sửa",
+      show: isSiteAdmin || (isPeopleAdmin &&isDeleteAndEdit() ),
     },
     {
-      key:OPTION.ADD_CK,
-      name:"Thêm vợ chồng"
+      key: OPTION.ADD_CK,
+      name: "Thêm vợ chồng",
+      show:  isSiteAdmin || (isPeopleAdmin &&isDeleteAndEdit() ),
     },
     {
-      key:OPTION.ADD_CHILD,
-      name:"Thêm con"
+      key: OPTION.ADD_CHILD,
+      name: "Thêm con",
+      show:  isSiteAdmin || (isPeopleAdmin &&isDeleteAndEdit() ),
     },
     {
-      key:OPTION.VIEW_CHILD_TREE,
-      name:"Xem riêng nhánh này"
+      key: OPTION.VIEW_CHILD_TREE,
+      name: "Xem riêng nhánh này",
+      show: true,
     },
-    
-  ]
-  let conntentModal = <></>
-    switch(modeModal){
-      case  OPTION.VIEW :{
-        conntentModal =  <InfoItem item={item} geneName={geneName} />
-        break;
-      }
-      case  OPTION.EDIT :{
-        conntentModal =  <AddMemberForm refreshData={() => {
-          getListAllNode();
-          setModeModal(null)
-        }} item={item} />
-        break;
-      }
-      case  OPTION.ADD_CK :{
-        conntentModal =  <AddMemberForm onCloseModal={() => {
-          getListAllNode();
-          setModeModal(null)
-        }} idTree={item.IdFamilyTree} isTree />
-        break;
-      }
-      case  OPTION.ADD_CHILD :{
-        conntentModal =  <AddMemberForm onCloseModal={() => {
-          getListAllNode();
-          setModeModal(null)
-        }} idTree={item.IdFamilyTree} dataAddChild={{
-          idParent:item.IdFamilyTree
-        }} />
-        break;
-      }
-      case  OPTION.VIEW_CHILD_TREE :{
-        conntentModal =  <Tree1 currentTree={item.IdFamilyTree} currentName={item.FirstName+ " "+ item.LastName} dataAddChild={{
-          idParent:item.IdFamilyTree
-        }} />
-        break;
-      }
-      default:{
-        conntentModal=  null;
-      }
-     
+  ];
+  let conntentModal = <></>;
+  switch (modeModal) {
+    case OPTION.VIEW: {
+      conntentModal = <InfoItem item={item} geneName={geneName} />;
+      break;
     }
-  
-  return <>
-  <div style={{
-    width: 200,
-  }}>
-    {
-      listOption.map((item,index) => <div onClick={() => setModeModal(item.key)} className="hover-gray" style={{
-        padding:10,
-        textAlign:"start",
-        cursor:"pointer",
-        textDecoration:"none",
-        borderBottom:index!== listOption.length - 1 && "1px solid lightgray"
-      
-      }} key={index}>
-        {item.name}
-      </div>)
+    case OPTION.EDIT: {
+      conntentModal = (
+        <AddMemberForm
+          refreshData={() => {
+            getListAllNode();
+            setModeModal(null);
+          }}
+          item={item}
+        />
+      );
+      break;
     }
-  </div>
-  <CustomModal open={modeModal && conntentModal} onClose={() => setModeModal(null)}>
-    {conntentModal}
-  </CustomModal>
-  </>
-}
-const NodeItem = ({ nodeDatum,getListAllNode }) => {
+    case OPTION.ADD_CK: {
+      conntentModal = (
+        <AddMemberForm
+          onCloseModal={() => {
+            getListAllNode();
+            setModeModal(null);
+          }}
+          idTree={item.IdFamilyTree}
+          isTree
+        />
+      );
+      break;
+    }
+    case OPTION.ADD_CHILD: {
+      conntentModal = (
+        <AddMemberForm
+          onCloseModal={() => {
+            getListAllNode();
+            setModeModal(null);
+          }}
+          idTree={item.IdFamilyTree}
+          dataAddChild={{
+            idParent: item.IdFamilyTree,
+          }}
+        />
+      );
+      break;
+    }
+    case OPTION.VIEW_CHILD_TREE: {
+      conntentModal = (
+        <Tree1
+          currentTree={item.IdFamilyTree}
+          currentName={item.FirstName + " " + item.LastName}
+          dataAddChild={{
+            idParent: item.IdFamilyTree,
+          }}
+        />
+      );
+      break;
+    }
+    default: {
+      conntentModal = null;
+    }
+  }
+
+  return (
+    <>
+      <div
+        style={{
+          width: 200,
+        }}
+      >
+        {listOption.filter(i => i.show).map((item, index) => (
+          <div
+            onClick={() => setModeModal(item.key)}
+            className="hover-gray"
+            style={{
+              padding: 10,
+              textAlign: "start",
+              cursor: "pointer",
+              textDecoration: "none",
+              borderBottom:
+                index !== listOption.length - 1 && "1px solid lightgray",
+            }}
+            key={index}
+          >
+            {item.name}
+          </div>
+        ))}
+      </div>
+      <CustomModal
+        open={modeModal && conntentModal}
+        onClose={() => setModeModal(null)}
+      >
+        {conntentModal}
+      </CustomModal>
+    </>
+  );
+};
+const NodeItem = ({ nodeDatum, getListAllNode,listNode }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorElList, setAnchorElList] = React.useState(
     Array(nodeDatum?.Users.length).fill(null)
@@ -532,7 +592,12 @@ const NodeItem = ({ nodeDatum,getListAllNode }) => {
                 >
                   <div>
                     {/* <InfoItem geneName={nodeDatum?.Name} item={item} /> */}
-                    <SelectInfo getListAllNode={getListAllNode}  geneName={nodeDatum?.Name} item={item} />
+                    <SelectInfo
+                      getListAllNode={getListAllNode}
+                      geneName={nodeDatum?.Name}
+                      item={item}
+                      listNode={listNode}
+                    />
                   </div>
                 </Popover>
                 <span
@@ -554,11 +619,13 @@ const NodeItem = ({ nodeDatum,getListAllNode }) => {
     </g>
   );
 };
-const RenderRectSvgNode = (getListAllNode) => ({ nodeDatum, toggleNode }) => {
-  return <NodeItem nodeDatum={nodeDatum} getListAllNode={getListAllNode} />;
-};
+const RenderRectSvgNode =
+  (getListAllNode,listNode) =>
+  ({ nodeDatum, toggleNode }) => {
+    return <NodeItem nodeDatum={nodeDatum} getListAllNode={getListAllNode} listNode = {listNode} />;
+  };
 
-export default function Tree1({ isGuest, idTree,currentTree,currentName }) {
+export default function Tree1({ isGuest, idTree, currentTree, currentName }) {
   const elementRef = useRef(null);
   const captureElement = () => {
     saveSvgAsPng(document.getElementsByClassName("svgClass")[0], "familyTree", {
@@ -603,12 +670,12 @@ export default function Tree1({ isGuest, idTree,currentTree,currentName }) {
   const listFilter = listNode.filter((i) => i.Users.length > 0);
   const nameGene = listNode.length > 0 ? listNode[0]?.GenealogyName : "";
   const isEmpty = listNode.every((item) => !item?.Users?.length);
-  console.log(buildTree(listFilter))
-  let dataTree  = buildTree(listFilter)
-  if(currentTree){
-    dataTree = extractUserDataFromFamilyTree(dataTree,currentTree)
+  console.log(buildTree(listFilter));
+  let dataTree = buildTree(listFilter);
+  if (currentTree) {
+    dataTree = extractUserDataFromFamilyTree(dataTree, currentTree);
   }
-  console.log(dataTree)
+  console.log(dataTree);
   return (
     <div>
       {!isEmpty && (
@@ -621,7 +688,7 @@ export default function Tree1({ isGuest, idTree,currentTree,currentName }) {
             alignItems: "center",
           }}
         >
-          <div style={{marginTop:10}} className="wrap-ex">
+          <div style={{ marginTop: 10 }} className="wrap-ex">
             <p className="bold">Chú thích</p>
             <div
               style={{
@@ -718,7 +785,9 @@ export default function Tree1({ isGuest, idTree,currentTree,currentName }) {
           marginTop: 20,
         }}
       >
-        {(!currentName && !currentTree) ? ("Cây gia phả"  + (nameGene ? " của " + nameGene : "")):("Nhánh riêng của "+ currentName)}
+        {!currentName && !currentTree
+          ? "Cây gia phả" + (nameGene ? " của " + nameGene : "")
+          : "Nhánh riêng của " + currentName}
       </p>
       <div style={{ ...containerStyles }} ref={containerRef}>
         {listFilter.length > 0 && (
@@ -726,7 +795,7 @@ export default function Tree1({ isGuest, idTree,currentTree,currentName }) {
             data={dataTree}
             dimensions={dimensions}
             translate={translate}
-            renderCustomNodeElement={RenderRectSvgNode(getListAllNode)}
+            renderCustomNodeElement={RenderRectSvgNode(getListAllNode,listNode)}
             orientation="vertical"
             pathFunc={"step"}
             zoomable={false}
@@ -772,7 +841,7 @@ export default function Tree1({ isGuest, idTree,currentTree,currentName }) {
               />
             </div>
           )}
-          {!isGuest  && !currentTree && (
+          {!isGuest && !currentTree && (
             <div
               style={{
                 marginTop: 20,
