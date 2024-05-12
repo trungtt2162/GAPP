@@ -7,6 +7,7 @@ import {
   buildTree,
   checkEmptyData,
   dateFormat,
+  extractUserDataFromFamilyTree,
   handleError,
 } from "../../../../../ultils/helper";
 import { genealogyApi } from "../../../../../api/genealogy.api";
@@ -386,6 +387,28 @@ const SelectInfo = ({ item, geneName,getListAllNode }) => {
         }} item={item} />
         break;
       }
+      case  OPTION.ADD_CK :{
+        conntentModal =  <AddMemberForm onCloseModal={() => {
+          getListAllNode();
+          setModeModal(null)
+        }} idTree={item.IdFamilyTree} isTree />
+        break;
+      }
+      case  OPTION.ADD_CHILD :{
+        conntentModal =  <AddMemberForm onCloseModal={() => {
+          getListAllNode();
+          setModeModal(null)
+        }} idTree={item.IdFamilyTree} dataAddChild={{
+          idParent:item.IdFamilyTree
+        }} />
+        break;
+      }
+      case  OPTION.VIEW_CHILD_TREE :{
+        conntentModal =  <Tree1 currentTree={item.IdFamilyTree} currentName={item.FirstName+ " "+ item.LastName} dataAddChild={{
+          idParent:item.IdFamilyTree
+        }} />
+        break;
+      }
       default:{
         conntentModal=  null;
       }
@@ -535,7 +558,7 @@ const RenderRectSvgNode = (getListAllNode) => ({ nodeDatum, toggleNode }) => {
   return <NodeItem nodeDatum={nodeDatum} getListAllNode={getListAllNode} />;
 };
 
-export default function Tree1({ isGuest, idTree }) {
+export default function Tree1({ isGuest, idTree,currentTree,currentName }) {
   const elementRef = useRef(null);
   const captureElement = () => {
     saveSvgAsPng(document.getElementsByClassName("svgClass")[0], "familyTree", {
@@ -580,6 +603,12 @@ export default function Tree1({ isGuest, idTree }) {
   const listFilter = listNode.filter((i) => i.Users.length > 0);
   const nameGene = listNode.length > 0 ? listNode[0]?.GenealogyName : "";
   const isEmpty = listNode.every((item) => !item?.Users?.length);
+  console.log(buildTree(listFilter))
+  let dataTree  = buildTree(listFilter)
+  if(currentTree){
+    dataTree = extractUserDataFromFamilyTree(dataTree,currentTree)
+  }
+  console.log(dataTree)
   return (
     <div>
       {!isEmpty && (
@@ -689,12 +718,12 @@ export default function Tree1({ isGuest, idTree }) {
           marginTop: 20,
         }}
       >
-        Cây gia phả {nameGene ? " của " + nameGene : ""}{" "}
+        {(!currentName && !currentTree) ? ("Cây gia phả"  + (nameGene ? " của " + nameGene : "")):("Nhánh riêng của "+ currentName)}
       </p>
       <div style={{ ...containerStyles }} ref={containerRef}>
         {listFilter.length > 0 && (
           <Tree
-            data={buildTree(listFilter)}
+            data={dataTree}
             dimensions={dimensions}
             translate={translate}
             renderCustomNodeElement={RenderRectSvgNode(getListAllNode)}
@@ -730,7 +759,7 @@ export default function Tree1({ isGuest, idTree }) {
             // borderTop:"1px solid lightgray"
           }}
         >
-          {!isGuest && (
+          {!isGuest && !currentTree && (
             <div
               style={{
                 marginTop: 20,
@@ -743,7 +772,7 @@ export default function Tree1({ isGuest, idTree }) {
               />
             </div>
           )}
-          {!isGuest && (
+          {!isGuest  && !currentTree && (
             <div
               style={{
                 marginTop: 20,

@@ -14,6 +14,7 @@ import {
   Radio,
 } from "@mui/material";
 import AddImage from "../../../../../components/common/addImage/AddImage";
+import { v4 as uuidv4 } from "uuid";
 import {
   checkValidEmail,
   dateFormat,
@@ -30,7 +31,14 @@ import useAuthStore from "../../../../../zustand/authStore";
 import { toast } from "react-toastify";
 import { genealogyApi } from "../../../../../api/genealogy.api";
 
-function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
+function AddMemberForm({
+  item,
+  refreshData = () => {},
+  idTree,
+  onCloseModal,
+  dataAddChild,
+  isTree,
+}) {
   const { currentIdGenealogy } = useAuthStore();
 
   const originData = {
@@ -59,15 +67,19 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
     UserId: 0,
     JobTitle: "",
     IsMartyrs: false,
-    Description:""
+    Description: "",
   };
 
-  const [memberData, setMemberData] = useState({
-    ...item,
-    DateOfBirth:dateFormat2(item.DateOfBirth),
-    DateOfDeath:dateFormat2(item.DateOfDeath),
-  } || originData);
-  console.log(memberData)
+  const [memberData, setMemberData] = useState(
+    item
+      ? {
+          ...item,
+          DateOfBirth: dateFormat2(item.DateOfBirth),
+          DateOfDeath: dateFormat2(item.DateOfDeath),
+        }
+      : originData
+  );
+  console.log(memberData);
   const [listFamilyTree, setListFamilyTree] = useState([]);
 
   const fileRef = useRef();
@@ -93,22 +105,36 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
   // Add
   const onAdd = async () => {
     try {
-      if(memberData?.Email?.trim() && !checkValidEmail(memberData.Email)){
+      if (memberData?.Email?.trim() && !checkValidEmail(memberData.Email)) {
         toast.error("Email sai định dạng");
-      return;
+        return;
       }
-      if(validatePhoneNumber(memberData.Phone) ===false){
+      if (validatePhoneNumber(memberData.Phone) === false) {
         toast.error("Định dạng điện thoại không chính xác. Yêu cầu 10 số");
         return;
       }
-      if(validateIDCard(memberData.Indentification)===false){
+      if (validateIDCard(memberData.Indentification) === false) {
         toast.error("Định dạng CCCD không chính xác. Yêu cầu 9- 12 số");
         return;
       }
-      if(validateAddress(memberData.Address)===false){
+      if (validateAddress(memberData.Address) === false) {
         toast.error("Địa chỉ cần cụ thể hơn.");
         return;
       }
+
+      // Them con
+      if (dataAddChild) {
+        const nodeRes = await familyTreeApi.addTree({
+          name: "Node " + uuidv4()?.slice(0, 8),
+          description: "",
+          Id: 0,
+          IdGenealogy: currentIdGenealogy,
+          parentId: dataAddChild.idParent,
+        });
+        console.log(nodeRes)
+        return;
+      }
+      // End them con
       const res = !item
         ? await genealogyApi.addNewMember({
             ...memberData,
@@ -120,15 +146,15 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
             IdGenealogy: currentIdGenealogy,
             Name: "sss",
             IsMartyrs: JSON.parse(memberData.IsMartyrs),
-            DateOfDeath:memberData.DateOfDeath||null,
-            DateOfBirth:memberData.DateOfBirth||null
+            DateOfDeath: memberData.DateOfDeath || null,
+            DateOfBirth: memberData.DateOfBirth || null,
           });
       if (res.data.StatusCode === 200) {
         if (!item) {
           setMemberData(originData);
           toast.success("Thêm thành công");
-          if(idTree){
-            onCloseModal()
+          if (idTree) {
+            onCloseModal();
           }
         } else {
           await refreshData();
@@ -142,8 +168,8 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
         });
       }
     } catch (error) {
-      console.log(error)
-      console.log("day 1")
+      console.log(error);
+      console.log("day 1");
       handleError(error);
     }
   };
@@ -155,7 +181,7 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
         setListFamilyTree(res.data.Data || []);
       }
     } catch (error) {
-      console.log("day 2")
+      console.log("day 2");
       handleError(error);
     }
   };
@@ -163,20 +189,32 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
     getListFamilyTree();
   }, [currentIdGenealogy]);
 
+  const getTitle = () => {
+    let title = "Thêm thành viên";
+    if (item) {
+      title = "Sửa thông tin thành viên";
+    }
+    if (dataAddChild) {
+      title = "Thêm con";
+    }
+    if (idTree && isTree) {
+      title = "Thêm vợ/chồng";
+    }
+    return title;
+  };
   return (
     <Container>
       <form>
-       
-          <h4
-            style={{
-              textAlign: "center",
-              marginBottom: 15,
-              fontWeight: "bold",
-            }}
-          >
-            {item ?" Sửa thông tin thành viên" : "Thêm thành viên"}
-          </h4>
-       
+        <h4
+          style={{
+            textAlign: "center",
+            marginBottom: 15,
+            fontWeight: "bold",
+          }}
+        >
+          {getTitle()}
+        </h4>
+
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Grid container spacing={2}>
@@ -205,7 +243,6 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                
                   fullWidth
                   label="Mô tả"
                   variant="outlined"
@@ -328,7 +365,7 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
                   }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={dataAddChild ? 12 : 6}>
                 <TextField
                   fullWidth
                   label="Nơi sinh"
@@ -338,22 +375,24 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Chi - nhánh *</InputLabel>
-                  <Select
-                    required
-                    name="IdFamilyTree"
-                    value={memberData.IdFamilyTree}
-                    onChange={handleChange}
-                    label="Chi - nhánh"
-                  >
-                    {listFamilyTree.map((i) => (
-                      <MenuItem value={i.Id}>{i.Name}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+              {!dataAddChild && (
+                <Grid item xs={6}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel>Chi - nhánh *</InputLabel>
+                    <Select
+                      required
+                      name="IdFamilyTree"
+                      value={memberData.IdFamilyTree}
+                      onChange={handleChange}
+                      label="Chi - nhánh"
+                    >
+                      {listFamilyTree.map((i) => (
+                        <MenuItem value={i.Id}>{i.Name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              )}
               <Grid item xs={6}>
                 <div
                   style={{
@@ -404,7 +443,7 @@ function AddMemberForm({ item, refreshData = () => {} ,idTree,onCloseModal}) {
               disabled={
                 !memberData.FirstName ||
                 !memberData.LastName ||
-                memberData.Gender ===""||
+                memberData.Gender === "" ||
                 !memberData.IdFamilyTree
               }
               onClick={() => onAdd()}

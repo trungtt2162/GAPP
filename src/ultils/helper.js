@@ -138,7 +138,7 @@ export function buildTree(data) {
     node = data[i];
     if (node.ParentID !== null) {
       // Nếu có ParentID, tìm phần tử cha và thêm nút hiện tại vào mảng children của nó
-      data[map[node.ParentID]]?.children.push(node);
+      data[map[node.ParentID]].children.push(node);
     } else {
       // Nếu không có ParentID, nó là nút gốc
       roots.push(node);
@@ -264,3 +264,36 @@ export const checkValidEmail = (email = "") => {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
 };
+
+
+//
+export function extractUserDataFromFamilyTree(data, idFamilyTree) {
+  // Tạo một đối tượng mới để lưu trữ dữ liệu người dùng
+  let result = {};
+
+  // Hàm đệ quy để duyệt qua cây genealogy và trích xuất dữ liệu người dùng
+  function extractUsers(node) {
+      // Kiểm tra nếu có người dùng trong node và có idFamilyTree tương ứng
+      if (node?.Users && node?.Users.length > 0) {
+          const users = node?.Users.filter(user => user.IdFamilyTree === idFamilyTree);
+          // Nếu có người dùng thuộc idFamilyTree, thêm vào kết quả
+          if (users.length > 0) {
+              result = { ...node, Users: users };
+              return;
+          }
+      }
+
+      // Nếu có nút con, tiếp tục đệ quy qua từng nút con
+      if (node?.children && node?.children.length > 0) {
+          node?.children.forEach(child => {
+              extractUsers(child);
+          });
+      }
+  }
+
+  // Bắt đầu quá trình trích xuất từ gốc của cây genealogy
+  extractUsers(data);
+
+  // Trả về kết quả đã trích xuất
+  return result;
+}
