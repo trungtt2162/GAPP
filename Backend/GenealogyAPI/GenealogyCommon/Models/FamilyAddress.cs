@@ -18,6 +18,8 @@ namespace GenealogyCommon.Models
         public string Location { get; set; }
 
         public int Type { get; set; }
-    
+
+        public string? Coordinate { get; set; }
+
     }
 }

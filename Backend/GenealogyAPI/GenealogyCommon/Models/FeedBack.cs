@@ -23,5 +23,7 @@ namespace GenealogyCommon.Models
         public int IdInstance { get; set; }
 
         public string Image { get; set; }
+
+        public bool IsCheck { get; set; } = false;
     }
 }

@@ -20,5 +20,7 @@ namespace GenealogyCommon.Models.Param
         public int Type { get; set; }
 
         public int Id { get; set; }
+
+        public string? Coordinate { get; set; }
     }
 }

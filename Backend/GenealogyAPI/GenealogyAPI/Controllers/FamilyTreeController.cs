@@ -47,8 +47,8 @@ namespace GenealogyAPI.Controllers
             //    return serviceResult.OnUnauthorized("Không có quyền");
             //}
             serviceResult.Data =  await _familyTreeBL.Create(_mapper.Map<FamilyTree>(familytreeParam));
-
-            return serviceResult.OnSuccess("Created");
+            serviceResult.Success = true;
+            return serviceResult;
         }
 
         [HttpGet("export")]
