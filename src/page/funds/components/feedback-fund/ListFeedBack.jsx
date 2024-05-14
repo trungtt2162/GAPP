@@ -151,7 +151,7 @@ const ListFeedback = () => {
 
       <Grid  container spacing={2}>
          {ListFeed.map(item => <Grid item xs={6}>
-           <FeedBackItem setCurr = {() => setCurrentItem(item)} refreshList={refreshList} {...item} />
+           <FeedBackItem item={item} setCurr = {() => setCurrentItem(item)} refreshList={refreshList} {...item} />
          </Grid>)}
       </Grid>
     </div>:<p>{checkEmptyData([])}</p>}

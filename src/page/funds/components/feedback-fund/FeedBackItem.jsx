@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -19,6 +19,8 @@ import { handleError } from "../../../../ultils/helper";
 import { feedbackApi } from "../../../../api/feedback.api";
 import { blue } from "@mui/material/colors";
 import Checkbox from "@mui/material/Checkbox";
+import { USER_ROLE } from "../../../../constant/common";
+import { fundApi } from "../../../../api/fund.api";
 
 const FeedBackItem = ({
   Name,
@@ -29,9 +31,14 @@ const FeedBackItem = ({
   Id,
   refreshList,
   setCurr,
+  item
 }) => {
   const { user, currentIdGenealogy } = useAuthStore();
+  console.log(item)
   const isMine = user.Email === CreatedBy;
+  const { isLogin, roleCode } = useAuthStore();
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+  const [check,setCheck] = useState(item.IsCheck)
   const onDelete = async () => {
     try {
       const res = await feedbackApi.deleteFeedBack(Id, currentIdGenealogy);
@@ -43,6 +50,19 @@ const FeedBackItem = ({
       handleError(error);
     }
   };
+
+  // Check
+  const handleCheck = async (v) => {
+    try {
+       const res  = await feedbackApi.updateFeedBack({...item,IsCheck:v});
+       if(res.data.StatusCode === 200){
+        toast.success(v === true ? "Đã ghi nhận" :"Đã hủy ghi nhận");
+        refreshList()
+       }
+    } catch (error) {
+      handleError(error)
+    }
+  }
   return (
     <div
       style={{
@@ -52,6 +72,7 @@ const FeedBackItem = ({
 
         color: "red",
         position: "relative",
+        background:item.IsCheck && "rgb(70 21 17)"
       }}
       className="card-bg"
     >
@@ -88,7 +109,8 @@ const FeedBackItem = ({
             fontWeight: "",
             textAlign: "start",
             fontSize: 12,
-            color: "blue",
+            color:"white"
+           
           }}
         >
           {ModifiedDate && moment(ModifiedDate).format("DD/MMYYYY")}
@@ -137,23 +159,25 @@ const FeedBackItem = ({
           />
         </div>
       )}
-      <div
-        style={{
-          position: "absolute",
-          right: 10,
-          bottom: 5,
-          fontStyle:"italic"
-        }}
-      >
-        Đã ghi nhận
-      </div>
+     {
+      item.IsCheck &&  <div
+      style={{
+        position: "absolute",
+        right: 10,
+        bottom: 5,
+        fontStyle:"italic"
+      }}
+    >
+      Đã ghi nhận
+    </div>
+     }
       <div div
         style={{
           position: "absolute",
           left: 0,
           top: 0,
         }}>
-        <Checkbox />
+        {isSiteAdmin && <Checkbox checked={item.IsCheck} onChange={e => handleCheck(e.target.checked)} />}
       </div>
     </div>
   );

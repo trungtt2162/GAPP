@@ -28,7 +28,8 @@ function FeedBackFund({ setNewList, item }) {
     Title: "",
     Description: "",
     IdInstance: 0,
-    Image:""
+    Image:"",
+    IsCheck:false
   };
   const [formData, setFormData] = useState(item || originData);
   const handleImageChange = async (event) => {
