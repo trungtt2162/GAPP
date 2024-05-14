@@ -123,6 +123,7 @@ function AddMemberForm({
       }
 
       // Them con
+      let nodeId;
       if (dataAddChild) {
         const nodeRes = await familyTreeApi.addTree({
           name: "Node " + uuidv4()?.slice(0, 8),
@@ -131,15 +132,15 @@ function AddMemberForm({
           IdGenealogy: currentIdGenealogy,
           parentId: dataAddChild.idParent,
         });
-        console.log(nodeRes)
-        return;
+        nodeId = nodeRes.data.Data
       }
       // End them con
       const res = !item
         ? await genealogyApi.addNewMember({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
-            IsMartyrs: true,
+            IsMartyrs: false,
+            IdFamilyTree:nodeId || memberData.IdFamilyTree
           })
         : await genealogyApi.updateUsergene({
             ...memberData,
@@ -343,6 +344,7 @@ function AddMemberForm({
                   label="Ngày sinh"
                   variant="outlined"
                   type="date"
+                  required
                   name="DateOfBirth"
                   value={memberData.DateOfBirth}
                   onChange={handleChange}
@@ -444,7 +446,8 @@ function AddMemberForm({
                 !memberData.FirstName ||
                 !memberData.LastName ||
                 memberData.Gender === "" ||
-                !memberData.IdFamilyTree
+                !memberData.IdFamilyTree ||
+                !memberData.DateOfBirth
               }
               onClick={() => onAdd()}
               variant="contained"
