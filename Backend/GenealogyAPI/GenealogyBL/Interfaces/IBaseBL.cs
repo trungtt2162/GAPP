@@ -18,5 +18,7 @@ namespace GenealogyBL.Interfaces
         Task<PageResult<T>> GetPagingData(PageRequest pagingRequest);
 
         Task<bool> PushNotification(Notification notification);
+
+        Task<bool> UpdateViewNotification(string ids);
     }
 }

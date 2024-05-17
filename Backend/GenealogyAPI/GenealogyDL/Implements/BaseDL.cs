@@ -196,6 +196,19 @@ namespace GenealogyDL.Implements
             }
         }
 
+        public async Task<bool> UpdateViewNotification(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                return false;
+            }
+            var listID = ids.Split(';');
+            var sql = $"UPDATE notification n SET n.IsViewed = TRUE WHERE n.ID IN ({string.Join(',', listID)})";
+            var param = new Dictionary<string, object>(){};
+            var result = await this.ExecuteScalarAsync<object>(sql, param);
+            return true;
+        }
+
         #endregion
     }
 }

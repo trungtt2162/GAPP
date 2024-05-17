@@ -134,7 +134,6 @@ namespace GenealogyAPI.Controllers
             serviceResult.Data = await _logBL.GetPagingData(paggingRequest);
             return serviceResult;
         }
-
         [HttpGet("notification")]
         public async Task<ServiceResult> GetNotification()
         {
@@ -150,6 +149,12 @@ namespace GenealogyAPI.Controllers
             serviceResult.Data = await _notificationBL.GetPagingData(paggingRequest);
             return serviceResult;
         }
-
+        [HttpPut("notification/view")]
+        public async Task<ServiceResult> UpdateView([FromBody] string ids)
+        {
+            var serviceResult = new ServiceResult();
+            await _notificationBL.UpdateViewNotification(ids);
+            return serviceResult;
+        }
     }
 }

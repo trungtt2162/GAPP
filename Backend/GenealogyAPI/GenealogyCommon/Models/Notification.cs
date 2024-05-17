@@ -19,5 +19,7 @@ namespace GenealogyCommon.Models
         public string Type { get; set; }
 
         public string RawData { get; set; }
+        
+        public bool? IsViewed { get; set; } = false;
     }
 }

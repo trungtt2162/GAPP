@@ -128,5 +128,11 @@ namespace GenealogyBL.Implements
             _ = _notificationService.PushNotification(notification);
             return true;
         }
+
+        public async Task<bool> UpdateViewNotification(string ids)
+        {
+            await _baseDL.UpdateViewNotification(ids);
+            return true;
+        }
     }
 }
