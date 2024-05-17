@@ -147,15 +147,15 @@ namespace GenealogyDL.Implements
         public Dictionary<string, object> GetParamInsertDB<T>(T obj){
             var param = Utilities.CreateParamDB(obj);
             param["p_CreatedDate"] = DateTime.Now;
-            param["p_CreatedBy"] = _authService.GetUserName();
-            param["p_ModifiedBy"] = _authService.GetUserName();
+            param["p_CreatedBy"] = _authService.GetFullName();
+            param["p_ModifiedBy"] = _authService.GetFullName();
             param["p_ModifiedDate"] = DateTime.Now;
             return param;
         }
 
         public Dictionary<string, object> GetParamUpdateDB<T>(T obj){
             var param = Utilities.CreateParamDB(obj);
-            param["p_ModifiedBy"] = _authService.GetUserName();
+            param["p_ModifiedBy"] = _authService.GetFullName();
             param["p_ModifiedDate"] = DateTime.Now;
             PropertyInfo idProperty = typeof(T).GetProperty("Id");
             param["p_Id"] = idProperty.GetValue(obj);
