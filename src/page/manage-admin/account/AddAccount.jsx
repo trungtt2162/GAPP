@@ -78,6 +78,7 @@ function AddAccount() {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
+            required
               fullWidth
               label="Họ"
               name="firstName"
@@ -87,6 +88,7 @@ function AddAccount() {
           </Grid>
           <Grid item xs={6}>
             <TextField
+             required
               fullWidth
               label="Tên"
               name="lastName"
@@ -96,6 +98,7 @@ function AddAccount() {
           </Grid>
           <Grid item xs={12}>
             <TextField
+             required
               fullWidth
               type="email"
               label="Email"
@@ -153,6 +156,7 @@ function AddAccount() {
           </Grid>
           <Grid item xs={6}>
             <TextField
+             required
               name="gender"
               select
               label="Giới tính"
@@ -170,6 +174,7 @@ function AddAccount() {
           <Grid item xs={6}>
             <TextField
               fullWidth
+              required
               type="date"
               label="Ngày sinh nhật"
               name="dateOfBirth"
