@@ -27,7 +27,8 @@ import { theme } from "../../theme";
 import { USER_ROLE, listNoHero } from "../../constant/common";
 import useAuthStore from "../../zustand/authStore";
 import { toast } from "react-toastify";
-import { dateFormat3 } from "../../ultils/helper";
+import { dateFormat3, handleError } from "../../ultils/helper";
+import { notiApi } from "../../api/noti.api";
 
 const Navbar = () => {
   const [anchor, setAnchor] = useState(false);
@@ -62,7 +63,8 @@ const Navbar = () => {
     currentIdGenealogy,
     listRole,
     selectGeneAction,
-    listNoti
+    listNoti,
+    setListNoti
   } = useAuthStore();
 
 
@@ -74,6 +76,7 @@ const Navbar = () => {
   const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
   const isUser = isLogin && roleCode === USER_ROLE.User;
   const isMember = isUser || isAdmin;
+  const numberNoti = listNoti?.filter(i => !i.IsViewed)?.length || 0
   useEffect(() => {
     setUrl(location.pathname);
   }, [location]);
@@ -183,6 +186,16 @@ const Navbar = () => {
         })
       }
     </div>
+  }
+  const handleViewed = async() => {
+    try {
+      const listNotView = listNoti.filter(i => !i.IsViewed).map(i => i.Id + "").join(";")
+     
+      await notiApi.viewNoti(listNotView + ";999")
+      setListNoti(listNoti.map(i => ({...i,IsViewed:true})))
+    } catch (error) {
+      
+    }
   }
   return (
     <Box
@@ -359,14 +372,17 @@ const Navbar = () => {
             {isMember && (
               <div style={{cursor:"pointer"}}>
                 <NotificationsIcon
-                onClick={(event) => setAnchorNoti(event.currentTarget)}
+                onClick={(event) => {
+                  setAnchorNoti(event.currentTarget)
+                  handleViewed()
+                }}
                 aria-describedby={idNoti}
                   style={{
                     position: "relative",
                     cursor:"pointer"
                   }}
                 />
-                <div className="noti-number">10</div>
+               {numberNoti !==0 &&  <div className="noti-number">{numberNoti}</div>}
                 <Popover
                   id={idNoti}
                   open={openNoti}

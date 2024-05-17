@@ -89,7 +89,7 @@ function ListMember({ list, action = true, isExport = true }) {
     });
     if (nodeItem) {
       // find Child
-      const idNode = nodeItem.Id;
+      const idNode = nodeItem?.Id;
       listNode.forEach((item) => {
         const node = listNode.find((i) => i.ParentID === idNode);
         if (node) {
@@ -188,7 +188,7 @@ function ListMember({ list, action = true, isExport = true }) {
     try {
       const res = await genealogyApi.deleteUserGene(
         currentIdGenealogy,
-        user.Id
+        user?.Id
       );
       if (res.data.StatusCode === 200) {
         await getListMember();
@@ -204,13 +204,13 @@ function ListMember({ list, action = true, isExport = true }) {
   };
 
   // Const list Node
-  const listmemberFamily = buildTree(listNode, user.Id);
+  const listmemberFamily = buildTree(listNode, user?.Id);
   const listFinalMemberFamily = extractUserDataFromFamilyTree(
     listmemberFamily,
     checkUserExistence(listmemberFamily, user.Id)
   );
   const isDeleteAndEdit = (id) => checkUserExistence(listFinalMemberFamily, id);
-  const idUserCurrent = user.Id;
+  const idUserCurrent = user?.Id;
   return (
     <div
       style={{
@@ -307,8 +307,7 @@ function ListMember({ list, action = true, isExport = true }) {
                     )}
                     {action && (
                       <TableCell>
-                       {((isSiteAdmin &&
-                          user.RoleCode !== USER_ROLE.SiteAdmin) ||
+                       {((isSiteAdmin ) ||
                           (isPeopleAdmin &&
                             isDeleteAndEdit(user.UserId) )) &&  <Button
                           onClick={() => setCurrentMember(user)}
