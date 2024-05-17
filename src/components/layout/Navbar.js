@@ -11,6 +11,8 @@ import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import { Menu, Close } from "@mui/icons-material";
 import PrimaryButton from "../common/button/PrimaryButton";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+
 import {
   TextField,
   Select,
@@ -25,13 +27,20 @@ import { theme } from "../../theme";
 import { USER_ROLE, listNoHero } from "../../constant/common";
 import useAuthStore from "../../zustand/authStore";
 import { toast } from "react-toastify";
+import { dateFormat3 } from "../../ultils/helper";
 
 const Navbar = () => {
   const [anchor, setAnchor] = useState(false);
+  const [anchorNoti, setAnchorNoti] = useState(false);
+
 
   const open = Boolean(anchor);
+  const openNoti = Boolean(anchorNoti);
+
 
   const id = open ? "open-profile" : undefined;
+  const idNoti = open ? "open-noti" : undefined;
+
 
   const { palette } = useTheme(theme);
   const navigate = useNavigate();
@@ -53,7 +62,9 @@ const Navbar = () => {
     currentIdGenealogy,
     listRole,
     selectGeneAction,
+    listNoti
   } = useAuthStore();
+
 
   const isAdmin =
     isLogin &&
@@ -87,7 +98,7 @@ const Navbar = () => {
       onClick: () => navigate("/create-gene"),
     },
     {
-      show: isLogin  && !isSupperAdmin,
+      show: isLogin && !isSupperAdmin,
       name: "Yêu cầu vào gia phả",
       onClick: () => navigate("/request-gene"),
     },
@@ -95,7 +106,7 @@ const Navbar = () => {
       name: "Đăng xuất",
 
       onClick: () => {
-        toast.dismiss()
+        toast.dismiss();
         logOutAction(false);
 
         navigate("/login");
@@ -104,22 +115,73 @@ const Navbar = () => {
     },
   ];
 
-  // render 
+  // render
   const renderListPopup = () => {
-    return <div >
-      {arrayPopup.filter(i => i.show).map(item => <div className="bg-hover" style={{
-        padding:10,
-        cursor:"pointer",
-        borderBottom:"1px solid lightgray",
-        "&:hover":{
-          background:"lightgray"
-        }
-      }} onClick={() =>{
-        item.onClick();
-        setAnchor(null)
-      }}>
-        {item.name}
-      </div>)}
+    return (
+      <div>
+        {arrayPopup
+          .filter((i) => i.show)
+          .map((item) => (
+            <div
+              className="bg-hover"
+              style={{
+                padding: 10,
+                cursor: "pointer",
+                borderBottom: "1px solid lightgray",
+                "&:hover": {
+                  background: "lightgray",
+                },
+              }}
+              onClick={() => {
+                item.onClick();
+                setAnchor(null);
+              }}
+            >
+              {item.name}
+            </div>
+          ))}
+      </div>
+    );
+  };
+
+
+  const messNoti = (type,data) => {
+  const dt = JSON.parse(data.RawData)
+    switch(type){
+      case "Member_Request_Genealogy":{
+        return "đã yêu cầu vào gia phả"
+      }
+      case "Admin_Approve_Genealogy":{
+        return "đã đồng ý cho bạn vào gia phả " + dt.GenealogyName
+      }
+      case "Admin_Reject_Genealogy":{
+        return "đã từ chối cho bạn vào gia phả " + dt.GenealogyName
+      }
+      default:{
+        return ""
+      }
+    }
+  }
+  // list Noti
+  const renderListNoti = () => {
+    if(listNoti.length === 0){
+      return <div className="noti empty-noti">
+        Không có thông báo nào
+      </div>
+    }
+    else return <div className="noti">
+      {
+        listNoti.map(item => {
+          return <div className="noti-item">
+          <span className="bold" style={{color:""}}>{item.SenderName}</span> {" " + messNoti(item.Type,item)} 
+          <div style={{
+            color:"gray",
+            textAlign:'end',
+            fontSize:12
+          }}>{dateFormat3(item.CreatedDate)}</div>
+        </div>
+        })
+      }
     </div>
   }
   return (
@@ -225,21 +287,6 @@ const Navbar = () => {
                 Quản lý quỹ
               </Link>
             )}
-            {/* {isLogin && isCreateGene && !isSupperAdmin && (
-              <Link
-                to="/create-gene"
-                className={"link" + (url === "/create-gene" ? " active" : "")}
-              >
-                Tạo gia phả
-              </Link>
-            )} */}
-
-            {/* <Link
-              to="/#"
-              className={"link" + (url === "/support" ? " active" : "")}
-            >
-              Support
-            </Link> */}
           </Box>
           <Box
             sx={{
@@ -251,7 +298,7 @@ const Navbar = () => {
             display="flex"
             gap="1.5rem"
           >
-             {!isSupperAdmin && listRole.length > 0 && (
+            {!isSupperAdmin && listRole.length > 0 && (
               <FormControl variant="outlined">
                 <InputLabel>Gia phả</InputLabel>
                 <Select
@@ -304,16 +351,40 @@ const Navbar = () => {
                   }}
                 >
                   <div>
-                    <div
-                   
-                    >
-                     {renderListPopup()}
-                    </div>
+                    <div>{renderListPopup()}</div>
                   </div>
                 </Popover>
               </>
             )}
-           
+            {isMember && (
+              <div style={{cursor:"pointer"}}>
+                <NotificationsIcon
+                onClick={(event) => setAnchorNoti(event.currentTarget)}
+                aria-describedby={idNoti}
+                  style={{
+                    position: "relative",
+                    cursor:"pointer"
+                  }}
+                />
+                <div className="noti-number">10</div>
+                <Popover
+                  id={idNoti}
+                  open={openNoti}
+                  anchorEl={anchorNoti}
+                  onClose={() => setAnchorNoti(null)}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                    
+                  }}
+                >
+                  <div>
+                    <div>{renderListNoti()}</div>
+                  </div>
+                </Popover>
+              </div>
+            )}
+
             {/* {isLogin && (
               <PrimaryButton
                 event={() => {

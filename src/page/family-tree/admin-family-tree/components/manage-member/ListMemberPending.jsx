@@ -75,13 +75,6 @@ function ListMemberPending() {
   const onApprove = async (user) => {
     try {
       const item = listFamilyTree.find(i => i.Id === idTree);
-      if(item){
-        console.log(item.users)
-        if(item?.Users?.length >=2){
-          toast.warning("Nhánh này đã đủ 2 người , vui lòng chọn nhánh khác");
-          return;
-        }
-      }
       const res = await genealogyApi.approveUser({
         UserID: currentUser.UserId,
         IdFamilyTree: idTree,
@@ -92,6 +85,9 @@ function ListMemberPending() {
         onClose();
         toast.success("Đã xác nhận");
         getListFamilyTree()
+      }
+      else{
+        toast.error(res?.data?.Data || "Lỗi");
       }
     } catch (error) {
       handleError(error);

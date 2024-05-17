@@ -34,6 +34,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "2.4.1",
     "save-svg-as-png": "^1.4.17",
+    "socket.io-client": "^4.7.5",
     "uuid": "^9.0.1",
     "web-vitals": "2.1.4",
     "zustand": "^4.5.2"

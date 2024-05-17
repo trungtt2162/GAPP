@@ -18,6 +18,7 @@ const useAuthStore = create(
       geneName: "",
       listRole: [],
       isCreateGene: false,
+      listNoti: [],
       setUser: (user) => {
         set({
           user,
@@ -34,9 +35,15 @@ const useAuthStore = create(
           isLogin: false,
           listRole: [],
           isCreateGene: "",
-          geneName:""
+          geneName: "",
         });
       },
+      setListNoti: (list = []) => {
+        set({
+          listNoti: list,
+        });
+      },
+
       selectGeneAction: (currentId, currentRole) => {
         const list = useAuthStore.getState().listRole;
         const current = list.find((i) => i.IdGenealogy == currentId);
