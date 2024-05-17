@@ -2,11 +2,12 @@ import { Button, useTheme } from "@mui/material";
 import { theme } from "../../../theme";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const ButtonLoading = ({ title, event, loading }) => {
+const ButtonLoading = ({ title, event, loading,disabled }) => {
   const { palette } = useTheme(theme);
 
   return (
     <Button
+    disabled={disabled}
       variant="text"
       sx={{
         // width: "10rem",

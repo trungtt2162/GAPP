@@ -187,6 +187,7 @@ function AddAccount() {
           </Grid>
           <Grid item xs={12}>
             <ButtonLoading
+              disabled={!formData.firstName || !formData.lastName || !formData.email || !formData.dateOfBirth || formData.gender === ""}
               title={" Thêm tài khoản"}
               loading={loading}
               type="submit"
