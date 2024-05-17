@@ -311,6 +311,7 @@ const [repassword,setRePass] = useState("");
               </Grid>
               <Grid item xs={6}>
                 <TextField
+                  required
                   fullWidth
                   type="date"
                   label="Ngày sinh nhật"
@@ -324,7 +325,7 @@ const [repassword,setRePass] = useState("");
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  disabled={!formData.FirstName || !formData.LastName || formData.Gender === "" || !formData.Password || !formData.Username}
+                  disabled={!formData.FirstName || !formData.LastName || formData.Gender === "" || !formData.Password || !formData.Username || !formData.DateOfBirth}
                   onClick={() => handlleRegister()}
                   variant="contained"
                   color="primary"
