@@ -124,6 +124,10 @@ namespace GenealogyBL.Implements
 
         public async Task<bool> PushNotification(Notification notification)
         {
+            notification.CreatedDate = DateTime.Now;
+            notification.ModifiedDate = DateTime.Now;
+            notification.CreatedBy = notification.SenderName;
+            notification.ModifiedBy = notification.SenderName;
             await _notificationDL.Create(notification);
             _ = _notificationService.PushNotification(notification);
             return true;
