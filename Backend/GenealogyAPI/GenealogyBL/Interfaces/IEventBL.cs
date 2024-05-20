@@ -11,5 +11,8 @@ namespace GenealogyBL.Interfaces
     {
         Task<PageResult<Event>> GetPagingDataGuest(PageRequest pagingRequest, int idGenealogy);
         Task<bool> SendEmails(List<UserEvent> users);
+        Task<bool> PushNotificationUser(List<UserEvent> users, string type);
+
+        Task<bool> PushNotificationAdmin(int idEvent, string type);
     }
 }

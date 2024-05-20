@@ -1,14 +1,18 @@
 ﻿using GenealogyBL.Interfaces;
+using GenealogyCommon.Constant;
 using GenealogyCommon.Implements;
 using GenealogyCommon.Interfaces;
 using GenealogyCommon.Models;
 using GenealogyCommon.Models.Param;
 using GenealogyDL.Implements;
 using GenealogyDL.Interfaces;
+using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -19,23 +23,26 @@ namespace GenealogyBL.Implements
     internal class EventBL : BaseBL<Event>, IEventBL
     {
         private readonly IEventDL _eventDL;
-        public readonly IGenealogyBL _genealogyBL;
+        public readonly IGenealogyDL _genealogyDL;
         private readonly IEmailSender _emailSender;
-        public EventBL(IEmailSender emailSender, IGenealogyBL genealogyBL, IEventDL eventDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService) : base(env, eventDL, logDL, authService, notificationDL, notificationService)
+        private readonly IUserGenealogyDL _userGenealogyDL;
+        public EventBL(IUserGenealogyDL userGenealogyDL, IEmailSender emailSender, IGenealogyDL genealogyDL, IEventDL eventDL, IWebHostEnvironment env, ILogDL logDL, IAuthService authService, INotificationDL notificationDL, INotificationService notificationService) : base(env, eventDL, logDL, authService, notificationDL, notificationService)
         {
             _eventDL = eventDL;
-            _genealogyBL = genealogyBL;
+            _genealogyDL = genealogyDL;
             _emailSender = emailSender;
+            _userGenealogyDL = userGenealogyDL;
         }
         public async Task<object> Create(Event obj)
         {
-            obj.UserIDHost = int.Parse(_authService.GetUserID());
+            obj.UserID = int.Parse(_authService.GetUserID());
             return await _eventDL.Create(obj);
         }
 
         override
         public void GetCustomParamPaging(PageRequest pagingRequest)
         {
+            pagingRequest.SortOrder = " OrganizationDate desc ";
             if (string.IsNullOrWhiteSpace(pagingRequest.Condition))
             {
                 throw new ArgumentException("IDGenealogy is null");
@@ -74,6 +81,7 @@ namespace GenealogyBL.Implements
             {
                 return false;
             }
+            _ = PushNotificationUser(users, "Invite_user_join_event");
             var eventInfo = await _eventDL.GetById(users[0].IdEvent);
             var receips = new JArray();
             foreach (var user in users)
@@ -98,6 +106,56 @@ namespace GenealogyBL.Implements
             return true;
         }
 
+        public async Task<bool> PushNotificationUser(List<UserEvent> users, string type)
+        {
+            if (!users.Any())
+            {
+                return false;
+            }
+            var eventInfo = await _eventDL.GetById(users[0].IdEvent);
+            var gen = await _genealogyDL.GetById(users[0].IdGenealogy);
+            foreach (var user in users)
+            {
+                var notification = new Notification()
+                {
+                    ReceiveID = user.UserID,
+                    Type = type,
+                    RawData = JsonConvert.SerializeObject(new
+                    {
+                        IdGenealogy = user.IdGenealogy,
+                        GenealogyName = gen.Name,
+                        EventName = eventInfo.Name,
+                        EventDescription = eventInfo.Description
+                    }),
+                    SenderID = int.Parse(_authService.GetUserID()),
+                    SenderName = _authService.GetFullName()
+                };
+                _ = PushNotification(notification);
+            }
+            return true;
+        }
+
+        public async Task<bool> PushNotificationAdmin(int idEvent, string type)
+        {
+            var eventInfo = await _eventDL.GetById(idEvent);
+            var gen = await _genealogyDL.GetById(eventInfo.IdGenealogy); ;
+            var notification = new Notification()
+            {
+                ReceiveID = eventInfo.UserID.Value,
+                Type = type,
+                RawData = JsonConvert.SerializeObject(new
+                {
+                    IdGenealogy = eventInfo.IdGenealogy,
+                    GenealogyName = gen.Name,
+                    EventName = eventInfo.Name,
+                    EventDescription = eventInfo.Description
+                }),
+                SenderID = int.Parse(_authService.GetUserID()),
+                SenderName = _authService.GetFullName()
+            };
+            _ = PushNotification(notification);
+            return true;
+        }
         private string GetTemplateEmailEvent(Event eventParam)
         {
             var email = $"<div>"+
@@ -109,6 +167,35 @@ namespace GenealogyBL.Implements
                 $"<p><strong> Link tham gia sự kiện:</strong> {eventParam.LinkStream}</p>" +
                 $"</div>";
             return email;
+        }
+
+        public async Task<bool> DeleteByID(int id, int idGenealogy)
+        {
+            var idRes = await base.DeleteByID(id, idGenealogy);
+            var gen = await _genealogyDL.GetById(idGenealogy);
+            var eventInfo = await _eventDL.GetById(id);
+            var userAdmins = await _userGenealogyDL.GetUserAdminNotify(idGenealogy);
+            var idUserEdit = int.Parse(_authService.GetUserID());
+            if (userAdmins.Any(x => x.UserId == idUserEdit))
+            {
+                var notification = new Notification()
+                {
+                    ReceiveID = eventInfo.UserID.Value,
+                    Type = "Admin_reject_request_event",
+                    RawData = JsonConvert.SerializeObject(new
+                    {
+                        IdGenealogy = idGenealogy,
+                        GenealogyName = gen.Name,
+                        EventName = eventInfo.Name,
+                        EventDescription = eventInfo.Description
+
+                    }),
+                    SenderID = int.Parse(_authService.GetUserID()),
+                    SenderName = _authService.GetFullName()
+                };
+                _ = PushNotification(notification);
+            }
+            return idRes;
         }
     }
 

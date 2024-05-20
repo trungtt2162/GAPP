@@ -20,9 +20,9 @@ namespace GenealogyCommon.Models
         
         public long EstimatedMoney { get; set; }
 
-        public bool IsCheck { get; set; } 
+        public bool IsCheck { get; set; }
 
-
+        public string? BillImage { get; set; }
 
 
     }

@@ -96,6 +96,7 @@ namespace GenealogyAPI.Controllers
             var eventData = _mapper.Map<Event>(param);
             eventData.InActive = true;
             var idEvent = await _eventBL.Create(eventData);
+            await _eventBL.PushNotificationAdmin((int)idEvent, "User_create_new_event_to_admin");
             if (param.UserEvents != null && param.UserEvents.Any()) {
                 List<Task> taskList = new List<Task>();
                 param.UserEvents.ForEach(e =>
