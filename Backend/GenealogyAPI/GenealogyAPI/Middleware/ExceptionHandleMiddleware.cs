@@ -23,7 +23,8 @@ namespace GenealogyAPI.Middleware
                 {
                     Success = false,
                     Message = "Có lỗi xảy ra",
-                    DevMessage = ex.Message
+                    DevMessage = ex.Message,
+                    StatusCode = 500
                 };
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(result));

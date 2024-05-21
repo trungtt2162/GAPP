@@ -130,7 +130,10 @@ namespace GenealogyBL.Implements
                     SenderID = int.Parse(_authService.GetUserID()),
                     SenderName = _authService.GetFullName()
                 };
-                _ = PushNotification(notification);
+                if (notification.ReceiveID != notification.SenderID)
+                {
+                    _ = PushNotification(notification);
+                }
             }
             return true;
         }
