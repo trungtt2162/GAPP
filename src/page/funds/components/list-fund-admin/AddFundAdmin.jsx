@@ -1,22 +1,23 @@
 import { Button, Container, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { handleError,formatMoney } from "../../../../ultils/helper";
+import { handleError, formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
 import { toast } from "react-toastify";
 
-function AddFundForm() {
-  const [fundInfo, setFundInfo] = useState({
+function AddFundForm({ item, reset }) {
+  const origin = {
     IdGenealogy: "",
     Money: 0,
     Name: "",
     SpendPurpose: "",
     EstimatedMoney: "",
     Id: 0,
-    IsCheck:false,
-  });
+    IsCheck: false,
+  };
+  const [fundInfo, setFundInfo] = useState(item || origin);
 
-  const {currentIdGenealogy} = useAuthStore()
+  const { currentIdGenealogy } = useAuthStore();
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFundInfo((prevState) => ({
@@ -25,30 +26,44 @@ function AddFundForm() {
     }));
   };
 
-const handleAdd = async () => {
-  try {
-    const res = await fundApi.addFund({...fundInfo,IdGenealogy:currentIdGenealogy})
-    if(res.data.StatusCode ===200){
-      setFundInfo({
-        IdGenealogy: "",
-        Money: 0,
-        Name: "",
-        SpendPurpose: "",
-        EstimatedMoney: "",
-        Id: 0,
-      })
-      toast.success("Thêm thành công")
+  const handleAdd = async () => {
+    try {
+      const res = !item
+        ? await fundApi.addFund({
+            ...fundInfo,
+            IdGenealogy: currentIdGenealogy,
+          })
+        : await fundApi.updateFund({
+            ...fundInfo,
+            IdGenealogy: currentIdGenealogy,
+          });
+      if (res.data.StatusCode === 200) {
+        if(!item){
+          setFundInfo({
+            IdGenealogy: "",
+            Money: 0,
+            Name: "",
+            SpendPurpose: "",
+            EstimatedMoney: "",
+            Id: 0,
+          });
+          toast.success("Thêm thành công");
+        }
+        else{
+          reset()
+          toast.success("Sửa thành công");
+        }
+      }
+    } catch (error) {
+      handleError(error);
     }
-  } catch (error) {
-      handleError(error)
-  }
-}
+  };
   return (
     <Container maxWidth="sm">
-      <h4 className="bold">Thêm Quỹ Mới</h4>
+      <h4 className="bold">{item ? "Chỉnh sửa quỹ" : "Thêm Quỹ Mới"}</h4>
       <form>
         <TextField
-        required
+          required
           fullWidth
           label="Tên quỹ"
           name="Name"
@@ -57,7 +72,7 @@ const handleAdd = async () => {
           margin="normal"
         />
         <TextField
-        required
+          required
           fullWidth
           label="Số tiền dự tính"
           name="EstimatedMoney"
@@ -66,7 +81,7 @@ const handleAdd = async () => {
           margin="normal"
         />
         <TextField
-        required
+          required
           fullWidth
           label="Nội dung"
           name="SpendPurpose"
@@ -76,8 +91,15 @@ const handleAdd = async () => {
           rows={4}
           margin="normal"
         />
-        <Button disabled={!fundInfo.Name|| !fundInfo.EstimatedMoney || !fundInfo.SpendPurpose}  onClick = {() => handleAdd()} variant="contained" color="primary">
-          Thêm
+        <Button
+          disabled={
+            !fundInfo.Name || !fundInfo.EstimatedMoney || !fundInfo.SpendPurpose
+          }
+          onClick={() => handleAdd()}
+          variant="contained"
+          color="primary"
+        >
+          {item ? "Sửa" : "Thêm"}
         </Button>
       </form>
     </Container>

@@ -7,12 +7,19 @@ import { fundApi } from "../../../../api/fund.api";
 import useAuthStore from "../../../../zustand/authStore";
 import Checkbox from "@mui/material/Checkbox";
 import { toast } from "react-toastify";
+import EditIcon from "@mui/icons-material/Edit";
+import CustomModal from "../../../../components/common/modal/CustomModal";
+import AddFundForm from "../list-fund-admin/AddFundAdmin";
+
 const ListFundMember = () => {
     const location = useLocation();
     const navigate = useNavigate();
   const [listFund, setListFund] = useState([]);
   const {currentIdGenealogy} = useAuthStore()
-  
+  const [currentFund,setCurremtFund] = useState(null);
+  const closeFund  = () => {
+    setCurremtFund(null)
+  }
 const getListFund = async() => {
 try {
   const res = await fundApi.getlistFund(currentIdGenealogy)
@@ -69,15 +76,31 @@ useEffect(() => {
               style={{
                 paddingRight: 10,
               }}
-              className="w100"
+              className="w100 border-right "
             >
               {formatMoney(item.EstimatedMoney)} VND
+            </div>
+            <div
+              style={{
+                paddingRight: 10,
+              }}
+              className="w100"
+            >
+              <EditIcon onClick={() => setCurremtFund(item)} style={{
+                cursor:"pointer"
+              }} />
             </div>
             {/* <div className="w100">{item.SpendPurpose}</div> */}
             <div style={{color:"white"}}  onClick={() => navigate(location.pathname + "?id="+item.Id)} className="button-more">Xem thêm</div>
           </div>
         );
       })}
+      <CustomModal open={currentFund} onClose={closeFund}>
+        <AddFundForm item={currentFund} reset = {() => {
+          getListFund()
+          closeFund()
+        }} />
+      </CustomModal>
     </div>
   );
 };
