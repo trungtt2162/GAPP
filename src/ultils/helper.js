@@ -320,3 +320,8 @@ export function checkUserExistence(data, idUser) {
 // Bắt đầu duyệt từ node gốc của cây genealogy
 return traverse(data);
 }
+export function objectToQueryParams(obj) {
+  return Object.keys(obj)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
+    .join('&');
+}
