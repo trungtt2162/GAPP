@@ -141,22 +141,30 @@ namespace GenealogyBL.Implements
         public async Task<bool> PushNotificationAdmin(int idEvent, string type)
         {
             var eventInfo = await _eventDL.GetById(idEvent);
-            var gen = await _genealogyDL.GetById(eventInfo.IdGenealogy); ;
-            var notification = new Notification()
+            var gen = await _genealogyDL.GetById(eventInfo.IdGenealogy);
+            var userAdmins = await _userGenealogyDL.GetUserAdminNotify(eventInfo.IdGenealogy);
+            if (userAdmins.Any())
             {
-                ReceiveID = eventInfo.UserID.Value,
-                Type = type,
-                RawData = JsonConvert.SerializeObject(new
+                foreach(var user in userAdmins)
                 {
-                    IdGenealogy = eventInfo.IdGenealogy,
-                    GenealogyName = gen.Name,
-                    EventName = eventInfo.Name,
-                    EventDescription = eventInfo.Description
-                }),
-                SenderID = int.Parse(_authService.GetUserID()),
-                SenderName = _authService.GetFullName()
-            };
-            _ = PushNotification(notification);
+                    var notification = new Notification()
+                    {
+                        ReceiveID = user.UserId,
+                        Type = type,
+                        RawData = JsonConvert.SerializeObject(new
+                        {
+                            IdGenealogy = eventInfo.IdGenealogy,
+                            GenealogyName = gen.Name,
+                            EventName = eventInfo.Name,
+                            EventDescription = eventInfo.Description
+                        }),
+                        SenderID = int.Parse(_authService.GetUserID()),
+                        SenderName = _authService.GetFullName()
+                    };
+                    _ = PushNotification(notification);
+                }
+            }
+           
             return true;
         }
         private string GetTemplateEmailEvent(Event eventParam)
