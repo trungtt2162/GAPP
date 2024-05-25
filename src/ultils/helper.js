@@ -187,6 +187,13 @@ export const splitText = (txt="") => {
 
 
 export const formatMoney = (amount="") => {
+  const amounCp = amount;
+  if(isNaN(amounCp)){
+    return 0;
+  }
+  if(Number(amounCp < 0)){
+    amount =-Number(amount)
+  }
   amount = amount + ""
   const parts = amount?.trim().toString().split('.');
   const integerPart = parts[0];
@@ -199,7 +206,7 @@ export const formatMoney = (amount="") => {
     formattedInteger = integerPart[i] + formattedInteger;
   }
 
-  return  formattedInteger + decimalPart;
+  return (Number(amounCp) >=0 ?"" :"-" )+formattedInteger + decimalPart;
 }
 
 export const validatePhoneNumber = (phoneNumber) => {
