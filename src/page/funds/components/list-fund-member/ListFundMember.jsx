@@ -50,7 +50,9 @@ useEffect(() => {
       {list.map((item, index) => {
         return (
           <div className="fund-wrap card-bg" style={{
-            background:item.IsCheck && "rgb(70 21 17)"
+            background:item.IsCheck && "rgb(70 21 17)",
+            fontWeight:500,
+            fontSize:20
           }}>
             <div>
               <Checkbox checked={item.IsCheck} onChange={(v) => handleToggleCheck(v.target.checked,item)} />
