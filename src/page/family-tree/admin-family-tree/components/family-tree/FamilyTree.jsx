@@ -610,7 +610,13 @@ const NodeItem = ({ nodeDatum, getListAllNode,listNode }) => {
                   }}
                 >
                   {item?.FirstName + " " + item?.LastName}
+                  
                 </span>
+                <div  style={{
+                    color: "black",
+                    fontSize: 11,
+                   
+                  }}>{`${item?.Description ? "( " + item?.Description + " )" :""}`}</div>
               </div>
             );
           })}
