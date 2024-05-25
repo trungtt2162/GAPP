@@ -34,8 +34,9 @@ const FeedBackItem = ({
   item
 }) => {
   const { user, currentIdGenealogy } = useAuthStore();
-  console.log(item)
-  const isMine = user.Email === CreatedBy;
+  console.log(user)
+  console.log(CreatedBy)
+  const isMine = (user.FirstName +" " +user.LastName)  === CreatedBy;
   const { isLogin, roleCode } = useAuthStore();
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
   const [check,setCheck] = useState(item.IsCheck)
