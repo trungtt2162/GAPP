@@ -38,9 +38,10 @@ function AddMemberForm({
   onCloseModal,
   dataAddChild,
   isTree,
+  firstMem,
+  rootId
 }) {
   const { currentIdGenealogy } = useAuthStore();
-
   const originData = {
     Id: 0,
     ModifiedBy: "string",
@@ -104,6 +105,7 @@ function AddMemberForm({
 
   // Add
   const onAdd = async () => {
+    console.log("Vao add")
     try {
       if (memberData?.Email?.trim() && !checkValidEmail(memberData.Email)) {
         toast.error("Email sai định dạng");
@@ -124,13 +126,14 @@ function AddMemberForm({
 
       // Them con
       let nodeId;
-      if (dataAddChild) {
+      if (dataAddChild || (firstMem && !rootId)) {
+        console.log("vao if")
         const nodeRes = await familyTreeApi.addTree({
-          name: "Node " + uuidv4()?.slice(0, 8),
+          name: dataAddChild ? "Node " + uuidv4()?.slice(0, 8) :"root",
           description: "",
           Id: 0,
           IdGenealogy: currentIdGenealogy,
-          parentId: dataAddChild.idParent,
+          parentId: dataAddChild ? dataAddChild?.idParent:null,
         });
         nodeId = nodeRes.data.Data
       }
@@ -140,7 +143,7 @@ function AddMemberForm({
             ...memberData,
             IdGenealogy: currentIdGenealogy,
             IsMartyrs: false,
-            IdFamilyTree:nodeId || memberData.IdFamilyTree
+            IdFamilyTree:rootId ||nodeId || memberData.IdFamilyTree
           })
         : await genealogyApi.updateUsergene({
             ...memberData,
@@ -154,7 +157,7 @@ function AddMemberForm({
         if (!item) {
           setMemberData(originData);
           toast.success("Thêm thành công");
-          if (idTree) {
+          if (idTree || firstMem) {
             onCloseModal();
           }
         } else {
@@ -367,7 +370,7 @@ function AddMemberForm({
                   }}
                 />
               </Grid>
-              <Grid item xs={dataAddChild ? 12 : 6}>
+              <Grid item xs={(dataAddChild || firstMem) ? 12 : 6}>
                 <TextField
                   fullWidth
                   label="Nơi sinh"
@@ -377,7 +380,7 @@ function AddMemberForm({
                   onChange={handleChange}
                 />
               </Grid>
-              {!dataAddChild && (
+              {(!dataAddChild && !firstMem) && (
                 <Grid item xs={6}>
                   <FormControl fullWidth variant="outlined">
                     <InputLabel>Chi - nhánh *</InputLabel>
@@ -446,7 +449,7 @@ function AddMemberForm({
                 !memberData.FirstName ||
                 !memberData.LastName ||
                 memberData.Gender === "" ||
-                !memberData.IdFamilyTree ||
+                (!memberData.IdFamilyTree && !firstMem) ||
                 !memberData.DateOfBirth
               }
               onClick={() => onAdd()}
