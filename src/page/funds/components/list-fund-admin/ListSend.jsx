@@ -33,6 +33,7 @@ const ListSend = () => {
   const [listFund, setListFund] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
   const { isLogin, roleCode } = useAuthStore();
+  const [currentImage,setCurrentImage] = useState(null);
 
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
   const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
@@ -143,6 +144,8 @@ const ListSend = () => {
               <TableCell className="text-center">Nội Dung</TableCell>
               <TableCell className="text-center">Số tiền đã chi</TableCell>
               <TableCell className="text-center">Thời gian</TableCell>
+              <TableCell className="text-center">Hóa đơn</TableCell>
+
               {isSiteAdmin && (
                 <TableCell className="text-center">Hành động</TableCell>
               )}
@@ -161,6 +164,12 @@ const ListSend = () => {
                   {row.CreatedDate &&
                     moment(row.CreatedDate).format("DD-MM-YYYY")}
                 </TableCell>
+                <TableCell className="text-center">
+                    {row.BillImage &&   <div onClick={() => setCurrentImage(row.BillImage)} style={{
+                        cursor:"pointer",
+                        color:"rgb(242, 184, 79)"
+                       }}>Xem hóa đơn</div>}
+                    </TableCell>
                 {isSiteAdmin && (
                   <TableCell className="text-center">
                     <Button
@@ -201,6 +210,17 @@ const ListSend = () => {
 
       <CustomModal open={currentItem} onClose={onClose}>
         <AddSpend setNewList={setNewList} item={currentItem} />
+      </CustomModal>
+      <CustomModal open={currentImage} onClose={() => setCurrentImage(null)}>
+       <div style={{
+        display:"flex",
+        justifyContent:'center'
+       }}>
+       <img src={currentImage} style={{
+          width:500,
+          height:"auto"
+        }}  />
+       </div>
       </CustomModal>
     </div>
   );

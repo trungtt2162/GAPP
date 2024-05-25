@@ -25,6 +25,7 @@ import AddDonateMember from "./AddDonatemember";
 import { USER_ROLE } from "../../../../constant/common";
 const ListContributor = () => {
   const { isLogin, roleCode } = useAuthStore();
+  const [currentImage,setCurrentImage] = useState(null);
 
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
   const isSupperAdmin = isLogin && roleCode === USER_ROLE.SupperAdmin;
@@ -141,6 +142,7 @@ const ListContributor = () => {
                 <TableCell className="text-center">Email</TableCell>
                 <TableCell className="text-center">Số tiền đóng góp</TableCell>
                 <TableCell className="text-center">Ngày đóng góp</TableCell>
+                <TableCell className="text-center">Hóa đơn</TableCell>
                {isSiteAdmin &&  <TableCell className="text-center">Hành động</TableCell>}
               </TableRow>
             </TableHead>
@@ -158,6 +160,13 @@ const ListContributor = () => {
                     <TableCell className="text-center">
                       {row.CreatedDate &&
                         moment(row.CreatedDate).format("DD-MM-YYYY")}
+                    </TableCell>
+
+                    <TableCell className="text-center">
+                    {row.BillImage &&   <div onClick={() => setCurrentImage(row.BillImage)} style={{
+                        cursor:"pointer",
+                        color:"rgb(242, 184, 79)"
+                       }}>Xem hóa đơn</div>}
                     </TableCell>
                   {isSiteAdmin &&   <TableCell className="text-center">
                       <Button
@@ -195,6 +204,17 @@ const ListContributor = () => {
       {checkEmptyData(listContributor)}
       <CustomModal  open={currentItem} onClose={onClose}>
         <AddDonateMember setNewList={setNewList} item={currentItem} />
+      </CustomModal>
+      <CustomModal open={currentImage} onClose={() => setCurrentImage(null)}>
+       <div style={{
+        display:"flex",
+        justifyContent:'center'
+       }}>
+       <img src={currentImage} style={{
+          width:500,
+          height:"auto"
+        }}  />
+       </div>
       </CustomModal>
     </div>
   );
