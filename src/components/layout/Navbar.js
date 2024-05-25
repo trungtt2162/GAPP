@@ -160,6 +160,21 @@ const Navbar = () => {
       case "Admin_Reject_Genealogy":{
         return "đã từ chối cho bạn vào gia phả " + dt.GenealogyName
       }
+      case "Invite_user_join_event":{
+        return "đã mời bạn vào gia phả " + dt.GenealogyName
+      }
+      case "User_create_new_event_to_admin":{
+        return "đã gửi yêu cầu tạo sự kiện " + dt.EventName
+      }
+      case "Admin_reject_request_event":{
+        return "đã từ chối yêu cầu tạo sự kiện " + dt.EventName
+      }
+      case "Invite_user_join_event":{
+        return "đã mời bạn tham gia sự kiện " + dt.EventName
+      }
+      case "Member_feedback_fund":{
+        return "đã gửi góp ý đến quỹ " + dt.FundName
+      }
       default:{
         return ""
       }

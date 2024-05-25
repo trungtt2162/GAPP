@@ -117,6 +117,28 @@ function RequestEvent({ item, updateItem }) {
       return;
     }
     try {
+      if(formData.Name.trim()===""){
+        toast.error("Vui lòng nhập tên sự kiện.");
+        return ;
+
+      }
+      if(formData.Description.trim()===""){
+        toast.error("Vui lòng nhập mô tả sự kiện.");
+        return ;
+      }
+      if(formData.OrganizationDate===""){
+        toast.error("Vui lòng nhập ngày sự kiện.");
+        return;
+      }
+      if(formData.Location===""){
+        toast.error("Vui lòng nhập địa điểm.");
+        return ;
+      }
+      const list = listMember.filter((i) => i.checked)
+      if(limitMeber == "true" && list.length===0 ){
+        toast.error("Vui lòng nhập chọn người tham gia");
+        return ;
+      }
       const data = {
         ...formData,
         IDGenealogy: currentIdGenealogy,
