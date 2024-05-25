@@ -183,8 +183,8 @@ const EventMember = () => {
                       .filter((item) => {
                         const now = new Date();
                         return  now < new Date(item.OrganizationDate);
-                      })
-                      .map((item, index) => {
+                      })?.reverse()
+                      ?.map((item, index) => {
                         return (
                           <div
                             className="card-bg"
@@ -235,53 +235,7 @@ const EventMember = () => {
                       })}
                   </div>
 
-                  {/* {sortArrByDate(listEvent, "OrganizationDate").map(
-                    (item, index) => {
-                      const now = new Date();
-                      const past = now > new Date(item.OrganizationDate);
-                      return (
-                        <div
-                          className="card-bg"
-                          onClick={() => {
-                            setCurrentEvent(item);
-                          }}
-                          style={{
-                            marginTop: 10,
-                            cursor: "pointer",
-                            padding: 10,
-                            width: "calc(50% - 10px)",
-                            marginBottom: "20px",
-                            height: "90%",
-                            background: past && "rgb(70 21 17)",
-                          }}
-                        >
-                          <div
-                            style={{
-                              border: "none !important",
-                            }}
-                            className="item-history"
-                          >
-                            <div className="" style={{ textAlign: "start" }}>
-                              <div
-                                style={{
-                                  fontSize: 20,
-                                  fontWeight: "bold",
-                                }}
-                              >
-                                {item.Name}
-                              </div>
-                              <div>
-                                Thời gian : {dateFormat3(item.OrganizationDate)}
-                              </div>
-                            </div>
-                            {item.Background && <Avatar style={{
-                              width:60,height:60
-                            }} src={item.Background} />}
-                          </div>
-                        </div>
-                      );
-                    }
-                  )} */}
+                
                 </div>
               </div>
             </Grid>
