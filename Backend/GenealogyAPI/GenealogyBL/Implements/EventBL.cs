@@ -174,12 +174,12 @@ namespace GenealogyBL.Implements
 
         public async Task<bool> DeleteByID(int id, int idGenealogy)
         {
+            var eventInfo = await _eventDL.GetById(id);
             var idRes = await base.DeleteByID(id, idGenealogy);
             var gen = await _genealogyDL.GetById(idGenealogy);
-            var eventInfo = await _eventDL.GetById(id);
             var userAdmins = await _userGenealogyDL.GetUserAdminNotify(idGenealogy);
             var idUserEdit = int.Parse(_authService.GetUserID());
-            if (userAdmins.Any(x => x.UserId == idUserEdit))
+            if (userAdmins.Any(x => x.UserId == idUserEdit) && eventInfo.InActive == true)
             {
                 var notification = new Notification()
                 {
