@@ -132,6 +132,11 @@ function AddEvent({ item, updateItem }) {
         toast.error("Vui lòng nhập địa điểm.");
         return ;
       }
+      const list = listMember.filter((i) => i.checked)
+      if(limitMeber == "true" && list.length===0 ){
+        toast.error("Vui lòng nhập chọn người tham gia");
+        return ;
+      }
       const data = {
         ...formData,
         IDGenealogy: currentIdGenealogy,
