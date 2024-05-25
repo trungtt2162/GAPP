@@ -9,11 +9,12 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
+import DonutChart from "react-donut-chart";
 
 import React, { useEffect, useState } from "react";
 import "./../list-fund-member/ListFund.scss";
 import PrimaryButton from "../../../../components/common/button/PrimaryButton";
-import { getQuery, handleError,formatMoney } from "../../../../ultils/helper";
+import { getQuery, handleError, formatMoney } from "../../../../ultils/helper";
 import { fundApi } from "../../../../api/fund.api";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "../../../../zustand/authStore";
@@ -25,7 +26,7 @@ const FundAdminDetail = () => {
   const location = useLocation();
   const { id } = getQuery();
   const { currentIdGenealogy } = useAuthStore();
-const [currentImage,setCurrentImage] = useState(null);
+  const [currentImage, setCurrentImage] = useState(null);
   // Hàm xử lý thay đổi trang
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -63,13 +64,56 @@ const [currentImage,setCurrentImage] = useState(null);
   const totalSend = listSpend.reduce((total, item) => {
     return total + (item.Money || 0);
   }, 0);
+  let per =0;
+  if(Number( detailFund?.EstimatedMoney) !=0){
+    per = Math.ceil(totalContributor/detailFund?.EstimatedMoney * 100)
+  }
+
+  useEffect(() => {
+   let ele = document.getElementsByClassName("donutchart-innertext-label");
+   if(ele && ele?.length >0){
+    ele[0].setAttribute("y","30%")
+   }
+   let ele1 = document.getElementsByClassName("donutchart-innertext-value");
+   if(ele1 && ele1?.length >0){
+    ele1[0].setAttribute("y","40%")
+   }
+  },[])
+  
   return (
+    
     <div>
       <h4 className="bold" style={{ marginBottom: 20 }}>
         {detailFund.Name}
       </h4>
+      <div style={{
+        display:"flex",
+        justifyContent:"center",
+        marginRight:-150
+      }}>
+        <DonutChart
+        selectedOffset={0}
+        emptyOffset={0}
+        height={430}
+        width={430}
+        colors={["#F2B84F","#FFF"]}
+          data={[
+            {
+              label: "Số tiền đã thu",
+              value: per > 0? 100:per,
+            },
+            {
+              label: "Số tiền dự tính",
+              value: 100-per < 0 ? 0:100-per,
+             
+            },
+          ]}
+        />
+        ;
+      </div>
 
-      <Card className="funddetail-wrap">
+    <div style={{marginTop:-100}}>
+    <Card className="funddetail-wrap">
         <p className="title bold">Số tiền dự tính</p>
         <p className="content">{formatMoney(detailFund.EstimatedMoney)} VND</p>
       </Card>
@@ -85,7 +129,9 @@ const [currentImage,setCurrentImage] = useState(null);
       </Card>
       <Card className="funddetail-wrap">
         <p className="title bold">Số tiền hiện có</p>
-        <p className="content">{formatMoney(totalContributor-totalSend)} VND</p>
+        <p className="content">
+          {formatMoney(totalContributor - totalSend)} VND
+        </p>
       </Card>
       <Card className="funddetail-wrap">
         <p className="title bold">Nội dung</p>
@@ -111,17 +157,26 @@ const [currentImage,setCurrentImage] = useState(null);
                     <TableCell className="text-center">
                       {row.Description}
                     </TableCell>
-                    <TableCell className="text-center">{formatMoney(row.Money)}</TableCell>
+                    <TableCell className="text-center">
+                      {formatMoney(row.Money)}
+                    </TableCell>
 
                     <TableCell className="text-center">
                       {row.CreatedDate &&
                         moment(row.CreatedDate).format("DD-MM-YYYY")}
                     </TableCell>
                     <TableCell className="text-center">
-                    {row.BillImage &&   <div onClick={() => setCurrentImage(row.BillImage)} style={{
-                        cursor:"pointer",
-                        color:"rgb(242, 184, 79)"
-                       }}>Xem hóa đơn</div>}
+                      {row.BillImage && (
+                        <div
+                          onClick={() => setCurrentImage(row.BillImage)}
+                          style={{
+                            cursor: "pointer",
+                            color: "rgb(242, 184, 79)",
+                          }}
+                        >
+                          Xem hóa đơn
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -159,16 +214,25 @@ const [currentImage,setCurrentImage] = useState(null);
                     </TableCell>
                     <TableCell className="text-center">{row.Email}</TableCell>
 
-                    <TableCell className="text-center">{formatMoney(row.Money)}</TableCell>
+                    <TableCell className="text-center">
+                      {formatMoney(row.Money)}
+                    </TableCell>
                     <TableCell className="text-center">
                       {row.PaymentDate &&
                         moment(row.PaymentDate).format("DD-MM-YYYY")}
                     </TableCell>
                     <TableCell className="text-center">
-                     {row.BillImage &&   <div onClick={() => setCurrentImage(row.BillImage)} style={{
-                        cursor:"pointer",
-                        color:"rgb(242, 184, 79)"
-                       }}>Xem hóa đơn</div>}
+                      {row.BillImage && (
+                        <div
+                          onClick={() => setCurrentImage(row.BillImage)}
+                          style={{
+                            cursor: "pointer",
+                            color: "rgb(242, 184, 79)",
+                          }}
+                        >
+                          Xem hóa đơn
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -183,18 +247,23 @@ const [currentImage,setCurrentImage] = useState(null);
           onPageChange={handleChangePage}
         />
       </div>
+    </div>
       <CustomModal open={currentImage} onClose={() => setCurrentImage(null)}>
-       <div style={{
-        display:"flex",
-        justifyContent:'center'
-       }}>
-       <img src={currentImage} style={{
-          width:500,
-          height:"auto"
-        }}  />
-       </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={currentImage}
+            style={{
+              width: 500,
+              height: "auto",
+            }}
+          />
+        </div>
       </CustomModal>
-     
     </div>
   );
 };

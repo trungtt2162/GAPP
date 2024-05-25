@@ -355,3 +355,9 @@ p {
 .noti-item:last-child {
   border-bottom: none;
 }
+.donutchart-legend{
+  display: none !important;
+}
+.donutchart-innertext,.donutchart-innertext-label{
+  margin-top: -30px;
+}
