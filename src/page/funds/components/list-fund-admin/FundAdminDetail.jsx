@@ -66,9 +66,11 @@ const FundAdminDetail = () => {
   }, 0);
   let per =0;
   if(Number( detailFund?.EstimatedMoney) !=0){
-    per = Math.ceil(totalContributor/detailFund?.EstimatedMoney * 100)
+    per = Number((100*totalContributor/Number(detailFund?.EstimatedMoney)).toFixed(0))
   }
 
+const v1 = per > 100? 100:per
+const v2 =  100-v1
   useEffect(() => {
    let ele = document.getElementsByClassName("donutchart-innertext-label");
    if(ele && ele?.length >0){
@@ -100,11 +102,11 @@ const FundAdminDetail = () => {
           data={[
             {
               label: "Số tiền đã thu",
-              value: per > 0? 100:per,
+              value: v1,
             },
             {
-              label: "Số tiền dự tính",
-              value: 100-per < 0 ? 0:100-per,
+              label: "Số tiền Cần thu còn lại",
+              value: v2,
              
             },
           ]}
