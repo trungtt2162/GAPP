@@ -15,6 +15,7 @@ import {
 import useAuthStore from "../../zustand/authStore";
 import { eventApi } from "../../api/event.api";
 import CustomModal from "../../components/common/modal/CustomModal";
+import AddEvent from "../family-tree/admin-family-tree/components/manage-event/AddEvent";
 const EventMember = () => {
   const { palette } = useTheme(theme);
   const { currentIdGenealogy } = useAuthStore();
@@ -22,6 +23,7 @@ const EventMember = () => {
   const [endDate, setEndDate] = useState("");
   const [listEvent, setListEvent] = useState([]);
   const [currentEvent, setCurrentEvent] = useState(null);
+  const [openModal,setOpenModal] = useState(false)
   const getListEvent = async (id) => {
     try {
       let query = "";
@@ -100,10 +102,12 @@ const EventMember = () => {
                       Lọc
                     </Button>
                   </Grid>
-                  <Grid item flex={1}>
+                  <Grid style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:10}} item flex={1}>
+                    <Button onClick={() => setOpenModal(true)} variant={"outlined"}>+ Tạo sự kiện mới</Button>
                     <div style={{ textAlign: "end" }}>
                       Có {listEvent.length} sự kiện
                     </div>
+
                   </Grid>
                 </Grid>
                 <div
@@ -351,6 +355,12 @@ const EventMember = () => {
             )}
           </div>
         </Grid>
+      </CustomModal>
+      <CustomModal width={1000} open={openModal} onClose={() => setOpenModal(false)}>
+          <AddEvent  reset={() => {
+        setOpenModal(false);
+        getListEvent(currentIdGenealogy)
+      }} />
       </CustomModal>
     </div>
   );

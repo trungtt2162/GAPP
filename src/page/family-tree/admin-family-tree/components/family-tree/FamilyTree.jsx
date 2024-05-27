@@ -387,7 +387,7 @@ const SelectInfo = ({ item, geneName, getListAllNode, listNode }) => {
     },
     {
       key: OPTION.ADD_CK,
-      name: "Thêm vợ chồng",
+      name: "Thêm vợ/chồng",
       show: isSiteAdmin || (isPeopleAdmin && isDeleteAndEdit()),
     },
     {

@@ -34,8 +34,6 @@ const FeedBackItem = ({
   item
 }) => {
   const { user, currentIdGenealogy } = useAuthStore();
-  console.log(user)
-  console.log(CreatedBy)
   const isMine = (user.FirstName +" " +user.LastName)  === CreatedBy;
   const { isLogin, roleCode } = useAuthStore();
   const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
@@ -114,7 +112,7 @@ const FeedBackItem = ({
            
           }}
         >
-          {ModifiedDate && moment(ModifiedDate).format("DD/MMYYYY")}
+          {ModifiedDate && moment(ModifiedDate).format("DD/MM/YYYY")}
         </div>
       </div>
       <p style={{ color: "white", textAlign: "start",marginBottom:20 }}>

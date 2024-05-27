@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AddEvent({ item, updateItem }) {
+function AddEvent({ item, updateItem,reset=() => {} }) {
   const classes = useStyles();
   const fileRef = useRef();
   const { userGenealogy, currentIdGenealogy, user } = useAuthStore();
@@ -153,6 +153,9 @@ function AddEvent({ item, updateItem }) {
         toast.success(item ? "Cập nhât thành công" : "Tạo thành công");
         if (!item) {
           setFormData(originData);
+          if(reset){
+            reset()
+          }
         } else {
           const listFinal =
             limitMeber == "true"
