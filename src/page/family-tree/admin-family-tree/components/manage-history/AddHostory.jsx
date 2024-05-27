@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-function AddHistory({ item, updateItem }) {
+function AddHistory({ item, updateItem ,reset=() => {}}) {
   const classes = useStyles();
   const { userGenealogy,currentIdGenealogy } = useAuthStore();
 
@@ -81,6 +81,9 @@ function AddHistory({ item, updateItem }) {
       if (res.data.StatusCode === 200) {
         toast.success(item ? "Cập nhât thành công" : "Thêm thành công");
         if (!item) {
+          if(reset){
+            reset()
+          }
           setFormData({
             IDGenealogy: "",
             Image: "",

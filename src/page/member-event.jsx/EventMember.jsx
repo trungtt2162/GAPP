@@ -16,7 +16,21 @@ import useAuthStore from "../../zustand/authStore";
 import { eventApi } from "../../api/event.api";
 import CustomModal from "../../components/common/modal/CustomModal";
 import AddEvent from "../family-tree/admin-family-tree/components/manage-event/AddEvent";
+import { USER_ROLE } from "../../constant/common";
 const EventMember = () => {
+  const {
+    isLogin,
+    roleCode,
+    user,
+    logOutAction,
+    isCreateGene,
+    listRole,
+    selectGeneAction,
+    listNoti,
+    setListNoti
+  } = useAuthStore();
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+
   const { palette } = useTheme(theme);
   const { currentIdGenealogy } = useAuthStore();
   const [startDate, setStartDate] = useState("");
@@ -103,7 +117,7 @@ const EventMember = () => {
                     </Button>
                   </Grid>
                   <Grid style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:10}} item flex={1}>
-                    <Button onClick={() => setOpenModal(true)} variant={"outlined"}>+ Tạo sự kiện mới</Button>
+                  {isSiteAdmin &&   <Button onClick={() => setOpenModal(true)} variant={"outlined"}>+ Tạo sự kiện mới</Button>}
                     <div style={{ textAlign: "end" }}>
                       Có {listEvent.length} sự kiện
                     </div>

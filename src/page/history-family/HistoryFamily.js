@@ -20,6 +20,7 @@ import { USER_ROLE } from "../../constant/common";
 import EditIcon from "@mui/icons-material/Edit";
 import PrimaryButton from "../../components/common/button/PrimaryButton";
 import { Description } from "@mui/icons-material";
+import AddHistory from "../family-tree/admin-family-tree/components/manage-history/AddHostory";
 const modules = {
   toolbar: [
     [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -139,6 +140,10 @@ const HistoryFamily = ({ list, desHis }) => {
       handleError(error);
     }
   };
+
+  const [openModal,setOpenModal] = useState(false)
+
+
   return (
     <div>
       <div className="how-work">
@@ -253,7 +258,8 @@ const HistoryFamily = ({ list, desHis }) => {
                       Lọc
                     </Button>
                   </Grid>
-                  <Grid item flex={1}>
+                  <Grid style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:10}} item flex={1}>
+                  {isSiteAdmin &&   <Button onClick={() => setOpenModal(true)} variant={"outlined"}>+ Tạo mốc lịch sử mới</Button>}
                     <div style={{ textAlign: "end" }}>
                       Có {lisFinal.length} sự kiện
                     </div>
@@ -368,6 +374,12 @@ const HistoryFamily = ({ list, desHis }) => {
             />
           )}
         </Grid>
+      </CustomModal>
+      <CustomModal width={1000} open={openModal} onClose={() => setOpenModal(false)}>
+          <AddHistory  reset={() => {
+        setOpenModal(false);
+        getListHistory(currentIdGenealogy)
+      }} />
       </CustomModal>
     </div>
   );
