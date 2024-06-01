@@ -10,8 +10,22 @@ import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import CustomModal from "../../../../components/common/modal/CustomModal";
 import AddFundForm from "../list-fund-admin/AddFundAdmin";
+import { USER_ROLE } from "../../../../constant/common";
 
 const ListFundMember = () => {
+  const {
+    isLogin,
+    roleCode,
+    user,
+    logOutAction,
+    isCreateGene,
+    listRole,
+    selectGeneAction,
+    listNoti,
+    setListNoti
+  } = useAuthStore();
+  const isSiteAdmin = isLogin && roleCode === USER_ROLE.SiteAdmin;
+
     const location = useLocation();
     const navigate = useNavigate();
   const [listFund, setListFund] = useState([]);
@@ -76,11 +90,11 @@ useEffect(() => {
               style={{
                 paddingRight: 10,
               }}
-              className="w100 border-right "
+              className={`w100 ${isSiteAdmin && "border-right"}`}
             >
               {formatMoney(item.EstimatedMoney)} VND
             </div>
-            <div
+           {isSiteAdmin &&  <div
               style={{
                 paddingRight: 10,
               }}
@@ -89,7 +103,7 @@ useEffect(() => {
               <EditIcon onClick={() => setCurremtFund(item)} style={{
                 cursor:"pointer"
               }} />
-            </div>
+            </div>}
             {/* <div className="w100">{item.SpendPurpose}</div> */}
             <div style={{color:"white"}}  onClick={() => navigate(location.pathname + "?id="+item.Id)} className="button-more">Xem thêm</div>
           </div>
